@@ -1,0 +1,35 @@
+.image-container {
+  position: relative;
+  text-align: center;
+  color: #383a38;
+  cursor: pointer;
+}
+
+img {
+  width: 100%;
+  cursor: pointer;
+}
+/* Centered text */
+.centered {
+  background: #f3f2e7;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.top-left {
+  background: #f3f2e7;
+
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+.bottom-right {
+  background: #f3f2e7;
+
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
