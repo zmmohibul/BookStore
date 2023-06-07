@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace API.Entities;
 
 public class Category
 {
     public int Id { get; set; }
+    
+    [MaxLength(100)]
     public string Name { get; set; }
 
     public int? ParentId { get; set; }

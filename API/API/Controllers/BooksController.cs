@@ -18,6 +18,10 @@ public class BooksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBooks()
     {
+        var catId = 1;
+        var books = _dataContext.Books
+            .Include(book => book.Categories)
+            .Where(book => book.Categories.Any(cat => cat.Id == catId));
         return Ok(await _dataContext.Books.ToListAsync());
     }
     
