@@ -8,6 +8,7 @@ public class Book
 
     public string Name { get; set; }
     public string Description { get; set; }
+    public ICollection<BookPicture> Pictures { get; set; } = new List<BookPicture>();
 
     public ICollection<Author> Authors { get; set; } = new List<Author>();
     public Publisher Publisher { get; set; }
@@ -20,8 +21,10 @@ public class Book
     public decimal HardcoverPrice { get; set; }
     public int HardcoverQuantity { get; set; }
 
+    public ICollection<Category> Categories { get; set; } = new List<Category>();
+    
     public int PrintLength { get; set; }
     public string Language { get; set; }
     public DateTime PublicationDate { get; set; }
-    public string ISBN13 { get; set; }
+    public string Isbn13 { get; set; }
 }
