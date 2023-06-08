@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API.Entities;
+namespace API.Entities.BookAggregate;
 
 public class Book
 {
@@ -13,6 +13,8 @@ public class Book
     public ICollection<BookPicture> Pictures { get; set; } = new List<BookPicture>();
 
     public ICollection<Author> Authors { get; set; } = new List<Author>();
+
+    public int PublisherId { get; set; }
     public Publisher Publisher { get; set; }
 
     [Column(TypeName = "decimal(8, 2)")]

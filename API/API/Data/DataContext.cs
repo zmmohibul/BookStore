@@ -1,9 +1,12 @@
-using API.Entities;
+using API.Entities.BookAggregate;
+using API.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class DataContext : DbContext
+public class DataContext : IdentityDbContext<User, AppRole, string>
 {
     public DataContext(DbContextOptions options) : base(options)
     {

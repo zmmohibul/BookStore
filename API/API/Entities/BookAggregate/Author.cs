@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Entities;
+namespace API.Entities.BookAggregate;
 
 public class Author
 {
@@ -9,7 +9,9 @@ public class Author
     [MaxLength(200)]
     public string Name { get; set; }
     public string Bio { get; set; }
-    public AuthorPicture Picture { get; set; }
+
+    public int AuthorPictureId { get; set; }
+    public AuthorPicture AuthorPicture { get; set; }
 
     public ICollection<Book> Books { get; set; } = new List<Book>();
 }

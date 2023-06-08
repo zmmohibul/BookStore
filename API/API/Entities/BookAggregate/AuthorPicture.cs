@@ -1,4 +1,4 @@
-namespace API.Entities;
+namespace API.Entities.BookAggregate;
 
 public class AuthorPicture
 {
@@ -6,7 +6,4 @@ public class AuthorPicture
     public string Url { get; set; }
     public bool IsMain { get; set; }
     public string? PublicId { get; set; }
-
-    public int AuthorId { get; set; }
-    public Author Author { get; set; }
 }

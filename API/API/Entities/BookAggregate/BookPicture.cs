@@ -1,4 +1,4 @@
-namespace API.Entities;
+namespace API.Entities.BookAggregate;
 
 public class BookPicture
 {
