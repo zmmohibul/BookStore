@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class DataContext : IdentityDbContext<User, AppRole, string>
+public class DataContext : IdentityDbContext<User>
 {
     public DataContext(DbContextOptions options) : base(options)
     {
