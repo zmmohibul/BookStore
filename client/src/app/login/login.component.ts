@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { LoginModel } from '../models/loginModel';
 import { AuthService } from '../services/auth.service';
 import {Router} from "@angular/router";
+import {User} from "../models/user";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,14 @@ export class LoginComponent {
 
   login() {
     this.authService.login(this.model).subscribe({
-      next: () => this.router.navigateByUrl('')
+      next: (user: User) => {
+        if (user.role == 'Admin') {
+          this.router.navigateByUrl('admin')
+        }
+        else {
+          this.router.navigateByUrl('')
+        }
+      }
     })
   }
 }

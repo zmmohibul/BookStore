@@ -22,6 +22,7 @@ export class AuthService {
         if (user) {
           this.setCurrentUser(user);
         }
+        return user;
       }),
     );
   }
