@@ -9,6 +9,7 @@ public class Seed
     public static async Task SeedUsers(UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager)
     {
+        Console.WriteLine("Gonna insert data....");
         if (await userManager.Users.AnyAsync())
         {
             return;

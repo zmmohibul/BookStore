@@ -21,15 +21,14 @@ namespace API.Services
 
         public async Task<string> CreateToken(User user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
+            
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(ClaimTypes.Role, roles[0]),
             };
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
