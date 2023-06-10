@@ -1,4 +1,5 @@
 using API.DTOs.Category;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,9 @@ public class CategoriesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories([FromQuery] PaginationParams paginationParams)
     {
-        return Ok(await _categoryRepository.GetAllCategories());
+        return Ok(await _categoryRepository.GetAllCategories(paginationParams));
     }
     
     [HttpGet("{id}")]

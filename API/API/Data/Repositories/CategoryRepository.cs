@@ -1,11 +1,9 @@
-using API.DTOs;
 using API.DTOs.Category;
 using API.Entities.BookAggregate;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repositories;
@@ -21,15 +19,15 @@ public class CategoryRepository : ICategoryRepository
         _mapper = mapper;
     }
     
-    public async Task<ICollection<CategoryDto>> GetAllCategories()
+    public async Task<PaginatedList<CategoryDto>> GetAllCategories(PaginationParams paginationParams)
     {
-        var categories = await _dataContext.Categories
+        var query = _dataContext.Categories
             .Where(category => category.ParentId == null)
             .AsNoTracking()
-            .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
-
-        return categories;
+            .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider);
+        
+        
+        return await PaginatedList<CategoryDto>.CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
     }
 
     public async Task<Result<CategoryWithSubCategoriesDto>> GetCategoryById(int id)
