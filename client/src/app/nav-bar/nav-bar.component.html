@@ -14,16 +14,16 @@
     <form class="input-group w-auto my-auto d-none d-sm-flex">
       <input
         autocomplete="off"
-        type="search"
         class="form-control"
         placeholder="Search"
         style="min-width: 625px"
+        type="search"
       />
 
       <button
         class="bg-light input-group-text border-0 d-none d-lg-flex"
-        type="button"
         data-mdb-ripple-color="dark"
+        type="button"
       >
         <i class="fas fa-search"></i>
       </button>
@@ -35,21 +35,21 @@
 
     <ul class="navbar-nav flex-row">
       <ng-container *ngIf="!user">
-        <div mdbDropdown class="dropdown me-3">
+        <div class="dropdown me-3" mdbDropdown>
           <button
+            aria-expanded="false"
             class="btn btn-outline-secondary text-white dropdown-toggle"
-            type="button"
             id="dropdownMenuButton2"
             mdbDropdownToggle
-            aria-expanded="false"
+            type="button"
           >
             <i class="fas fa-user me-2"></i> Guest
           </button>
 
           <ul
-            mdbDropdownMenu
-            class="dropdown-menu dropdown-menu-light"
             aria-labelledby="dropdownMenuButton2"
+            class="dropdown-menu dropdown-menu-light"
+            mdbDropdownMenu
           >
             <li><a class="dropdown-item" routerLink="login">Login</a></li>
             <li><a class="dropdown-item" routerLink="register">Register</a></li>
@@ -57,26 +57,54 @@
         </div>
       </ng-container>
 
-      <ng-container *ngIf="user">
-        <div mdbDropdown class="dropdown me-3">
+      <ng-container *ngIf="user && user.role == 'User'">
+        <div class="dropdown me-3" mdbDropdown>
           <button
+            aria-expanded="false"
             class="btn btn-outline-secondary text-white dropdown-toggle"
-            type="button"
             id="dropdownMenuButton2"
             mdbDropdownToggle
-            aria-expanded="false"
+            type="button"
           >
             <i class="fas fa-user me-2"></i> {{ user.userName }}
           </button>
 
           <ul
-            mdbDropdownMenu
-            class="dropdown-menu dropdown-menu-light"
             aria-labelledby="dropdownMenuButton2"
+            class="dropdown-menu dropdown-menu-light"
+            mdbDropdownMenu
           >
             <li><a class="dropdown-item" href="#">Your Profile</a></li>
             <li><a class="dropdown-item" href="#">Your Orders</a></li>
-            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <hr class="dropdown-divider"/>
+            </li>
+            <li><a class="dropdown-item" href="#">Logout</a></li>
+          </ul>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="user && user.role == 'Admin'">
+        <div class="dropdown me-3" mdbDropdown>
+          <button
+            aria-expanded="false"
+            class="btn btn-outline-secondary text-white dropdown-toggle"
+            id="dropdownMenuButton2"
+            mdbDropdownToggle
+            type="button"
+          >
+            <i class="fas fa-user me-2"></i> {{ user.userName }}
+          </button>
+
+          <ul
+            aria-labelledby="dropdownMenuButton2"
+            class="dropdown-menu dropdown-menu-light"
+            mdbDropdownMenu
+          >
+            <li><a class="dropdown-item" routerLink="admin">Admin Dashboard</a></li>
+            <li>
+              <hr class="dropdown-divider"/>
+            </li>
             <li><a class="dropdown-item" href="#">Logout</a></li>
           </ul>
         </div>

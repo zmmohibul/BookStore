@@ -1,4 +1,6 @@
 using API.Data;
+using API.Data.Repositories;
+using API.DTOs;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +17,10 @@ public static class ApplicationServiceExtensions
             opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
         });
         services.AddCors();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         return services;
     }
 }
