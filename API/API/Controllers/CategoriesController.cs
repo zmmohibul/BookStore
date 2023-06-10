@@ -1,5 +1,4 @@
-using API.DTOs;
-using API.Errors;
+using API.DTOs.Category;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,10 +35,12 @@ public class CategoriesController : BaseApiController
             return CreatedAtAction(nameof(GetCategory), new { id = result.Data.Id }, result.Data);
         }
 
-        return BadRequest(new Error()
-        {
-            StatusCode = result.StatusCode,
-            ErrorMessage = result.ErrorMessage
-        });
+        return HandleResult(result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCategory(int id, [FromBody]UpdateCategoryDto updateCategoryDto)
+    {
+        return HandleResult(await _categoryRepository.UpdateCategory(id, updateCategoryDto));
     }
 }

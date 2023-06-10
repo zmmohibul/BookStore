@@ -1,6 +1,4 @@
-using API.Entities.BookAggregate;
-
-namespace API.DTOs;
+namespace API.DTOs.Category;
 
 public class CategoryWithSubCategoriesDto
 {

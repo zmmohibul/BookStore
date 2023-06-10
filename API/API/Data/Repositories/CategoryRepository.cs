@@ -1,4 +1,5 @@
 using API.DTOs;
+using API.DTOs.Category;
 using API.Entities.BookAggregate;
 using API.Helpers;
 using API.Interfaces;
@@ -84,7 +85,7 @@ public class CategoryRepository : ICategoryRepository
                 {
                     Data = null,
                     StatusCode = 400,
-                    ErrorMessage = "No Parent Category found with the given parentId",
+                    ErrorMessage = $"No Parent Category found with the given parentId - {category.ParentId}",
                     IsSuccess = false
                 };
             }
@@ -113,6 +114,55 @@ public class CategoryRepository : ICategoryRepository
             Data = null,
             StatusCode = 400,
             ErrorMessage = "Failed to create category",
+            IsSuccess = false
+        };
+    }
+
+    public async Task<Result<CategoryDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto)
+    {
+        var category = await _dataContext.Categories
+            .Where(cat => cat.Id == id)
+            .SingleOrDefaultAsync();
+        
+        if (category == null)
+        {
+            return new Result<CategoryDto>()
+            {
+                Data = null,
+                StatusCode = 400,
+                ErrorMessage = $"No Category found with the given id - {id}",
+                IsSuccess = false
+            };
+        }
+
+        if (category.Name.Equals(updateCategoryDto.Name))
+        {
+            return new Result<CategoryDto>()
+            {
+                Data = null,
+                StatusCode = 400,
+                ErrorMessage = "Attempt to update with same name",
+                IsSuccess = false
+            };
+        }
+
+        category.Name = updateCategoryDto.Name;
+        
+        if (await _dataContext.SaveChangesAsync() > 0)
+        {
+            return new Result<CategoryDto>()
+            {
+                Data = _mapper.Map<CategoryDto>(category),
+                IsSuccess = true,
+                StatusCode = 200
+            };
+        }
+        
+        return new Result<CategoryDto>()
+        {
+            Data = null,
+            StatusCode = 400,
+            ErrorMessage = "Failed to update category",
             IsSuccess = false
         };
     }

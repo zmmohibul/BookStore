@@ -1,4 +1,4 @@
-namespace API.DTOs;
+namespace API.DTOs.Category;
 
 public class CategoryDto
 {

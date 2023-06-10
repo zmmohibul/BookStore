@@ -1,4 +1,5 @@
 using API.DTOs;
+using API.DTOs.Category;
 using API.Entities.BookAggregate;
 using AutoMapper;
 
