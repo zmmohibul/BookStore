@@ -10,4 +10,5 @@ public interface ICategoryRepository
     Task<Result<CategoryWithSubCategoriesDto>> GetCategoryById(int id);
     Task<Result<CategoryDto>> CreateCategory(CreateCategoryDto createCategoryDto);
     Task<Result<CategoryDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto);
+    Task<Result<CategoryDto>> DeleteCategory(int id);
 }

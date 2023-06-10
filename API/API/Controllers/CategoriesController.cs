@@ -43,4 +43,10 @@ public class CategoriesController : BaseApiController
     {
         return HandleResult(await _categoryRepository.UpdateCategory(id, updateCategoryDto));
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        return HandleResult(await _categoryRepository.DeleteCategory(id));
+    }
 }

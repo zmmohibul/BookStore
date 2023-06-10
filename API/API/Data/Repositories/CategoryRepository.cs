@@ -5,6 +5,7 @@ using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repositories;
@@ -81,13 +82,7 @@ public class CategoryRepository : ICategoryRepository
             var parentCategory = await _dataContext.Categories.FindAsync(createCategoryDto.ParentId);
             if (parentCategory == null)
             {
-                return new Result<CategoryDto>()
-                {
-                    Data = null,
-                    StatusCode = 400,
-                    ErrorMessage = $"No Parent Category found with the given parentId - {category.ParentId}",
-                    IsSuccess = false
-                };
+                return NotFoundResult($"No Parent Category found with the given parentId - {category.ParentId}");
             }
             category.Parent = parentCategory;
         }
@@ -126,13 +121,7 @@ public class CategoryRepository : ICategoryRepository
         
         if (category == null)
         {
-            return new Result<CategoryDto>()
-            {
-                Data = null,
-                StatusCode = 400,
-                ErrorMessage = $"No Category found with the given id - {id}",
-                IsSuccess = false
-            };
+            return NotFoundResult($"No Category found with the given id - {id} to update");
         }
 
         if (category.Name.Equals(updateCategoryDto.Name))
@@ -166,9 +155,49 @@ public class CategoryRepository : ICategoryRepository
             IsSuccess = false
         };
     }
+    
+    public async Task<Result<CategoryDto>> DeleteCategory(int id)
+    {
+        var category = await _dataContext.Categories.SingleOrDefaultAsync(cat => cat.Id == id);
+        if (category == null)
+        {
+            return NotFoundResult($"No Category found with the given id - {id} to delete");
+        }
+
+        _dataContext.Categories.Remove(category);
+        
+        if (await _dataContext.SaveChangesAsync() > 0)
+        {
+            return new Result<CategoryDto>()
+            {
+                Data = null,
+                IsSuccess = true,
+                StatusCode = 204
+            };
+        }
+        
+        return new Result<CategoryDto>()
+        {
+            Data = null,
+            StatusCode = 400,
+            ErrorMessage = "Failed to delete category",
+            IsSuccess = false
+        };
+    }
 
     private async Task<bool> CategoryNameExist(CreateCategoryDto createCategoryDto)
     {
         return await _dataContext.Categories.AnyAsync(category => category.Name.Equals(createCategoryDto.Name));
+    }
+
+    private Result<CategoryDto> NotFoundResult(string message)
+    {
+        return new Result<CategoryDto>()
+        {
+            Data = null,
+            StatusCode = 404,
+            ErrorMessage = message,
+            IsSuccess = false
+        };
     }
 }
