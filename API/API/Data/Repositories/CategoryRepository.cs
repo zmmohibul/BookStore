@@ -1,4 +1,6 @@
 using API.DTOs;
+using API.Entities.BookAggregate;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -38,5 +40,70 @@ public class CategoryRepository : ICategoryRepository
             .SingleOrDefaultAsync();
 
         return category;
+    }
+
+    public async Task<Result<CategoryDto>> CreateCategory(CreateCategoryDto createCategoryDto)
+    {
+        if (await CategoryNameExist(createCategoryDto))
+        {
+            return new Result<CategoryDto>()
+            {
+                Data = null,
+                StatusCode = 400,
+                ErrorMessage = "Category Name already in use",
+                IsSuccess = false
+            };
+        }
+        
+        var category = new Category()
+        {
+            Name = createCategoryDto.Name
+        };
+
+        if (createCategoryDto.ParentId != null)
+        {
+            var parentCategory = await _dataContext.Categories.FindAsync(createCategoryDto.ParentId);
+            if (parentCategory == null)
+            {
+                return new Result<CategoryDto>()
+                {
+                    Data = null,
+                    StatusCode = 400,
+                    ErrorMessage = "No Parent Category found with the given parentId",
+                    IsSuccess = false
+                };
+            }
+            category.Parent = parentCategory;
+        }
+
+        _dataContext.Categories.Add(category);
+
+        if (await _dataContext.SaveChangesAsync() > 0)
+        { 
+            var data = await _dataContext.Categories
+                .Where(cat => cat.Name.Equals(createCategoryDto.Name))
+                .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
+                .SingleOrDefaultAsync();
+
+            return new Result<CategoryDto>()
+            {
+                Data = data,
+                IsSuccess = true,
+                StatusCode = 201
+            };
+        }
+        
+        return new Result<CategoryDto>()
+        {
+            Data = null,
+            StatusCode = 500,
+            ErrorMessage = "Failed to create category",
+            IsSuccess = false
+        };
+    }
+
+    private async Task<bool> CategoryNameExist(CreateCategoryDto createCategoryDto)
+    {
+        return await _dataContext.Categories.AnyAsync(category => category.Name.Equals(createCategoryDto.Name));
     }
 }
