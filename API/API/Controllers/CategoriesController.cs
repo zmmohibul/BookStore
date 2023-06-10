@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class CategoriesController : ControllerBase
+public class CategoriesController : BaseApiController
 {
     private readonly ICategoryRepository _categoryRepository;
 
@@ -25,7 +23,7 @@ public class CategoriesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCategory(int id)
     {
-        return Ok(await _categoryRepository.GetCategoryById(id));
+        return HandleResult(await _categoryRepository.GetCategoryById(id));
     }
 
     [HttpPost]

@@ -30,7 +30,7 @@ public class CategoryRepository : ICategoryRepository
         return categories;
     }
 
-    public async Task<CategoryWithSubCategoriesDto> GetCategoryById(int id)
+    public async Task<Result<CategoryWithSubCategoriesDto>> GetCategoryById(int id)
     {
         var category = await _dataContext.Categories
             .Where(category => category.Id == id)
@@ -39,7 +39,22 @@ public class CategoryRepository : ICategoryRepository
             .ProjectTo<CategoryWithSubCategoriesDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync();
 
-        return category;
+        if (category == null)
+        {
+            return new Result<CategoryWithSubCategoriesDto>()
+            {
+                IsSuccess = false,
+                StatusCode = 404,
+                ErrorMessage = "No category found with the given id"
+            };
+        }
+
+        return new Result<CategoryWithSubCategoriesDto>()
+        {
+            IsSuccess = true,
+            Data = category,
+            StatusCode = 200
+        };
     }
 
     public async Task<Result<CategoryDto>> CreateCategory(CreateCategoryDto createCategoryDto)
@@ -96,7 +111,7 @@ public class CategoryRepository : ICategoryRepository
         return new Result<CategoryDto>()
         {
             Data = null,
-            StatusCode = 500,
+            StatusCode = 400,
             ErrorMessage = "Failed to create category",
             IsSuccess = false
         };
