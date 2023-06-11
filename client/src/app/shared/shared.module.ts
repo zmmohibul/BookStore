@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { FooterComponent } from './footer/footer.component';
-import { BrowserModule } from '@angular/platform-browser';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 import { MdbCarouselModule } from 'mdb-angular-ui-kit/carousel';
 import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
@@ -21,14 +19,11 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from '../app-routing.module';
 
 @NgModule({
-  declarations: [NavBarComponent, FooterComponent],
+  declarations: [FooterComponent],
   imports: [
     CommonModule,
-    AppRoutingModule,
-    BrowserModule,
     MdbAccordionModule,
     MdbCarouselModule,
     MdbCheckboxModule,
@@ -44,13 +39,11 @@ import { AppRoutingModule } from '../app-routing.module';
     MdbTabsModule,
     MdbTooltipModule,
     MdbValidationModule,
-    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
   ],
   exports: [
     CommonModule,
-    BrowserModule,
     MdbAccordionModule,
     MdbCarouselModule,
     MdbCheckboxModule,
@@ -66,11 +59,10 @@ import { AppRoutingModule } from '../app-routing.module';
     MdbTabsModule,
     MdbTooltipModule,
     MdbValidationModule,
-    BrowserAnimationsModule,
+
     FormsModule,
     HttpClientModule,
 
-    NavBarComponent,
     FooterComponent,
   ],
 })
