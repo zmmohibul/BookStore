@@ -4,6 +4,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../models/user';
 import { LoginModel } from '../../models/loginModel';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class AuthenticationService {
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(model: LoginModel) {
     return this.http.post<User>(`${this.baseUrl}/account/login`, model).pipe(
@@ -30,6 +31,7 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.router.navigateByUrl('');
   }
 
   setCurrentUser(user: User) {
