@@ -51,13 +51,13 @@
             class="dropdown-menu dropdown-menu-light"
             mdbDropdownMenu
           >
-            <li><a class="dropdown-item" routerLink="login">Login</a></li>
-            <li><a class="dropdown-item" routerLink="register">Register</a></li>
+            <li><a class="dropdown-item" routerLink="auth/login">Login</a></li>
+            <li><a class="dropdown-item" routerLink="auth/register">Register</a></li>
           </ul>
         </div>
       </ng-container>
 
-      <ng-container *ngIf="user && user.role == 'User'">
+      <ng-container *ngIf="user">
         <div class="dropdown me-3" mdbDropdown>
           <button
             aria-expanded="false"
@@ -74,42 +74,24 @@
             class="dropdown-menu dropdown-menu-light"
             mdbDropdownMenu
           >
-            <li><a class="dropdown-item" href="#">Your Profile</a></li>
-            <li><a class="dropdown-item" href="#">Your Orders</a></li>
+
+            <ng-container *ngIf="user && user.role == 'User'">
+              <li><a class="dropdown-item" href="#">Your Profile</a></li>
+              <li><a class="dropdown-item" href="#">Your Orders</a></li>
+            </ng-container>
+
+
+            <ng-container *ngIf="user && user.role == 'Admin'">
+              <li><a class="dropdown-item" routerLink="admin">Admin Dashboard</a></li>
+            </ng-container>
+
             <li>
               <hr class="dropdown-divider"/>
             </li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
           </ul>
         </div>
       </ng-container>
-
-      <ng-container *ngIf="user && user.role == 'Admin'">
-        <div class="dropdown me-3" mdbDropdown>
-          <button
-            aria-expanded="false"
-            class="btn btn-outline-secondary text-white dropdown-toggle"
-            id="dropdownMenuButton2"
-            mdbDropdownToggle
-            type="button"
-          >
-            <i class="fas fa-user me-2"></i> {{ user.userName }}
-          </button>
-
-          <ul
-            aria-labelledby="dropdownMenuButton2"
-            class="dropdown-menu dropdown-menu-light"
-            mdbDropdownMenu
-          >
-            <li><a class="dropdown-item" routerLink="admin">Admin Dashboard</a></li>
-            <li>
-              <hr class="dropdown-divider"/>
-            </li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
-          </ul>
-        </div>
-      </ng-container>
-
 
       <li class="nav-item me-5 me-lg-0">
         <a class="nav-link" href="#">

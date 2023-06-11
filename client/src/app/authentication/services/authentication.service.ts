@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject, map } from 'rxjs';
-import { User } from '../models/user';
-import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { LoginModel } from '../models/loginModel';
+import { User } from '../../models/user';
+import { LoginModel } from '../../models/loginModel';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthenticationService {
   baseUrl = environment.apiUrl;
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
@@ -25,6 +25,11 @@ export class AuthService {
         return user;
       })
     );
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
   }
 
   setCurrentUser(user: User) {
