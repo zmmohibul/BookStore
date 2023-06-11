@@ -11,23 +11,26 @@
     <!-- Left elements -->
 
     <!-- Center elements -->
-    <form class="input-group w-auto my-auto d-none d-sm-flex">
-      <input
-        autocomplete="off"
-        class="form-control"
-        placeholder="Search"
-        style="min-width: 625px"
-        type="search"
-      />
+    <ng-container *ngIf="!user || (user && user.role != 'Admin')">
+      <form class="input-group w-auto my-auto d-none d-sm-flex">
+        <input
+          autocomplete="off"
+          class="form-control"
+          placeholder="Search"
+          style="min-width: 625px"
+          type="search"
+        />
 
-      <button
-        class="bg-light input-group-text border-0 d-none d-lg-flex"
-        data-mdb-ripple-color="dark"
-        type="button"
-      >
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
+        <button
+          class="bg-light input-group-text border-0 d-none d-lg-flex"
+          data-mdb-ripple-color="dark"
+          type="button"
+        >
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </ng-container>
+
     <!-- Center elements -->
 
     <!-- Right elements -->
@@ -93,13 +96,16 @@
         </div>
       </ng-container>
 
-      <li class="nav-item me-5 me-lg-0">
-        <a class="nav-link" href="#">
-          <!-- <span class="badge badge-pill bg-danger">1</span> -->
-          <span><i class="fas fa-shopping-cart fa-lg"></i></span>
-          <span class="badge rounded-pill badge-notification bg-danger">1</span>
-        </a>
-      </li>
+      <ng-container *ngIf="!user || (user && user.role != 'Admin')">
+        <li class="nav-item me-5 me-lg-0">
+          <a class="nav-link" href="#">
+            <!-- <span class="badge badge-pill bg-danger">1</span> -->
+            <span><i class="fas fa-shopping-cart fa-lg"></i></span>
+            <span class="badge rounded-pill badge-notification bg-danger">1</span>
+          </a>
+        </li>
+      </ng-container>
+
     </ul>
     <!-- Right elements -->
   </div>
