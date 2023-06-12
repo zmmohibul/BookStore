@@ -1,0 +1,28 @@
+<mdb-form-control>
+  <input
+    mdbValidate
+    mdbInput
+    type={{type}}
+    id="form1"
+    class="form-control"
+    [formControl]="control"
+  />
+  <label mdbLabel class="form-label" for="form1">{{label}}</label>
+  <mdb-error *ngIf="control.errors?.['required'] && (control?.dirty || control?.touched)">
+    {{label}} is required
+  </mdb-error>
+
+  <mdb-error *ngIf="control.errors?.['minlength'] && (control?.dirty || control?.touched)">
+    {{label}} must be at least {{control.errors?.['minlength'].requiredLength}} characters
+  </mdb-error>
+
+  <mdb-error *ngIf="control.errors?.['maxlength'] && (control?.dirty || control?.touched)">
+    {{label}} can be at most {{control.errors?.['maxlength'].requiredLength}} characters
+  </mdb-error>
+
+  <mdb-error *ngIf="control.errors?.['notMatching'] && (control?.dirty || control?.touched)">
+    Passwords do not match
+  </mdb-error>
+
+  <mdb-success *ngIf="control?.valid && (control?.dirty || control?.touched)">Looks good!</mdb-success>
+</mdb-form-control>

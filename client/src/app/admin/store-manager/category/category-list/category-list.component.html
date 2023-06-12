@@ -16,10 +16,11 @@
         </td >
 
         <td class="text-center">
-          <mdb-form-control>
-            <input mdbInput type="text" id="form1" class="form-control"  [formControl]="editedCategoryName" />
-            <label mdbLabel class="form-label" for="form1">New Category Name</label>
-          </mdb-form-control>
+<!--          <mdb-form-control>-->
+<!--            <input mdbInput type="text" id="form1" class="form-control"  [formControl]="editedCategoryName" />-->
+<!--            <label mdbLabel class="form-label" for="form1">New Category Name</label>-->
+<!--          </mdb-form-control>-->
+          <app-input [formControl]="editedCategoryName" label="New Category Name"></app-input>
         </td>
 
         <td class="text-center">

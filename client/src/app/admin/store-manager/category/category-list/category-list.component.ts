@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../../../services/category.service';
 import { PaginatedList } from '../../../../models/paginatedList';
 import { Category } from '../../../../models/category';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-category-list',
@@ -16,14 +21,25 @@ export class CategoryListComponent implements OnInit {
   updatedCategory: Category = { id: 0, name: '' };
 
   editedCategoryName = new FormControl('', Validators.required);
+  categoryForm: FormGroup = new FormGroup({});
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this.initializeForm();
     this.categoryService.getAllCategories().subscribe({
       next: (result) => {
         this.categories = result;
       },
+    });
+  }
+
+  initializeForm() {
+    this.categoryForm = this.formBuilder.group({
+      categoryName: ['', Validators.required],
     });
   }
 

@@ -16,12 +16,12 @@ import { MdbScrollspyModule } from 'mdb-angular-ui-kit/scrollspy';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { InputComponent } from './input/input.component';
 
 @NgModule({
-  declarations: [FooterComponent],
+  declarations: [FooterComponent, InputComponent],
   imports: [
     CommonModule,
     MdbAccordionModule,
@@ -67,6 +67,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
 
     FooterComponent,
+    InputComponent,
   ],
 })
 export class SharedModule {}
