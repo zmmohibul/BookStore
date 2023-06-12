@@ -16,11 +16,7 @@
         </td >
 
         <td class="text-center">
-<!--          <mdb-form-control>-->
-<!--            <input mdbInput type="text" id="form1" class="form-control"  [formControl]="editedCategoryName" />-->
-<!--            <label mdbLabel class="form-label" for="form1">New Category Name</label>-->
-<!--          </mdb-form-control>-->
-          <app-input [formControl]="editedCategoryName" label="New Category Name"></app-input>
+          <app-input [formControl]="newCategoryName" label="New Category Name"></app-input>
         </td>
 
         <td class="text-center">
@@ -61,20 +57,26 @@
 <hr class="hr hr-blurry" />
 
 <div class="container text-center mx-5">
-  <div class="row row-cols-1 row-cols-md-2 g-4 text-center">
-
-    <div class="col">
+  <div class="row text-center" *ngIf="create.createMode" >
+    <div class="col-8">
       <mdb-form-control>
         <input mdbInput type="text" id="form2" class="form-control" />
         <label mdbLabel class="form-label" for="form2">Category Name</label>
       </mdb-form-control>
     </div>
-    <div class="col ">
+    <div class="col-4">
       <button type="button" class="btn btn-link  btn-rounded">
-        Add New Category
+        Create Category
+      </button>
+      <button type="button" class="btn btn-link  btn-rounded text-danger" (click)="create.createMode = false">
+        Cancel
       </button>
     </div>
   </div>
+
+  <button type="button" class="btn btn-link  btn-rounded" *ngIf="!create.createMode" (click)="openNewCategoryForm()">
+    Add New Category
+  </button>
 </div>
 
 <hr class="hr hr-blurry" />
@@ -98,3 +100,5 @@
     </nav>
   </div>
 </div>
+
+

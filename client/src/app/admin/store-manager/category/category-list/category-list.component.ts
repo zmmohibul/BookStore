@@ -16,12 +16,10 @@ import {
 })
 export class CategoryListComponent implements OnInit {
   categories: PaginatedList<Category> | null = null;
-
   edit = { editMode: false, id: 0 };
+  create = { createMode: false };
   updatedCategory: Category = { id: 0, name: '' };
-
-  editedCategoryName = new FormControl('', Validators.required);
-  categoryForm: FormGroup = new FormGroup({});
+  newCategoryName = new FormControl('', Validators.required);
 
   constructor(
     private categoryService: CategoryService,
@@ -29,7 +27,6 @@ export class CategoryListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initializeForm();
     this.categoryService.getAllCategories().subscribe({
       next: (result) => {
         this.categories = result;
@@ -37,14 +34,20 @@ export class CategoryListComponent implements OnInit {
     });
   }
 
-  initializeForm() {
-    this.categoryForm = this.formBuilder.group({
-      categoryName: ['', Validators.required],
-    });
+  editCategory(id: number) {
+    this.openEditCategoryForm(id);
+    if (this.categories) {
+      this.categories.items = this.categories.items.map((item) => {
+        if (item.id == id) {
+          this.newCategoryName.setValue(item.name);
+        }
+        return item;
+      });
+    }
   }
 
   updateCategory(id: number) {
-    this.updatedCategory = { id, name: this.editedCategoryName.value! };
+    this.updatedCategory = { id, name: this.newCategoryName.value! };
     this.categoryService.updateCategory(id, this.updatedCategory).subscribe({
       next: (result) => {
         if (this.categories) {
@@ -57,18 +60,16 @@ export class CategoryListComponent implements OnInit {
         }
       },
     });
-    this.edit = { id, editMode: !this.edit.editMode };
+    this.edit = { id, editMode: false };
   }
 
-  editCategory(id: number) {
-    this.edit = { id, editMode: !this.edit.editMode };
-    if (this.categories) {
-      this.categories.items = this.categories.items.map((item) => {
-        if (item.id == id) {
-          this.editedCategoryName.setValue(item.name);
-        }
-        return item;
-      });
-    }
+  openNewCategoryForm() {
+    this.create = { createMode: true };
+    this.edit = { editMode: false, id: 0 };
+  }
+
+  openEditCategoryForm(id: number) {
+    this.edit = { editMode: true, id };
+    this.create = { createMode: false };
   }
 }
