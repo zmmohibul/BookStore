@@ -17,7 +17,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -39,8 +39,10 @@ import { HttpClientModule } from '@angular/common/http';
     MdbTabsModule,
     MdbTooltipModule,
     MdbValidationModule,
+
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule,
   ],
   exports: [
     CommonModule,
@@ -62,6 +64,7 @@ import { HttpClientModule } from '@angular/common/http';
 
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule,
 
     FooterComponent,
   ],

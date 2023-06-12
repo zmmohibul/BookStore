@@ -21,4 +21,11 @@ export class CategoryService {
   getCategoryById(id: number) {
     return this.http.get<CategoryDetail>(`${this.baseUrl}/categories/${id}`);
   }
+
+  updateCategory(id: number, category: Category) {
+    return this.http.put<Category>(
+      `${this.baseUrl}/categories/${id}`,
+      category
+    );
+  }
 }
