@@ -18,25 +18,24 @@ import { PaginationParams } from '../../../../models/paginationParams';
   styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent implements OnInit {
-  categories: PaginatedList<Category> | null = null;
+  categories: PaginatedList<Category> = new PaginatedList<Category>();
   edit = { editMode: false, id: 0 };
   create = { createMode: false };
   newCategoryName = new FormControl('', Validators.required);
   paginationParams: PaginationParams = new PaginationParams();
 
-  constructor(
-    private categoryService: CategoryService,
-    private formBuilder: FormBuilder
-  ) {}
+  constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.getCategories();
   }
 
   getCategories() {
+    this.paginationParams.pageSize = 48;
     this.categoryService.getAllCategories(this.paginationParams).subscribe({
       next: (result) => {
         this.categories = result;
+        this.categories.pageSize = result.items.length;
       },
     });
   }
@@ -83,7 +82,8 @@ export class CategoryListComponent implements OnInit {
       this.categoryService.createCategory(newCategory).subscribe({
         next: (response) => {
           const cat: Category = { ...response };
-          this.categories?.items.push(cat);
+          this.categories.items.push(cat);
+          this.categories.count += 1;
           this.create.createMode = false;
         },
         error: (err) => {
@@ -99,11 +99,10 @@ export class CategoryListComponent implements OnInit {
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
       next: () => {
-        if (this.categories) {
-          this.categories.items = this.categories.items.filter(
-            (item) => item.id != id
-          );
-        }
+        this.categories.items = this.categories.items.filter(
+          (item) => item.id != id
+        );
+        this.categories.count -= 1;
       },
     });
   }
@@ -120,7 +119,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    console.log(event.pageIndex);
     this.paginationParams.pageSize = event.pageSize;
     this.paginationParams.pageNumber = event.pageIndex + 1;
     this.getCategories();

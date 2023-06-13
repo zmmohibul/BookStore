@@ -10,8 +10,7 @@
   </tr>
   </thead>
   <tbody>
-  <ng-container *ngIf="categories">
-    <tr *ngFor="let item of categories.items">
+  <ng-container *ngIf="categories"><tr *ngFor="let item of categories.items">
       <ng-container *ngIf="(edit.editMode && edit.id == item.id); else elseBlock">
         <td class="text-center">
           <p class="fw-normal mb-1 ">Update Category: Id - {{ item.id }}</p>

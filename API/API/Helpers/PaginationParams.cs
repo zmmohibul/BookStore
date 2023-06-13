@@ -2,7 +2,7 @@ namespace API.Helpers;
 
 public class PaginationParams
 {
-    private int MaxPageSize = 24;
+    private int MaxPageSize = 48;
 
     public int PageNumber { get; set; } = 1;
     

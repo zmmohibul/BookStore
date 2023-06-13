@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, of } from 'rxjs';
 import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
@@ -13,20 +13,33 @@ import { PaginationParams } from '../models/paginationParams';
 })
 export class CategoryService {
   baseUrl = environment.apiUrl;
-  private categories: Category[] = [];
+  private categories: PaginatedList<Category> = new PaginatedList<Category>();
+  categoryCache = new Map();
 
   constructor(private http: HttpClient) {}
 
   getAllCategories(paginationParams: PaginationParams) {
-    const str = Object.values(paginationParams).join('-');
+    const queryStr = Object.values(paginationParams).join('-');
+    const response = this.categoryCache.get(queryStr);
+    if (response) {
+      return of(response);
+    }
+
+    // if (this.categories.items.length) {
+    //   return of(this.categories);
+    // }
 
     const params = { ...paginationParams };
-    return this.http.get<PaginatedList<Category>>(
-      `${this.baseUrl}/categories`,
-      {
+    return this.http
+      .get<PaginatedList<Category>>(`${this.baseUrl}/categories`, {
         params,
-      }
-    );
+      })
+      .pipe(
+        map((result) => {
+          this.categoryCache.set(queryStr, result);
+          return result;
+        })
+      );
   }
 
   getCategoryById(id: number) {
