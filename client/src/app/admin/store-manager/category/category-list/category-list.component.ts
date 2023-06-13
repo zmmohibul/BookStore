@@ -9,6 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { CreateCategory } from '../../../../models/createCategory';
+import { PageEvent } from '@angular/material/paginator';
+import { PaginationParams } from '../../../../models/paginationParams';
 
 @Component({
   selector: 'app-category-list',
@@ -20,6 +22,7 @@ export class CategoryListComponent implements OnInit {
   edit = { editMode: false, id: 0 };
   create = { createMode: false };
   newCategoryName = new FormControl('', Validators.required);
+  paginationParams: PaginationParams = new PaginationParams();
 
   constructor(
     private categoryService: CategoryService,
@@ -27,7 +30,11 @@ export class CategoryListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categoryService.getAllCategories().subscribe({
+    this.getCategories();
+  }
+
+  getCategories() {
+    this.categoryService.getAllCategories(this.paginationParams).subscribe({
       next: (result) => {
         this.categories = result;
       },
@@ -98,5 +105,12 @@ export class CategoryListComponent implements OnInit {
   openEditCategoryForm(id: number) {
     this.edit = { editMode: true, id };
     this.create = { createMode: false };
+  }
+
+  onPageChange(event: PageEvent) {
+    console.log(event.pageIndex);
+    this.paginationParams.pageSize = event.pageSize;
+    this.paginationParams.pageNumber = event.pageIndex + 1;
+    this.getCategories();
   }
 }

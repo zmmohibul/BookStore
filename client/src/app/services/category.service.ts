@@ -6,6 +6,7 @@ import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
 import { CreateCategory } from '../models/createCategory';
+import { PaginationParams } from '../models/paginationParams';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +16,14 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  getAllCategories() {
-    return this.http.get<PaginatedList<Category>>(`${this.baseUrl}/categories`);
+  getAllCategories(paginationParams: PaginationParams) {
+    const params = { ...paginationParams };
+    return this.http.get<PaginatedList<Category>>(
+      `${this.baseUrl}/categories`,
+      {
+        params,
+      }
+    );
   }
 
   getCategoryById(id: number) {

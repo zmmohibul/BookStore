@@ -24,6 +24,7 @@ public class CategoryRepository : ICategoryRepository
         var query = _dataContext.Categories
             .Where(category => category.ParentId == null)
             .AsNoTracking()
+            .OrderBy(cat => cat.Name)
             .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider);
         
         

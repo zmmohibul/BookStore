@@ -1,4 +1,6 @@
-<p class="h3">Categories <span class="fs-4 text-muted fw-normal "> | 11 out of 42</span></p>
+<p class="h3 mb-4">Categories</p>
+<hr class="hr hr-blurry" />
+
 <table class="table align-middle mb-0 bg-white">
   <thead class="bg-light">
   <tr>
@@ -51,52 +53,58 @@
         </td>
       </ng-template>
     </tr>
+    <tr class="text-center">
+      <td colspan="3">
+        <div class="row text-center" *ngIf="create.createMode" >
+          <div class="col-8">
+            <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
+          </div>
+
+          <div class="col-4">
+            <button type="button" class="btn btn-link  btn-rounded" (click)="createCategory()">
+              Create Category
+            </button>
+            <button type="button" class="btn btn-link  btn-rounded text-danger" (click)="create.createMode = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-link  btn-rounded" *ngIf="!create.createMode" (click)="openNewCategoryForm()">
+          Add New Category
+        </button>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        <ng-container *ngIf="categories">
+          <mat-paginator [length]="categories.count"
+                         [pageSize]="categories.pageSize"
+                         [pageSizeOptions]="[5, 10, 25, 100]"
+                         showFirstLastButtons
+                         (page)="onPageChange($event)"
+                         aria-label="Select page">
+          </mat-paginator>
+        </ng-container>
+      </td>
+    </tr>
   </ng-container>
   </tbody>
 </table>
-<hr class="hr hr-blurry" />
 
-<div class="container text-center mx-5">
-  <div class="row text-center" *ngIf="create.createMode" >
-    <div class="col-8">
-      <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
-    </div>
-
-    <div class="col-4">
-      <button type="button" class="btn btn-link  btn-rounded" (click)="createCategory()">
-        Create Category
-      </button>
-      <button type="button" class="btn btn-link  btn-rounded text-danger" (click)="create.createMode = false">
-        Cancel
-      </button>
-    </div>
-  </div>
-
-  <button type="button" class="btn btn-link  btn-rounded" *ngIf="!create.createMode" (click)="openNewCategoryForm()">
-    Add New Category
-  </button>
-</div>
+<!--<ng-container *ngIf="categories">-->
+<!--  <mat-paginator [length]="categories.count"-->
+<!--                 [pageSize]="categories.pageSize"-->
+<!--                 [pageSizeOptions]="[5, 10, 25, 100]"-->
+<!--                 showFirstLastButtons-->
+<!--                 (page)="onPageEvent($event)"-->
+<!--                 aria-label="Select page">-->
+<!--  </mat-paginator>-->
+<!--</ng-container>-->
 
 <hr class="hr hr-blurry" />
 
-<div class="d-flex justify-content-center align-items-center">
-  <div class="my-3">
-    <nav aria-label="...">
-      <ul class="pagination pagination-circle">
-        <li class="page-item">
-          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active" aria-current="page">
-          <a class="page-link" href="#">2 <span class="visually-hidden">(current)</span></a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</div>
+
 
 
