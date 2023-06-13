@@ -43,4 +43,8 @@ export class CategoryService {
       category
     );
   }
+
+  deleteCategory(id: number) {
+    return this.http.delete(`${this.baseUrl}/categories/${id}`);
+  }
 }

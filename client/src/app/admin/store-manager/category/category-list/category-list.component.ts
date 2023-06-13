@@ -96,6 +96,18 @@ export class CategoryListComponent implements OnInit {
     }
   }
 
+  deleteCategory(id: number) {
+    this.categoryService.deleteCategory(id).subscribe({
+      next: () => {
+        if (this.categories) {
+          this.categories.items = this.categories.items.filter(
+            (item) => item.id != id
+          );
+        }
+      },
+    });
+  }
+
   openNewCategoryForm() {
     this.create = { createMode: true };
     this.edit = { editMode: false, id: 0 };
