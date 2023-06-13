@@ -12,11 +12,11 @@
     <tr *ngFor="let item of categories.items">
       <ng-container *ngIf="(edit.editMode && edit.id == item.id); else elseBlock">
         <td class="text-center">
-          <p class="fw-normal mb-1 ">Update Category Id - {{ item.id }}</p>
+          <p class="fw-normal mb-1 ">Update Category: Id - {{ item.id }}</p>
         </td >
 
         <td class="text-center">
-          <app-input [formControl]="newCategoryName" label="New Category Name"></app-input>
+          <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
         </td>
 
         <td class="text-center">
@@ -59,13 +59,11 @@
 <div class="container text-center mx-5">
   <div class="row text-center" *ngIf="create.createMode" >
     <div class="col-8">
-      <mdb-form-control>
-        <input mdbInput type="text" id="form2" class="form-control" />
-        <label mdbLabel class="form-label" for="form2">Category Name</label>
-      </mdb-form-control>
+      <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
     </div>
+
     <div class="col-4">
-      <button type="button" class="btn btn-link  btn-rounded">
+      <button type="button" class="btn btn-link  btn-rounded" (click)="createCategory()">
         Create Category
       </button>
       <button type="button" class="btn btn-link  btn-rounded text-danger" (click)="create.createMode = false">

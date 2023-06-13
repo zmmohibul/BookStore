@@ -57,11 +57,11 @@ public class CategoryRepository : ICategoryRepository
         };
     }
 
-    public async Task<Result<CategoryDto>> CreateCategory(CreateCategoryDto createCategoryDto)
+    public async Task<Result<CategoryWithSubCategoriesDto>> CreateCategory(CreateCategoryDto createCategoryDto)
     {
         if (await CategoryNameExist(createCategoryDto))
         {
-            return new Result<CategoryDto>()
+            return new Result<CategoryWithSubCategoriesDto>()
             {
                 Data = null,
                 StatusCode = 400,
@@ -91,10 +91,11 @@ public class CategoryRepository : ICategoryRepository
         { 
             var data = await _dataContext.Categories
                 .Where(cat => cat.Name.Equals(createCategoryDto.Name))
-                .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
+                .Include(cat => cat.SubCategories)
+                .ProjectTo<CategoryWithSubCategoriesDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
 
-            return new Result<CategoryDto>()
+            return new Result<CategoryWithSubCategoriesDto>()
             {
                 Data = data,
                 IsSuccess = true,
@@ -102,7 +103,7 @@ public class CategoryRepository : ICategoryRepository
             };
         }
         
-        return new Result<CategoryDto>()
+        return new Result<CategoryWithSubCategoriesDto>()
         {
             Data = null,
             StatusCode = 400,
@@ -111,10 +112,11 @@ public class CategoryRepository : ICategoryRepository
         };
     }
 
-    public async Task<Result<CategoryDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto)
+    public async Task<Result<CategoryWithSubCategoriesDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto)
     {
         var category = await _dataContext.Categories
             .Where(cat => cat.Id == id)
+            .Include(cat => cat.SubCategories)
             .SingleOrDefaultAsync();
         
         if (category == null)
@@ -124,7 +126,7 @@ public class CategoryRepository : ICategoryRepository
 
         if (category.Name.Equals(updateCategoryDto.Name))
         {
-            return new Result<CategoryDto>()
+            return new Result<CategoryWithSubCategoriesDto>()
             {
                 Data = null,
                 StatusCode = 400,
@@ -137,15 +139,15 @@ public class CategoryRepository : ICategoryRepository
         
         if (await _dataContext.SaveChangesAsync() > 0)
         {
-            return new Result<CategoryDto>()
+            return new Result<CategoryWithSubCategoriesDto>()
             {
-                Data = _mapper.Map<CategoryDto>(category),
+                Data = _mapper.Map<CategoryWithSubCategoriesDto>(category),
                 IsSuccess = true,
                 StatusCode = 200
             };
         }
         
-        return new Result<CategoryDto>()
+        return new Result<CategoryWithSubCategoriesDto>()
         {
             Data = null,
             StatusCode = 400,
@@ -154,7 +156,7 @@ public class CategoryRepository : ICategoryRepository
         };
     }
     
-    public async Task<Result<CategoryDto>> DeleteCategory(int id)
+    public async Task<Result<CategoryWithSubCategoriesDto>> DeleteCategory(int id)
     {
         var category = await _dataContext.Categories.SingleOrDefaultAsync(cat => cat.Id == id);
         if (category == null)
@@ -166,7 +168,7 @@ public class CategoryRepository : ICategoryRepository
         
         if (await _dataContext.SaveChangesAsync() > 0)
         {
-            return new Result<CategoryDto>()
+            return new Result<CategoryWithSubCategoriesDto>()
             {
                 Data = null,
                 IsSuccess = true,
@@ -174,7 +176,7 @@ public class CategoryRepository : ICategoryRepository
             };
         }
         
-        return new Result<CategoryDto>()
+        return new Result<CategoryWithSubCategoriesDto>()
         {
             Data = null,
             StatusCode = 400,
@@ -188,9 +190,9 @@ public class CategoryRepository : ICategoryRepository
         return await _dataContext.Categories.AnyAsync(category => category.Name.Equals(createCategoryDto.Name));
     }
 
-    private Result<CategoryDto> NotFoundResult(string message)
+    private Result<CategoryWithSubCategoriesDto> NotFoundResult(string message)
     {
-        return new Result<CategoryDto>()
+        return new Result<CategoryWithSubCategoriesDto>()
         {
             Data = null,
             StatusCode = 404,

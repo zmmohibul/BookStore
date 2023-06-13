@@ -3,11 +3,11 @@
     mdbValidate
     mdbInput
     type={{type}}
-    id="form1"
+    id={{label}}
     class="form-control"
     [formControl]="control"
   />
-  <label mdbLabel class="form-label" for="form1">{{label}}</label>
+  <label mdbLabel class="form-label" for={{label}}>{{label}}</label>
   <mdb-error *ngIf="control.errors?.['required'] && (control?.dirty || control?.touched)">
     {{label}} is required
   </mdb-error>
@@ -24,5 +24,8 @@
     Passwords do not match
   </mdb-error>
 
-  <mdb-success *ngIf="control?.valid && (control?.dirty || control?.touched)">Looks good!</mdb-success>
+  <mdb-error *ngIf="control.errors?.['categoryNameTaken'] && (control?.dirty || control?.touched)">
+    Category Name is Already in use
+  </mdb-error>
+
 </mdb-form-control>

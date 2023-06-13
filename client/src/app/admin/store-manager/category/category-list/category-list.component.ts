@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { CreateCategory } from '../../../../models/createCategory';
 
 @Component({
   selector: 'app-category-list',
@@ -18,7 +19,6 @@ export class CategoryListComponent implements OnInit {
   categories: PaginatedList<Category> | null = null;
   edit = { editMode: false, id: 0 };
   create = { createMode: false };
-  updatedCategory: Category = { id: 0, name: '' };
   newCategoryName = new FormControl('', Validators.required);
 
   constructor(
@@ -47,25 +47,52 @@ export class CategoryListComponent implements OnInit {
   }
 
   updateCategory(id: number) {
-    this.updatedCategory = { id, name: this.newCategoryName.value! };
-    this.categoryService.updateCategory(id, this.updatedCategory).subscribe({
-      next: (result) => {
-        if (this.categories) {
-          this.categories.items = this.categories.items.map((item) => {
-            if (item.id == result.id) {
-              item.name = result.name;
-            }
-            return item;
-          });
-        }
-      },
-    });
-    this.edit = { id, editMode: false };
+    if (this.newCategoryName.value) {
+      const updatedCategory: Category = {
+        id,
+        name: this.newCategoryName.value,
+      };
+      this.categoryService.updateCategory(id, updatedCategory).subscribe({
+        next: (result) => {
+          if (this.categories) {
+            this.categories.items = this.categories.items.map((item) => {
+              if (item.id == result.id) {
+                item.name = result.name;
+              }
+              return item;
+            });
+          }
+        },
+      });
+      this.edit = { id, editMode: false };
+    } else {
+      return;
+    }
+  }
+
+  createCategory() {
+    if (this.newCategoryName.value) {
+      const newCategory: CreateCategory = { name: this.newCategoryName.value };
+      this.categoryService.createCategory(newCategory).subscribe({
+        next: (response) => {
+          const cat: Category = { ...response };
+          this.categories?.items.push(cat);
+          this.create.createMode = false;
+        },
+        error: (err) => {
+          this.newCategoryName.setErrors({ categoryNameTaken: true });
+          console.log(err.error.errorMessage);
+        },
+      });
+    } else {
+      return;
+    }
   }
 
   openNewCategoryForm() {
     this.create = { createMode: true };
     this.edit = { editMode: false, id: 0 };
+    this.newCategoryName.setValue('');
   }
 
   openEditCategoryForm(id: number) {

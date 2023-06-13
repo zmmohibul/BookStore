@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
+import { CreateCategory } from '../models/createCategory';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,13 @@ export class CategoryService {
 
   getCategoryById(id: number) {
     return this.http.get<CategoryDetail>(`${this.baseUrl}/categories/${id}`);
+  }
+
+  createCategory(category: CreateCategory) {
+    return this.http.post<CategoryDetail>(
+      `${this.baseUrl}/categories`,
+      category
+    );
   }
 
   updateCategory(id: number, category: Category) {
