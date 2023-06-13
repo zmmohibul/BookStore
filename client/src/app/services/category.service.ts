@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
@@ -13,10 +13,13 @@ import { PaginationParams } from '../models/paginationParams';
 })
 export class CategoryService {
   baseUrl = environment.apiUrl;
+  private categories: Category[] = [];
 
   constructor(private http: HttpClient) {}
 
   getAllCategories(paginationParams: PaginationParams) {
+    const str = Object.values(paginationParams).join('-');
+
     const params = { ...paginationParams };
     return this.http.get<PaginatedList<Category>>(
       `${this.baseUrl}/categories`,
@@ -31,10 +34,13 @@ export class CategoryService {
   }
 
   createCategory(category: CreateCategory) {
-    return this.http.post<CategoryDetail>(
-      `${this.baseUrl}/categories`,
-      category
-    );
+    return this.http
+      .post<CategoryDetail>(`${this.baseUrl}/categories`, category)
+      .pipe(
+        map((result) => {
+          return result;
+        })
+      );
   }
 
   updateCategory(id: number, category: Category) {
