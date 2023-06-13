@@ -1,0 +1,99 @@
+<p class="h3 mb-4">Categories</p>
+<hr class="hr hr-blurry" />
+
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+  <tr>
+    <th class="text-center">Id</th>
+    <th class="text-center">Name</th>
+    <th class="text-center">Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngIf="categories"><tr *ngFor="let item of categories.items">
+    <ng-container *ngIf="(edit.editMode && edit.id == item.id); else elseBlock">
+      <td class="text-center">
+        <p class="fw-normal mb-1 ">Update Category: Id - {{ item.id }}</p>
+      </td >
+
+      <td class="text-center">
+        <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
+      </td>
+
+      <td class="text-center">
+        <button (click)="updateCategory(item.id)" type="button" class="btn btn-link btn-sm btn-rounded">
+          Update
+        </button>
+        <button (click)="edit.editMode = false" type="button" class="btn btn-link btn-sm btn-rounded text-danger">
+          Cancel
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-template #elseBlock>
+      <td class="text-center">
+        <p class="fw-normal mb-1 ">{{ item.id }}</p>
+      </td >
+
+      <td class="text-center">
+        <p class="fw-normal mb-1 ">{{ item.name }}</p>
+      </td>
+
+      <td class="text-center">
+        <button type="button" class="btn btn-link btn-sm btn-rounded">
+          View SubCategories
+        </button>
+        <button (click)="editCategory(item.id)" type="button" class="btn btn-link btn-sm btn-rounded">
+          Edit
+        </button>
+        <button (click)="deleteCategory(item.id)" type="button" class="btn btn-link btn-sm btn-rounded text-danger">
+          Delete
+        </button>
+      </td>
+    </ng-template>
+  </tr>
+    <tr class="text-center">
+      <td colspan="3">
+        <div class="row text-center" *ngIf="create.createMode" >
+          <div class="col-8">
+            <app-input [formControl]="newCategoryName" label="Category Name"></app-input>
+          </div>
+
+          <div class="col-4">
+            <button type="button" class="btn btn-link  btn-rounded" (click)="createCategory()">
+              Create Category
+            </button>
+            <button type="button" class="btn btn-link  btn-rounded text-danger" (click)="create.createMode = false">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-link  btn-rounded" *ngIf="!create.createMode" (click)="openNewCategoryForm()">
+          Add New Category
+        </button>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        <ng-container *ngIf="categories">
+          <mat-paginator [length]="categories.count"
+                         [pageSize]="categories.pageSize"
+                         [pageSizeOptions]="[5, 10, 25, 100]"
+                         showFirstLastButtons
+                         (page)="onPageChange($event)"
+                         aria-label="Select page">
+          </mat-paginator>
+        </ng-container>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
+
+<hr class="hr hr-blurry" />
+
+
+
+

@@ -19,11 +19,11 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { InputComponent } from './input/input.component';
-import { PaginatorComponent } from './paginator/paginator.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  declarations: [FooterComponent, InputComponent, PaginatorComponent],
+  declarations: [FooterComponent, InputComponent],
   imports: [
     CommonModule,
     MdbAccordionModule,
@@ -74,7 +74,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
     FooterComponent,
     InputComponent,
-    PaginatorComponent,
   ],
 })
 export class SharedModule {}
