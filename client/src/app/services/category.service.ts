@@ -16,6 +16,8 @@ export class CategoryService {
   private categories: PaginatedList<Category> = new PaginatedList<Category>();
   categoryCache = new Map();
 
+  subCategories = new Map();
+
   constructor(private http: HttpClient) {}
 
   getAllCategories(paginationParams: PaginationParams) {
@@ -24,10 +26,6 @@ export class CategoryService {
     if (response) {
       return of(response);
     }
-
-    // if (this.categories.items.length) {
-    //   return of(this.categories);
-    // }
 
     const params = { ...paginationParams };
     return this.http
@@ -43,7 +41,34 @@ export class CategoryService {
   }
 
   getCategoryById(id: number) {
-    return this.http.get<CategoryDetail>(`${this.baseUrl}/categories/${id}`);
+    const response = this.subCategories.get(id);
+    if (response) {
+      return of(response);
+    }
+
+    return this.http
+      .get<CategoryDetail>(`${this.baseUrl}/categories/${id}`)
+      .pipe(
+        map((result) => {
+          this.subCategories.set(result.parentId, result.subCategories);
+        })
+      );
+  }
+
+  getSubCategories(parentId: number) {
+    const response = this.subCategories.get(parentId);
+    if (response) {
+      return of(response);
+    }
+
+    return this.http
+      .get<CategoryDetail>(`${this.baseUrl}/categories/${parentId}`)
+      .pipe(
+        map((result) => {
+          this.subCategories.set(result.parentId, result);
+          return result;
+        })
+      );
   }
 
   createCategory(category: CreateCategory) {

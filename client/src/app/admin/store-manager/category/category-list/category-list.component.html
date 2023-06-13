@@ -1,1 +1,5 @@
-<app-category-table></app-category-table>
+<app-category-table (viewSubCategory)="onViewSubCategoryClick($event)" [categories]="categories.items" heading="Categories"></app-category-table>
+
+<ng-container *ngFor="let item of subCategories">
+  <app-category-table (close)="closeSubCategory($event)" [parentId]="item.parentId" (viewSubCategory)="onViewSubCategoryClick($event)" [categories]="item.subCategories" heading={{item.heading}}></app-category-table>
+</ng-container>

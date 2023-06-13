@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
-import { PaginatedList } from '../../../../models/paginatedList';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Category } from '../../../../models/category';
 import { FormControl, Validators } from '@angular/forms';
-import { PaginationParams } from '../../../../models/paginationParams';
 import { CategoryService } from '../../../../services/category.service';
 import { ToastrService } from 'ngx-toastr';
 import { CreateCategory } from '../../../../models/createCategory';
-import { PageEvent } from '@angular/material/paginator';
+import { CategoryDetail } from '../../../../models/categoryDetail';
 
 @Component({
   selector: 'app-category-table',
@@ -14,35 +12,25 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./category-table.component.scss'],
 })
 export class CategoryTableComponent {
-  categories: PaginatedList<Category> = new PaginatedList<Category>();
+  @Output() viewSubCategory = new EventEmitter();
+  @Output() close = new EventEmitter();
+  @Input() categories: Category[] = [];
+  @Input() heading: string = '';
+  @Input() parentId: number = 0;
+
   edit = { editMode: false, id: 0 };
   create = { createMode: false };
   newCategoryName = new FormControl('', Validators.required);
-  paginationParams: PaginationParams = new PaginationParams();
 
   constructor(
     private categoryService: CategoryService,
     private toastr: ToastrService
   ) {}
 
-  ngOnInit(): void {
-    this.getCategories();
-  }
-
-  getCategories() {
-    this.paginationParams.pageSize = 48;
-    this.categoryService.getAllCategories(this.paginationParams).subscribe({
-      next: (result) => {
-        this.categories = result;
-        this.categories.pageSize = result.items.length;
-      },
-    });
-  }
-
   editCategory(id: number) {
     this.openEditCategoryForm(id);
     if (this.categories) {
-      this.categories.items = this.categories.items.map((item) => {
+      this.categories = this.categories.map((item) => {
         if (item.id == id) {
           this.newCategoryName.setValue(item.name);
         }
@@ -60,7 +48,7 @@ export class CategoryTableComponent {
       this.categoryService.updateCategory(id, updatedCategory).subscribe({
         next: (result) => {
           if (this.categories) {
-            this.categories.items = this.categories.items.map((item) => {
+            this.categories = this.categories.map((item) => {
               if (item.id == result.id) {
                 item.name = result.name;
               }
@@ -78,11 +66,14 @@ export class CategoryTableComponent {
   createCategory() {
     if (this.newCategoryName.value) {
       const newCategory: CreateCategory = { name: this.newCategoryName.value };
+      if (this.parentId) {
+        newCategory.parentId = this.parentId;
+      }
+
       this.categoryService.createCategory(newCategory).subscribe({
         next: (response) => {
           const cat: Category = { ...response };
-          this.categories.items.push(cat);
-          this.categories.count += 1;
+          this.categories.push(response);
           this.create.createMode = false;
           this.toastr.success(
             `'${cat.name}' Added to Categories`,
@@ -102,7 +93,7 @@ export class CategoryTableComponent {
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
       next: () => {
-        this.categories.items = this.categories.items.filter((item) => {
+        this.categories = this.categories.filter((item) => {
           if (item.id != id) {
             return item;
           } else {
@@ -113,7 +104,6 @@ export class CategoryTableComponent {
             return null;
           }
         });
-        this.categories.count -= 1;
       },
     });
   }
@@ -129,9 +119,11 @@ export class CategoryTableComponent {
     this.create = { createMode: false };
   }
 
-  onPageChange(event: PageEvent) {
-    this.paginationParams.pageSize = event.pageSize;
-    this.paginationParams.pageNumber = event.pageIndex + 1;
-    this.getCategories();
+  onViewSubCategoryClick(item: Category) {
+    this.viewSubCategory.emit(item);
+  }
+
+  closeCategory() {
+    this.close.emit(this.heading);
   }
 }
