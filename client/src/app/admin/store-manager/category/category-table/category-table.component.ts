@@ -21,6 +21,7 @@ export class CategoryTableComponent {
   edit = { editMode: false, id: 0 };
   create = { createMode: false };
   newCategoryName = new FormControl('', Validators.required);
+  @Input() loading = true;
 
   constructor(
     private categoryService: CategoryService,

@@ -13,11 +13,13 @@ import { PageEvent } from '@angular/material/paginator';
 import { PaginationParams } from '../../../../models/paginationParams';
 import { ToastrService } from 'ngx-toastr';
 import { Event } from '@angular/router';
+import { delay } from 'rxjs';
 
-interface subCategoryDict {
-  heading: string;
-  subCategories: Category[];
-  parentId: number;
+class subCategoryDict {
+  loading: boolean = true;
+  heading: string = '';
+  subCategories: Category[] = [];
+  parentId: number = 0;
 }
 @Component({
   selector: 'app-category-list',
@@ -49,22 +51,33 @@ export class CategoryListComponent implements OnInit {
   }
 
   onViewSubCategoryClick(item: Category) {
-    this.categoryService.getSubCategories(item.id).subscribe({
-      next: (result) => {
-        if (result?.length == 0) {
-          this.toastr.error('No Sub-Categories found');
-          return;
-        }
-        this.subCategories = [
-          ...this.subCategories,
-          {
-            heading: `Sub-Categories of ${item.name}`,
-            subCategories: result?.subCategories,
-            parentId: result?.id,
-          },
-        ];
+    const headingString = `Sub-Categories of ${item.name}`;
+    this.subCategories = [
+      ...this.subCategories,
+      {
+        heading: headingString,
+        subCategories: [],
+        loading: true,
+        parentId: 0,
       },
-    });
+    ];
+
+    this.categoryService
+      .getSubCategories(item.id)
+      .pipe(delay(1000))
+      .subscribe({
+        next: (result) => {
+          this.subCategories = this.subCategories.map((item) => {
+            if (item.heading === headingString) {
+              item.subCategories = result?.subCategories;
+              item.loading = false;
+              item.parentId = result?.parentId;
+            }
+
+            return item;
+          });
+        },
+      });
   }
 
   closeSubCategory(heading: string) {
