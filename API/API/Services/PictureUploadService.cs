@@ -22,7 +22,7 @@ public class PictureUploadService : IPictureUploadService
         _cloudinary = new Cloudinary(acc);
     }
     
-    public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
+    public async Task<ImageUploadResult> AddPictureAsync(IFormFile file)
     {
         var uploadResult = new ImageUploadResult();
 

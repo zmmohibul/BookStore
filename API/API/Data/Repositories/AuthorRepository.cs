@@ -1,3 +1,4 @@
+using API.DTOs;
 using API.DTOs.Author;
 using API.Entities.BookAggregate;
 using API.Helpers;
@@ -11,11 +12,36 @@ public class AuthorRepository : IAuthorRepository
 {
     private readonly DataContext _dataContext;
     private readonly IMapper _mapper;
+    private readonly IPictureUploadService _pictureUploadService;
 
-    public AuthorRepository(DataContext dataContext, IMapper mapper)
+    public AuthorRepository(DataContext dataContext, IMapper mapper, IPictureUploadService pictureUploadService)
     {
         _dataContext = dataContext;
         _mapper = mapper;
+        _pictureUploadService = pictureUploadService;
+    }
+
+    public async Task<Result<AuthorDto>> GetAuthorById(int authorId)
+    {
+        var author = await _dataContext.Authors
+            .Include(author => author.AuthorPicture)
+            .SingleOrDefaultAsync(author => author.Id == authorId);
+
+        if (author == null)
+        {
+            return new Result<AuthorDto>()
+            {
+                IsSuccess = false,
+                StatusCode = 404,
+                ErrorMessage = $"No author found with id {authorId}"
+            };
+        }
+
+        return new Result<AuthorDto>()
+        {
+            StatusCode = 200,
+            Data = _mapper.Map<AuthorDto>(author)
+        };
     }
     
     public async Task<Result<AuthorDto>> CreateAuthor(CreateAuthorDto createAuthorDto)
@@ -50,6 +76,59 @@ public class AuthorRepository : IAuthorRepository
             StatusCode = 201
         };
 
+    }
+
+    public async Task<Result<PictureDto>> AddAuthorPicture(int authorId, IFormFile file)
+    {
+        var author = await _dataContext.Authors.FindAsync(authorId);
+
+        if (author == null)
+        {
+            return new Result<PictureDto>()
+            {
+                IsSuccess = false,
+                StatusCode = 404,
+                ErrorMessage = $"No author found with id {authorId}"
+            };
+        }
+
+        var result = await _pictureUploadService.AddPictureAsync(file);
+
+        if (result.Error != null)
+        {
+            return new Result<PictureDto>()
+            {
+                IsSuccess = false,
+                StatusCode = 400,
+                ErrorMessage = result.Error.Message
+            };
+        }
+
+        var authorPicture = new AuthorPicture()
+        {
+            Url = result.SecureUrl.AbsoluteUri,
+            PublicId = result.PublicId,
+            IsMain = true
+        };
+
+        author.AuthorPicture = authorPicture;
+
+        if (await _dataContext.SaveChangesAsync() > 0)
+        {
+            return new Result<PictureDto>()
+            {
+                Data = _mapper.Map<PictureDto>(authorPicture),
+                StatusCode = 200,
+                IsSuccess = true
+            };
+        }
+
+        return new Result<PictureDto>()
+        {
+            IsSuccess = false,
+            StatusCode = 400,
+            ErrorMessage = "Problem adding picture"
+        };
     }
 
     public async Task<bool> AuthorNameExist(string authorName)

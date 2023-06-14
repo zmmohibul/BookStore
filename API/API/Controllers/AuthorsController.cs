@@ -13,6 +13,12 @@ public class AuthorsController : BaseApiController
         _authorRepository = authorRepository;
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAuthorById(int id)
+    {
+        return HandleResult(await _authorRepository.GetAuthorById(id));
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAuthor(CreateAuthorDto createAuthorDto)
     {
@@ -24,5 +30,11 @@ public class AuthorsController : BaseApiController
         }
 
         return HandleResult(result);
+    }
+
+    [HttpPost("{id}/add-picture")]
+    public async Task<IActionResult> AddAuthorPicture(int id, IFormFile file)
+    {
+        return HandleResult(await _authorRepository.AddAuthorPicture(id, file));
     }
 }
