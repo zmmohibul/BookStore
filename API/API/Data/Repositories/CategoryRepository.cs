@@ -159,10 +159,23 @@ public class CategoryRepository : ICategoryRepository
     
     public async Task<Result<CategoryWithSubCategoriesDto>> DeleteCategory(int id)
     {
-        var category = await _dataContext.Categories.SingleOrDefaultAsync(cat => cat.Id == id);
+        var category = await _dataContext.Categories
+            .Include(cat => cat.SubCategories)
+            .SingleOrDefaultAsync(cat => cat.Id == id);
         if (category == null)
         {
             return NotFoundResult($"No Category found with the given id - {id} to delete");
+        }
+
+        if (category.SubCategories.Count > 0)
+        {
+            return new Result<CategoryWithSubCategoriesDto>()
+            {
+                Data = null,
+                StatusCode = 400,
+                ErrorMessage = $"{category.Name} has {category.SubCategories.Count} Sub-Categories. Delete them first",
+                IsSuccess = false
+            };
         }
 
         _dataContext.Categories.Remove(category);
