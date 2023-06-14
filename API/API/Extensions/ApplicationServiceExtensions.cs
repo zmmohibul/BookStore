@@ -21,6 +21,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
 
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
         return services;
     }
 }

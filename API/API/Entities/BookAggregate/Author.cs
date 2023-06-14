@@ -10,8 +10,8 @@ public class Author
     public string Name { get; set; }
     public string Bio { get; set; }
 
-    public int AuthorPictureId { get; set; }
-    public AuthorPicture AuthorPicture { get; set; }
+    public int? AuthorPictureId { get; set; }
+    public AuthorPicture? AuthorPicture { get; set; }
 
     public ICollection<Book> Books { get; set; } = new List<Book>();
 }
