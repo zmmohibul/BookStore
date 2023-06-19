@@ -10,6 +10,7 @@ export class CreateAuthorComponent implements OnInit {
   createAuthorForm: FormGroup = new FormGroup({});
 
   constructor(private formBuilder: FormBuilder) {}
+
   ngOnInit(): void {
     this.initializeForm();
   }
@@ -17,7 +18,11 @@ export class CreateAuthorComponent implements OnInit {
   initializeForm() {
     this.createAuthorForm = this.formBuilder.group({
       name: ['Alu Bhai', Validators.required],
-      bio: ['Ami Alu Bhai. Ami Alu niye boi likhi.', Validators.required],
+      bio: ['', Validators.required],
     });
+  }
+
+  onButtonClick() {
+    console.log(this.createAuthorForm.value);
   }
 }

@@ -9,15 +9,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AuthorFormComponent implements OnInit {
   @Input() authorForm: FormGroup = new FormGroup({});
 
-  constructor(private formBuilder: FormBuilder) {}
-  ngOnInit(): void {
-    // this.initializeForm();
-  }
-
-  initializeForm() {
-    this.authorForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      bio: ['', Validators.required],
-    });
-  }
+  constructor() {}
+  ngOnInit(): void {}
 }

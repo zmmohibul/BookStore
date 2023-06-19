@@ -15,7 +15,6 @@ export class CategoryService {
   baseUrl = environment.apiUrl;
   private categories: PaginatedList<Category> = new PaginatedList<Category>();
   categoryCache = new Map();
-
   subCategories = new Map();
 
   constructor(private http: HttpClient) {}
