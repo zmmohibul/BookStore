@@ -5,9 +5,11 @@ import { StoreManagerRoutingModule } from './store-manager-routing.module';
 import { CategoryListComponent } from './category/category-list/category-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { CategoryTableComponent } from './category/category-table/category-table.component';
+import { AuthorFormComponent } from './author/author-form/author-form.component';
+import { CreateAuthorComponent } from './author/create-author/create-author.component';
 
 @NgModule({
-  declarations: [CategoryListComponent, CategoryTableComponent],
+  declarations: [CategoryListComponent, CategoryTableComponent, AuthorFormComponent, CreateAuthorComponent],
   imports: [CommonModule, StoreManagerRoutingModule, SharedModule],
 })
 export class StoreManagerModule {}

@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="text-center" >
+    <div  class="inp">
+      <app-input  [formControl]="$any(authorForm.controls['name'])" label="Author's Full Name"></app-input>
+    </div>
+    <div class="inp">
+      <app-input  [formControl]="$any(authorForm.controls['bio'])" label="Author's Bio" type="textarea"></app-input>
+    </div>
+
+  </div>
+</div>
