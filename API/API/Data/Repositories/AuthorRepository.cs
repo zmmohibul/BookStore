@@ -4,6 +4,7 @@ using API.Entities.BookAggregate;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repositories;
@@ -19,6 +20,17 @@ public class AuthorRepository : IAuthorRepository
         _dataContext = dataContext;
         _mapper = mapper;
         _pictureUploadService = pictureUploadService;
+    }
+    
+    public async Task<PaginatedList<AuthorDto>> GetAllAuthors(PaginationParams paginationParams)
+    {
+        var query = _dataContext.Authors
+            .AsNoTracking()
+            .OrderBy(author => author.Name)
+            .ProjectTo<AuthorDto>(_mapper.ConfigurationProvider);
+        
+        
+        return await PaginatedList<AuthorDto>.CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
     }
 
     public async Task<Result<AuthorDto>> GetAuthorById(int authorId)

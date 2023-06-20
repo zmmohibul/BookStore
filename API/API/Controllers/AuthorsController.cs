@@ -1,4 +1,5 @@
 using API.DTOs.Author;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,12 @@ public class AuthorsController : BaseApiController
     public AuthorsController(IAuthorRepository authorRepository)
     {
         _authorRepository = authorRepository;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAuthors([FromQuery] PaginationParams paginationParams)
+    {
+        return Ok(await _authorRepository.GetAllAuthors(paginationParams));
     }
 
     [HttpGet("{id}")]

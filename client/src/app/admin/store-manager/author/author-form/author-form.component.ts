@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthorsService } from '../../../../services/authors.service';
+import { CreateAuthorModel } from '../../../../models/author/createAuthorModel';
 
 @Component({
   selector: 'app-author-form',
@@ -9,6 +11,31 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AuthorFormComponent implements OnInit {
   @Input() authorForm: FormGroup = new FormGroup({});
 
-  constructor() {}
-  ngOnInit(): void {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authorService: AuthorsService
+  ) {}
+
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  initializeForm() {
+    this.authorForm = this.formBuilder.group({
+      name: ['Alu Bhai', Validators.required],
+      bio: ['', Validators.required],
+    });
+  }
+
+  onSubmit() {
+    console.log(this.authorForm.value);
+    if (this.authorForm.valid) {
+      const authorModel: CreateAuthorModel = { ...this.authorForm.value };
+      this.authorService.createAuthor(authorModel).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+      });
+    }
+  }
 }
