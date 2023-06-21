@@ -39,7 +39,7 @@
       <ng-container *ngIf="authors">
         <mat-paginator (page)="onPageChange($event)"
                        [length]="authors.count"
-                       [pageSizeOptions]="[5, 10, 25, 100]"
+                       [pageSizeOptions]="[authors.pageSize, 5, 10, 25, 100]"
                        [pageSize]="authors.pageSize"
                        aria-label="Select page"
                        class="mat-paginator"
