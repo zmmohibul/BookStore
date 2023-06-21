@@ -8,6 +8,7 @@ import { User } from '../../../../models/user';
 import { AuthenticationService } from '../../../../services/authentication.service';
 import { take } from 'rxjs';
 import { Author } from '../../../../models/author/author';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-author-form',
@@ -16,20 +17,19 @@ import { Author } from '../../../../models/author/author';
 })
 export class AuthorFormComponent implements OnInit {
   @Input() author: Author | undefined;
-
   authorForm: FormGroup = new FormGroup({});
+
   uploader: FileUploader | undefined;
   hasBaseDropZoneOver = false;
+
   baseUrl = environment.apiUrl;
-
   user: User | undefined;
-
-  uploadedPictureUrl = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authorService: AuthorsService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private toastr: ToastrService
   ) {
     this.authenticationService.currentUser$.pipe(take(1)).subscribe({
       next: (user) => {
@@ -75,27 +75,37 @@ export class AuthorFormComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
-        this.uploadedPictureUrl = photo.url;
       }
     };
   }
 
   onSubmit() {
-    console.log(this.authorForm.value);
     if (this.authorForm.valid) {
       const authorModel: CreateAuthorModel = { ...this.authorForm.value };
-      this.authorService.createAuthor(authorModel).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.author = res;
-          this.uploader?.setOptions({
-            url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
-          });
-          this.uploader?.uploadAll();
-
-          this.authorForm.setValue({ name: '', bio: '' });
-        },
-      });
+      if (this.author) {
+        this.authorService.updateAuthor(this.author.id, authorModel).subscribe({
+          next: (res) => {
+            this.author = res;
+            this.uploader?.setOptions({
+              url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
+            });
+            this.uploader?.uploadAll();
+            this.toastr.success('Author Updated');
+          },
+        });
+      } else {
+        this.authorService.createAuthor(authorModel).subscribe({
+          next: (res) => {
+            this.author = res;
+            this.uploader?.setOptions({
+              url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
+            });
+            this.uploader?.uploadAll();
+            this.authorForm.setValue({ name: '', bio: '' });
+            this.toastr.success('Author Added');
+          },
+        });
+      }
     }
   }
 }

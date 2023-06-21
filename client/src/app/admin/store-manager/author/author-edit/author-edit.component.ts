@@ -23,7 +23,6 @@ export class AuthorEditComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.author = response;
-          console.log(this.author);
         },
         error: () => {
           this.router.navigateByUrl('/admin');

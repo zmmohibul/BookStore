@@ -40,6 +40,13 @@ export class AuthorsService {
     return this.http.get<Author>(`${this.baseUrl}/authors/${authorId}`);
   }
 
+  updateAuthor(authorId: number, createAuthorModel: CreateAuthorModel) {
+    return this.http.put<Author>(
+      `${this.baseUrl}/authors/${authorId}`,
+      createAuthorModel
+    );
+  }
+
   createAuthor(createAuthorModel: CreateAuthorModel) {
     return this.http.post<Author>(`${this.baseUrl}/authors`, createAuthorModel);
   }
