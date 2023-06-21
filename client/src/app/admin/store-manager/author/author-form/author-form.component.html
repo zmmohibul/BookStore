@@ -17,16 +17,13 @@
         <div (fileOver)="fileOverBase($event)"
              [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
              [uploader]="uploader"
-             class="card bg-faded p-3 text-center mb-3 my-drop-zone"
-             ng2FileDrop>
+             class="card bg-faded p-5 text-center mb-3 my-drop-zone"
+             ng2FileDrop
+             style="min-height: 12rem;">
           <i class="fa fa-upload fa-3x"></i>
           Drop Picture here
         </div>
 
-        Multiple
-        <input [uploader]="uploader" multiple ng2FileSelect type="file"/><br/>
-
-        Single
         <input [uploader]="uploader" ng2FileSelect type="file"/>
       </div>
 

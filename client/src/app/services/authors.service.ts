@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { PaginatedList } from '../models/paginatedList';
-import { Category } from '../models/category';
-import { HttpClient } from '@angular/common/http';
-import { CreateAuthorModel } from '../models/author/createAuthorModel';
-import { Author } from '../models/author/author';
+import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {PaginatedList} from '../models/paginatedList';
+import {Category} from '../models/category';
+import {HttpClient} from '@angular/common/http';
+import {CreateAuthorModel} from '../models/author/createAuthorModel';
+import {Author} from '../models/author/author';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,12 @@ import { Author } from '../models/author/author';
 export class AuthorsService {
   baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
+
+  getAllAuthors() {
+    return this.http.get<PaginatedList<Author>>(`${this.baseUrl}/authors`);
+  }
 
   createAuthor(createAuthorModel: CreateAuthorModel) {
     return this.http.post<Author>(`${this.baseUrl}/authors`, createAuthorModel);

@@ -47,7 +47,7 @@ export class AuthorFormComponent implements OnInit {
 
   initializeForm() {
     this.authorForm = this.formBuilder.group({
-      name: ['Alu Bhai', Validators.required],
+      name: ['', Validators.required],
       bio: ['', Validators.required],
     });
   }
@@ -65,6 +65,7 @@ export class AuthorFormComponent implements OnInit {
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 30 * 1024 * 1024,
+      queueLimit: 1,
     });
 
     this.uploader.onAfterAddingFile = (file) => {
@@ -91,6 +92,8 @@ export class AuthorFormComponent implements OnInit {
             url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
           });
           this.uploader?.uploadAll();
+
+          this.authorForm.setValue({ name: '', bio: '' });
         },
       });
     }
