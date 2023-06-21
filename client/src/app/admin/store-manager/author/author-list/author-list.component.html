@@ -8,6 +8,11 @@
   </tr>
   </thead>
   <tbody>
+  <tr *ngIf="loading" class="text-center">
+    <td colspan="3">
+      <div [ngClass]="{'loader': loading}"></div>
+    </td>
+  </tr>
   <tr *ngFor="let author of authors?.items">
     <td class="text-center">{{ author.id }}</td>
     <td>

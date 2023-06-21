@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AuthorListComponent implements OnInit {
   authors: PaginatedList<Author> | undefined;
   paginationParams = new PaginationParams();
+  loading = false;
 
   constructor(
     private authorService: AuthorsService,
@@ -26,18 +27,21 @@ export class AuthorListComponent implements OnInit {
   }
 
   loadAuthors() {
+    this.loading = true;
     this.authorService.getAllAuthors(this.paginationParams).subscribe({
       next: (response) => {
         this.authors = response;
+        this.loading = false;
       },
     });
   }
 
   deleteAuthor(author: Author) {
+    this.loading = true;
     this.authorService.deleteAuthor(author.id).subscribe({
       next: () => {
         this.toastr.success(
-          `'${author.name}' deleted from Authors`,
+          `${author.name} deleted from Authors`,
           'Author Deleted'
         );
         if (this.authors) {
@@ -45,6 +49,7 @@ export class AuthorListComponent implements OnInit {
             (item) => item.id != author.id
           );
         }
+        this.loading = false;
       },
     });
   }

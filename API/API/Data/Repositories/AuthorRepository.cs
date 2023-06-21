@@ -72,6 +72,8 @@ public class AuthorRepository : IAuthorRepository
     {
         var author = await _dataContext.Authors
             .Include(auth => auth.AuthorPicture)
+            .Include(auth => auth.Books)
+            .ThenInclude(book => book.Authors)
             .SingleOrDefaultAsync(auth => auth.Id == authorId);
 
         if (author == null)
@@ -84,14 +86,19 @@ public class AuthorRepository : IAuthorRepository
             await _pictureUploadService.DeletePhotoAsync(author.AuthorPicture.PublicId);
         }
 
+        if (author.Books.Count > 0)
+        {
+            _dataContext.RemoveRange(author
+                .Books.Where(book => book.Authors.Count == 1));
+            
+            await _dataContext.SaveChangesAsync();
+        }
+
         _dataContext.Remove(author);
 
-        if (await _dataContext.SaveChangesAsync() > 0)
-        {
-            return Result<bool>.NoContentResult();
-        }
-        
-        return Result<bool>.BadRequestResult("Failed to delete author");
+        return await _dataContext.SaveChangesAsync() > 0 
+            ? Result<bool>.NoContentResult() 
+            : Result<bool>.BadRequestResult("Failed to delete author");
     }
 
     public async Task<Result<PictureDto>> AddAuthorPicture(int authorId, IFormFile file)
