@@ -68,6 +68,26 @@ public class AuthorRepository : IAuthorRepository
         return Result<AuthorDto>.DataCreatedResult(_mapper.Map<AuthorDto>(author));
     }
 
+    public async Task<Result<AuthorDto>> UpdateAuthor(int authorId, CreateAuthorDto createAuthorDto)
+    {
+        var author = await _dataContext.Authors.FindAsync(authorId);
+
+        if (author == null)
+        {
+            return Result<AuthorDto>.NotFoundResult($"Author with id - {authorId} not found");
+        }
+
+        _mapper.Map(createAuthorDto, author);
+
+        await _dataContext.SaveChangesAsync();
+        
+        author = await _dataContext.Authors
+            .Include(auth => auth.AuthorPicture)
+            .SingleOrDefaultAsync(auth => auth.Id == authorId);
+        
+        return Result<AuthorDto>.OkResult(_mapper.Map<AuthorDto>(author));
+    }
+
     public async Task<Result<bool>> DeleteAuthor(int authorId)
     {
         var author = await _dataContext.Authors

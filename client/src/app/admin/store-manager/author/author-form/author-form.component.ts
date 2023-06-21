@@ -15,14 +15,14 @@ import { Author } from '../../../../models/author/author';
   styleUrls: ['./author-form.component.scss'],
 })
 export class AuthorFormComponent implements OnInit {
-  @Input() authorForm: FormGroup = new FormGroup({});
+  @Input() author: Author | undefined;
 
+  authorForm: FormGroup = new FormGroup({});
   uploader: FileUploader | undefined;
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
 
   user: User | undefined;
-  author: Author | undefined;
 
   uploadedPictureUrl = '';
 
@@ -47,8 +47,8 @@ export class AuthorFormComponent implements OnInit {
 
   initializeForm() {
     this.authorForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      bio: ['', Validators.required],
+      name: [this.author ? `${this.author.name}` : '', Validators.required],
+      bio: [this.author ? `${this.author.bio}` : '', Validators.required],
     });
   }
 

@@ -8,6 +8,7 @@ import { CategoryTableComponent } from './category/category-table/category-table
 import { AuthorFormComponent } from './author/author-form/author-form.component';
 import { CreateAuthorComponent } from './author/create-author/create-author.component';
 import { AuthorListComponent } from './author/author-list/author-list.component';
+import { AuthorEditComponent } from './author/author-edit/author-edit.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AuthorListComponent } from './author/author-list/author-list.component'
     AuthorFormComponent,
     CreateAuthorComponent,
     AuthorListComponent,
+    AuthorEditComponent,
   ],
   imports: [CommonModule, StoreManagerRoutingModule, SharedModule],
 })

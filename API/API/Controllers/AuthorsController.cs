@@ -39,6 +39,12 @@ public class AuthorsController : BaseApiController
         return HandleResult(result);
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAuthor(int id, [FromBody] CreateAuthorDto createAuthorDto)
+    {
+        return HandleResult(await _authorRepository.UpdateAuthor(id, createAuthorDto));
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAuthor(int id)
     {
