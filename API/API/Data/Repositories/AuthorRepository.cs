@@ -104,6 +104,11 @@ public class AuthorRepository : IAuthorRepository
             };
         }
 
+        if (author.AuthorPicture != null)
+        {
+            await _pictureUploadService.DeletePhotoAsync(author.AuthorPicture.PublicId);
+        }
+
         var result = await _pictureUploadService.AddPictureAsync(file);
 
         if (result.Error != null)

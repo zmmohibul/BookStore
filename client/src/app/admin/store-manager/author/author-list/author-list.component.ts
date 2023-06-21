@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthorsService} from "../../../../services/authors.service";
 import {Author} from "../../../../models/author/author";
+import {PaginatedList} from "../../../../models/paginatedList";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-author-list',
@@ -8,7 +10,7 @@ import {Author} from "../../../../models/author/author";
   styleUrls: ['./author-list.component.scss']
 })
 export class AuthorListComponent implements OnInit {
-  authors: Author[] | undefined;
+  authors: PaginatedList<Author> | undefined;
 
   constructor(private authorService: AuthorsService) {
   }
@@ -20,9 +22,13 @@ export class AuthorListComponent implements OnInit {
   loadAuthors() {
     this.authorService.getAllAuthors().subscribe({
       next: (response) => {
-        this.authors = response.items;
+        this.authors = response;
       }
     });
+  }
+
+  onPageChange(event: PageEvent) {
+
   }
 
 
