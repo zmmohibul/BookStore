@@ -17,7 +17,7 @@ public class CategoriesController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAllCategories([FromQuery] PaginationParams paginationParams)
     {
-        return Ok(await _categoryRepository.GetAllCategories(paginationParams));
+        return HandleResult(await _categoryRepository.GetAllCategories(paginationParams));
     }
     
     [HttpGet("{id}")]

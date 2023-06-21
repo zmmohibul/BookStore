@@ -17,7 +17,7 @@ public class AuthorsController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAllAuthors([FromQuery] PaginationParams paginationParams)
     {
-        return Ok(await _authorRepository.GetAllAuthors(paginationParams));
+        return HandleResult(await _authorRepository.GetAllAuthors(paginationParams));
     }
 
     [HttpGet("{id}")]

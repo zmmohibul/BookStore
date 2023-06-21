@@ -13,7 +13,7 @@ import { map, of } from 'rxjs';
 })
 export class AuthorsService {
   baseUrl = environment.apiUrl;
-  authors = new Map();
+  authors = new Map<string, PaginatedList<Author>>();
 
   constructor(private http: HttpClient) {}
 

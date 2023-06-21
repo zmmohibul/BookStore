@@ -19,7 +19,7 @@ public class CategoryRepository : ICategoryRepository
         _mapper = mapper;
     }
     
-    public async Task<PaginatedList<CategoryDto>> GetAllCategories(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<CategoryDto>>> GetAllCategories(PaginationParams paginationParams)
     {
         var query = _dataContext.Categories
             .Where(category => category.ParentId == null)
@@ -27,8 +27,10 @@ public class CategoryRepository : ICategoryRepository
             .OrderBy(cat => cat.Name)
             .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider);
         
+        var data = await PaginatedList<CategoryDto>
+            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
         
-        return await PaginatedList<CategoryDto>.CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+        return Result<PaginatedList<CategoryDto>>.OkResult(data);
     }
 
     public async Task<Result<CategoryWithSubCategoriesDto>> GetCategoryById(int id)
@@ -42,33 +44,17 @@ public class CategoryRepository : ICategoryRepository
 
         if (category == null)
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                IsSuccess = false,
-                StatusCode = 404,
-                ErrorMessage = "No category found with the given id"
-            };
+            return Result<CategoryWithSubCategoriesDto>.NotFoundResult($"No category found with id: {id}");
         }
-
-        return new Result<CategoryWithSubCategoriesDto>()
-        {
-            IsSuccess = true,
-            Data = category,
-            StatusCode = 200
-        };
+        
+        return Result<CategoryWithSubCategoriesDto>.OkResult(category);
     }
 
     public async Task<Result<CategoryWithSubCategoriesDto>> CreateCategory(CreateCategoryDto createCategoryDto)
     {
         if (await CategoryNameExist(createCategoryDto))
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = null,
-                StatusCode = 400,
-                ErrorMessage = "Category Name already in use",
-                IsSuccess = false
-            };
+            return Result<CategoryWithSubCategoriesDto>.BadRequestResult("Category Name already in use");
         }
         
         var category = new Category()
@@ -81,7 +67,7 @@ public class CategoryRepository : ICategoryRepository
             var parentCategory = await _dataContext.Categories.FindAsync(createCategoryDto.ParentId);
             if (parentCategory == null)
             {
-                return NotFoundResult($"No Parent Category found with the given parentId - {category.ParentId}");
+                return Result<CategoryWithSubCategoriesDto>.NotFoundResult($"No Parent Category found with the given parentId - {category.ParentId}");
             }
             category.Parent = parentCategory;
         }
@@ -95,22 +81,11 @@ public class CategoryRepository : ICategoryRepository
                 .Include(cat => cat.SubCategories)
                 .ProjectTo<CategoryWithSubCategoriesDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
-
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = data,
-                IsSuccess = true,
-                StatusCode = 201
-            };
+            
+            return Result<CategoryWithSubCategoriesDto>.DataCreatedResult(data);
         }
-        
-        return new Result<CategoryWithSubCategoriesDto>()
-        {
-            Data = null,
-            StatusCode = 400,
-            ErrorMessage = "Failed to create category",
-            IsSuccess = false
-        };
+
+        return Result<CategoryWithSubCategoriesDto>.BadRequestResult("Failed to create category");
     }
 
     public async Task<Result<CategoryWithSubCategoriesDto>> UpdateCategory(int id, UpdateCategoryDto updateCategoryDto)
@@ -122,39 +97,22 @@ public class CategoryRepository : ICategoryRepository
         
         if (category == null)
         {
-            return NotFoundResult($"No Category found with the given id - {id} to update");
+            return Result<CategoryWithSubCategoriesDto>.NotFoundResult($"No Category found with the given id - {id} to update");
         }
 
         if (category.Name.Equals(updateCategoryDto.Name))
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = null,
-                StatusCode = 400,
-                ErrorMessage = "Attempt to update with same name",
-                IsSuccess = false
-            };
+            return Result<CategoryWithSubCategoriesDto>.BadRequestResult("Attempt to update with same name");
         }
 
         category.Name = updateCategoryDto.Name;
         
         if (await _dataContext.SaveChangesAsync() > 0)
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = _mapper.Map<CategoryWithSubCategoriesDto>(category),
-                IsSuccess = true,
-                StatusCode = 200
-            };
+            return Result<CategoryWithSubCategoriesDto>.OkResult(_mapper.Map<CategoryWithSubCategoriesDto>(category));
         }
         
-        return new Result<CategoryWithSubCategoriesDto>()
-        {
-            Data = null,
-            StatusCode = 400,
-            ErrorMessage = "Failed to update category",
-            IsSuccess = false
-        };
+        return Result<CategoryWithSubCategoriesDto>.BadRequestResult("Failed to update category");
     }
     
     public async Task<Result<CategoryWithSubCategoriesDto>> DeleteCategory(int id)
@@ -164,54 +122,28 @@ public class CategoryRepository : ICategoryRepository
             .SingleOrDefaultAsync(cat => cat.Id == id);
         if (category == null)
         {
-            return NotFoundResult($"No Category found with the given id - {id} to delete");
+            return Result<CategoryWithSubCategoriesDto>.NotFoundResult($"No Category found with the given id - {id} to delete");
         }
 
         if (category.SubCategories.Count > 0)
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = null,
-                StatusCode = 400,
-                ErrorMessage = $"{category.Name} has {category.SubCategories.Count} Sub-Categories. Delete them first",
-                IsSuccess = false
-            };
+            return Result<CategoryWithSubCategoriesDto>
+                .BadRequestResult($"{category.Name} has {category.SubCategories.Count} Sub-Categories. Delete them first");
         }
 
         _dataContext.Categories.Remove(category);
         
         if (await _dataContext.SaveChangesAsync() > 0)
         {
-            return new Result<CategoryWithSubCategoriesDto>()
-            {
-                Data = null,
-                IsSuccess = true,
-                StatusCode = 204
-            };
+            return Result<CategoryWithSubCategoriesDto>.NoContentResult();
         }
         
-        return new Result<CategoryWithSubCategoriesDto>()
-        {
-            Data = null,
-            StatusCode = 400,
-            ErrorMessage = "Failed to delete category",
-            IsSuccess = false
-        };
+        return Result<CategoryWithSubCategoriesDto>
+            .BadRequestResult("Failed to delete category");
     }
 
     private async Task<bool> CategoryNameExist(CreateCategoryDto createCategoryDto)
     {
         return await _dataContext.Categories.AnyAsync(category => category.Name.Equals(createCategoryDto.Name));
-    }
-
-    private Result<CategoryWithSubCategoriesDto> NotFoundResult(string message)
-    {
-        return new Result<CategoryWithSubCategoriesDto>()
-        {
-            Data = null,
-            StatusCode = 404,
-            ErrorMessage = message,
-            IsSuccess = false
-        };
     }
 }

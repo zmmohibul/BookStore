@@ -22,7 +22,7 @@ public class AuthorRepository : IAuthorRepository
         _pictureUploadService = pictureUploadService;
     }
     
-    public async Task<PaginatedList<AuthorDto>> GetAllAuthors(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<AuthorDto>>> GetAllAuthors(PaginationParams paginationParams)
     {
         var query = _dataContext.Authors
             .AsNoTracking()
@@ -30,7 +30,10 @@ public class AuthorRepository : IAuthorRepository
             .ProjectTo<AuthorDto>(_mapper.ConfigurationProvider);
         
         
-        return await PaginatedList<AuthorDto>.CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+        var data = await PaginatedList<AuthorDto>
+            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+        
+        return Result<PaginatedList<AuthorDto>>.OkResult(data);
     }
 
     public async Task<Result<AuthorDto>> GetAuthorById(int authorId)
@@ -41,31 +44,17 @@ public class AuthorRepository : IAuthorRepository
 
         if (author == null)
         {
-            return new Result<AuthorDto>()
-            {
-                IsSuccess = false,
-                StatusCode = 404,
-                ErrorMessage = $"No author found with id {authorId}"
-            };
+            return Result<AuthorDto>.NotFoundResult($"No author found with id {authorId}");
         }
-
-        return new Result<AuthorDto>()
-        {
-            StatusCode = 200,
-            Data = _mapper.Map<AuthorDto>(author)
-        };
+        
+        return Result<AuthorDto>.OkResult(_mapper.Map<AuthorDto>(author));
     }
     
     public async Task<Result<AuthorDto>> CreateAuthor(CreateAuthorDto createAuthorDto)
     {
         if (await AuthorNameExist(createAuthorDto.Name))
         {
-            return new Result<AuthorDto>()
-            {
-                StatusCode = 400,
-                IsSuccess = false,
-                ErrorMessage = $"The author name {createAuthorDto.Name} is already in use"
-            };
+            return Result<AuthorDto>.BadRequestResult($"The author name {createAuthorDto.Name} is already in use");
         }
         
         var author = _mapper.Map<Author>(createAuthorDto);
@@ -73,21 +62,10 @@ public class AuthorRepository : IAuthorRepository
 
         if (!(await _dataContext.SaveChangesAsync() > 0))
         {
-            return new Result<AuthorDto>()
-            {
-                StatusCode = 400,
-                IsSuccess = false,
-                ErrorMessage = $"Something went wrong. Could not save author to db."
-            };
+            return Result<AuthorDto>.BadRequestResult($"Could not save author to db.");
         }
-
-        return new Result<AuthorDto>()
-        {
-            Data = _mapper.Map<AuthorDto>(author),
-            IsSuccess = true,
-            StatusCode = 201
-        };
-
+        
+        return Result<AuthorDto>.DataCreatedResult(_mapper.Map<AuthorDto>(author));
     }
 
     public async Task<Result<PictureDto>> AddAuthorPicture(int authorId, IFormFile file)
