@@ -33,10 +33,16 @@ public class AuthorsController : BaseApiController
 
         if (result.IsSuccess)
         {
-            return Ok(result.Data);
+            return CreatedAtAction(nameof(GetAuthorById), new { id = result.Data.Id }, result.Data);
         }
 
         return HandleResult(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAuthor(int id)
+    {
+        return HandleResult(await _authorRepository.DeleteAuthor(id));
     }
 
     [HttpPost("{id}/add-picture")]

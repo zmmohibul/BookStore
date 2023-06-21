@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { PaginatedList } from '../models/paginatedList';
-import { Category } from '../models/category';
-import { HttpClient } from '@angular/common/http';
-import { CreateAuthorModel } from '../models/author/createAuthorModel';
-import { Author } from '../models/author/author';
-import { PaginationParams } from '../models/paginationParams';
-import { map, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {PaginatedList} from '../models/paginatedList';
+import {Category} from '../models/category';
+import {HttpClient} from '@angular/common/http';
+import {CreateAuthorModel} from '../models/author/createAuthorModel';
+import {Author} from '../models/author/author';
+import {PaginationParams} from '../models/paginationParams';
+import {map, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,8 @@ export class AuthorsService {
   baseUrl = environment.apiUrl;
   authors = new Map<string, PaginatedList<Author>>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getAllAuthors(paginationParams: PaginationParams) {
     let queryString = Object.values(paginationParams).join('-');
@@ -26,7 +27,7 @@ export class AuthorsService {
 
     return this.http
       .get<PaginatedList<Author>>(`${this.baseUrl}/authors`, {
-        params: { ...paginationParams },
+        params: {...paginationParams},
       })
       .pipe(
         map((response) => {
@@ -38,5 +39,9 @@ export class AuthorsService {
 
   createAuthor(createAuthorModel: CreateAuthorModel) {
     return this.http.post<Author>(`${this.baseUrl}/authors`, createAuthorModel);
+  }
+
+  deleteAuthor(id: number) {
+    return this.http.delete(`${this.baseUrl}/authors/${id}`);
   }
 }

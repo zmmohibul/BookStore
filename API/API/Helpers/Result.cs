@@ -55,6 +55,4 @@ public class Result<T>
             IsSuccess = true
         };
     }
-    
-    
 }

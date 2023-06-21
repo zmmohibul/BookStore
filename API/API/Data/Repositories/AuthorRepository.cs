@@ -68,6 +68,32 @@ public class AuthorRepository : IAuthorRepository
         return Result<AuthorDto>.DataCreatedResult(_mapper.Map<AuthorDto>(author));
     }
 
+    public async Task<Result<bool>> DeleteAuthor(int authorId)
+    {
+        var author = await _dataContext.Authors
+            .Include(auth => auth.AuthorPicture)
+            .SingleOrDefaultAsync(auth => auth.Id == authorId);
+
+        if (author == null)
+        {
+            return Result<bool>.NotFoundResult($"No author found with id {authorId}");
+        }
+
+        if (author.AuthorPicture != null)
+        {
+            await _pictureUploadService.DeletePhotoAsync(author.AuthorPicture.PublicId);
+        }
+
+        _dataContext.Remove(author);
+
+        if (await _dataContext.SaveChangesAsync() > 0)
+        {
+            return Result<bool>.NoContentResult();
+        }
+        
+        return Result<bool>.BadRequestResult("Failed to delete author");
+    }
+
     public async Task<Result<PictureDto>> AddAuthorPicture(int authorId, IFormFile file)
     {
         var author = await _dataContext.Authors.FindAsync(authorId);
