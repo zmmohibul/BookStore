@@ -24,10 +24,6 @@ public class BookRepository : IBookRepository
         var query = _dataContext.Books
             .AsNoTracking()
             .OrderBy(book => book.Name)
-            .Include(book => book.Authors)
-            .Include(book => book.Categories)
-            .Include(book => book.Publisher)
-            .Include(book => book.Pictures)
             .ProjectTo<BookDto>(_mapper.ConfigurationProvider);
 
         var data = await PaginatedList<BookDto>
@@ -41,10 +37,6 @@ public class BookRepository : IBookRepository
         var book = await _dataContext.Books
             .AsNoTracking()
             .OrderBy(book => book.Name)
-            .Include(book => book.Authors)
-            .Include(book => book.Categories)
-            .Include(book => book.Publisher)
-            .Include(book => book.Pictures)
             .ProjectTo<BookDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(book => book.Id == id);
 

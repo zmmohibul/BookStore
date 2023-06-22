@@ -1,1 +1,100 @@
-<p>book-form works!</p>
+<div [ngClass]="{'loader': loading}"></div>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="text-center">
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['name'])" inputType="text"
+                 label="Book Name"></app-input>
+    </div>
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['description'])" inputType="textarea"
+                 label="Book Description"></app-input>
+    </div>
+
+    <div class="input">
+      <app-select-search (select)="onAuthorSelect($event)" [searchUrl]="baseUrl + '/authors'"
+                         label="Author"></app-select-search>
+    </div>
+
+    <div *ngFor="let item of [].constructor(coAuthorCount)" class="input">
+      <app-select-search (close)="closeCoAuthor($event)" (select)="onAuthorSelect($event)"
+                         [searchUrl]="baseUrl + '/authors'"
+                         label="Co-Author"></app-select-search>
+    </div>
+
+
+    <button (click)="addCoAuthor()" class="btn btn-dark btn-block my-4 mb-5" type="submit">
+      Add More Author
+    </button>
+
+    <div class="input">
+      <app-select-search (select)="onAuthorSelect($event)" [searchUrl]="baseUrl + '/categories'"
+                         label="Category"></app-select-search>
+    </div>
+
+
+    <div class="mb-3">
+      <div>
+        <h3>Add Book Pictures</h3>
+        <div (fileOver)="fileOverBase($event)"
+             [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+             [uploader]="uploader"
+             class="card bg-faded p-5 text-center mb-3 my-drop-zone"
+             ng2FileDrop
+             style="min-height: 12rem;">
+          <i class="fa fa-upload fa-3x"></i>
+          Drop Picture here
+        </div>
+
+        <input [uploader]="uploader" ng2FileSelect type="file"/>
+      </div>
+
+      <div *ngIf="uploader?.queue?.length" class="col-9" style="margin-bottom: 40px">
+
+        <h3>Upload queue</h3>
+        <p>Queue length: {{ uploader?.queue?.length }}</p>
+
+        <table class="table">
+          <thead>
+          <tr>
+            <th width="50%">Name</th>
+            <th>Size</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of uploader?.queue">
+            <td><strong>{{ item?.file?.name }}</strong></td>
+            <td *ngIf="uploader?.options?.isHTML5" nowrap>{{ item?.file?.size / 1024 / 1024 | number:'.2' }} MB</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div>
+          <div>
+            Queue progress:
+            <div class="progress">
+              <div [ngStyle]="{ 'width': uploader?.progress + '%' }" class="progress-bar" role="progressbar"></div>
+            </div>
+          </div>
+          <button (click)="uploader?.uploadAll()" [disabled]="!uploader?.getNotUploadedItems()?.length"
+                  class="btn btn-success btn-s" type="button">
+            <span class="fa fa-upload"></span> Upload all
+          </button>
+          <button (click)="uploader?.cancelAll()" [disabled]="!uploader?.isUploading"
+                  class="btn btn-warning btn-s" type="button">
+            <span class="fa fa-ban"></span> Cancel all
+          </button>
+          <button (click)="uploader?.clearQueue()" [disabled]="!uploader?.queue?.length"
+                  class="btn btn-danger btn-s" type="button">
+            <span class="fa fa-trash"></span> Remove all
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <button (click)="onSubmit()" class="btn btn-dark btn-block my-4 mb-5" type="submit">
+      Submit
+    </button>
+  </div>
+</div>
+

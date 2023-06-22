@@ -6,6 +6,7 @@ using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Data.Repositories;
 
@@ -22,16 +23,23 @@ public class AuthorRepository : IAuthorRepository
         _pictureUploadService = pictureUploadService;
     }
     
-    public async Task<Result<PaginatedList<AuthorDto>>> GetAllAuthors(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<AuthorDto>>> GetAllAuthors(PaginationParams paginationParams, QueryParameters queryParameters)
     {
         var query = _dataContext.Authors
-            .AsNoTracking()
-            .OrderBy(author => author.Name)
-            .ProjectTo<AuthorDto>(_mapper.ConfigurationProvider);
+            .AsNoTracking();
+
+        if (!queryParameters.SearchTerm.IsNullOrEmpty())
+        {
+            Console.WriteLine(queryParameters.SearchTerm);
+            query = query.Where(author => author.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
+        }
         
+        query = query.OrderBy(author => author.Name);
+
+        var projectedQuery = query.ProjectTo<AuthorDto>(_mapper.ConfigurationProvider);
         
         var data = await PaginatedList<AuthorDto>
-            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+            .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<AuthorDto>>.OkResult(data);
     }
