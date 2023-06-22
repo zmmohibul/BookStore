@@ -73,7 +73,6 @@ export class CategoryTableComponent {
       if (this.parentId) {
         newCategory.parentId = this.parentId;
       }
-      console.log(newCategory);
 
       this.categoryService.createCategory(newCategory).subscribe({
         next: (response) => {

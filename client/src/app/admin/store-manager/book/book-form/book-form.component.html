@@ -22,7 +22,8 @@
                          label="Co-Author"></app-select-search>
     </div>
 
-    <button (click)="addCoAuthor()" class="btn btn-dark btn-block mb-5" type="submit">
+    <button (click)="addCoAuthor()" [disabled]="!createBookModel.authorsId.length" class="btn btn-dark btn-block mb-5"
+            type="submit">
       Add More Author
     </button>
 
@@ -157,7 +158,8 @@
     </div>
 
 
-    <button (click)="onSubmit()" class="btn btn-dark btn-block my-5 mb-5" type="submit">
+    <button (click)="onSubmit()" [disabled]="!this.bookForm.valid" class="btn btn-dark btn-block my-5 mb-5"
+            type="submit">
       Submit
     </button>
   </div>

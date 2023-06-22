@@ -1,3 +1,4 @@
+using API.DTOs;
 using API.DTOs.Book;
 using API.Entities.BookAggregate;
 using API.Helpers;
@@ -11,11 +12,13 @@ namespace API.Data.Repositories;
 public class BookRepository : IBookRepository
 {
     private readonly DataContext _dataContext;
+    private readonly IPictureUploadService _pictureUploadService;
     private readonly IMapper _mapper;
 
-    public BookRepository(DataContext dataContext, IMapper mapper)
+    public BookRepository(DataContext dataContext, IPictureUploadService pictureUploadService, IMapper mapper)
     {
         _dataContext = dataContext;
+        _pictureUploadService = pictureUploadService;
         _mapper = mapper;
     }
     
@@ -94,11 +97,63 @@ public class BookRepository : IBookRepository
         book.Publisher = publisher;
         publisher.Books.Add(book);
 
-        if (await _dataContext.SaveChangesAsync() > 0)
+        return await _dataContext.SaveChangesAsync() > 0 
+            ? Result<BookDto>.OkResult(_mapper.Map<BookDto>(book)) 
+            : Result<BookDto>.BadRequestResult($"Could not save book...");
+    }
+
+    public async Task<Result<bool>> DeleteBook(int bookId)
+    {
+        var book = await _dataContext.Books
+            .Include(book => book.Pictures)
+            .SingleOrDefaultAsync(b => b.Id == bookId);
+
+        if (book == null)
         {
-            return Result<BookDto>.OkResult(_mapper.Map<BookDto>(book));
+            return Result<bool>.NotFoundResult($"No book found with given id {bookId}");
         }
 
-        return Result<BookDto>.BadRequestResult($"Could not save book...");
+        foreach (var bookPicture in book.Pictures)
+        {
+            await _pictureUploadService.DeletePhotoAsync(bookPicture.PublicId);
+        }
+
+        _dataContext.Remove(book);
+
+        return await _dataContext.SaveChangesAsync() > 0
+            ? Result<bool>.NoContentResult()
+            : Result<bool>.BadRequestResult("Could not delete book");
+    }
+
+    public async Task<Result<PictureDto>> AddBookPicture(int bookId, IFormFile file)
+    {
+        var book = await _dataContext.Books
+            .Include(book => book.Pictures)
+            .SingleOrDefaultAsync(b => b.Id == bookId);
+
+        if (book == null)
+        {
+            return Result<PictureDto>.NotFoundResult($"No book found with given id {bookId}");
+        }
+
+        var result = await _pictureUploadService.AddPictureAsync(file);
+
+        if (result.Error != null)
+        {
+            return Result<PictureDto>.BadRequestResult(result.Error.Message);
+        }
+
+        var bookPicture = new BookPicture
+        {
+            Url = result.SecureUrl.AbsoluteUri,
+            PublicId = result.PublicId,
+            IsMain = book.Pictures.Count == 0
+        };
+        
+        book.Pictures.Add(bookPicture);
+        
+        return await _dataContext.SaveChangesAsync() > 0 
+            ? Result<PictureDto>.OkResult(_mapper.Map<PictureDto>(bookPicture)) 
+            : Result<PictureDto>.BadRequestResult("Problem adding picture");
     }
 }

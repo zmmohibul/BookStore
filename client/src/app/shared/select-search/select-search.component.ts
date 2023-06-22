@@ -99,7 +99,6 @@ export class SelectSearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onSelect() {
     const emitData = { prevId: this.selectedId, id: this.control.value.id };
-    console.log(this.control.value);
     this.selectedId = this.control.value.id;
     this.selectedData = emitData;
     this.select.emit(emitData);
@@ -151,7 +150,6 @@ export class SelectSearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.http.get(`${this.searchUrl}?searchTerm=${searchTerm}`).subscribe({
       next: (response: any) => {
         result = [...response.items];
-        console.log(result);
         this.filteredItems.next(result.slice());
         this.items = result.slice();
         if (!result.length) {

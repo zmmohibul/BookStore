@@ -40,4 +40,16 @@ public class BooksController : BaseApiController
 
         return HandleResult(result);
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        return HandleResult(await _bookRepository.DeleteBook(id));
+    }
+    
+    [HttpPost("{id}/add-picture")]
+    public async Task<IActionResult> AddBookPicture(int id, IFormFile file)
+    {
+        return HandleResult(await _bookRepository.AddBookPicture(id, file));
+    }
 }

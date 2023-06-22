@@ -15,6 +15,8 @@ import {
 import { MatSelect } from '@angular/material/select';
 import { CreateBookModel } from '../../../../models/book/createBookModel';
 import { CategoryService } from '../../../../services/category.service';
+import { BooksService } from '../../../../services/books.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-book-form',
@@ -40,7 +42,9 @@ export class BookFormComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private bookService: BooksService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -104,11 +108,36 @@ export class BookFormComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
+        this.toastr.success(`Item added.`);
       }
     };
   }
 
-  onSubmit() {}
+  onSubmit() {
+    if (
+      !this.bookForm.valid ||
+      !this.createBookModel.publisherId ||
+      !this.createBookModel.authorsId.length ||
+      !this.createBookModel.categoriesId.length
+    ) {
+      return;
+    }
+
+    this.createBookModel = { ...this.createBookModel, ...this.bookForm.value };
+
+    this.bookService.createBook(this.createBookModel).subscribe({
+      next: (response) => {
+        this.uploader?.setOptions({
+          url: `${this.baseUrl}/books/${response.id}/add-picture`,
+        });
+
+        this.uploader?.uploadAll();
+      },
+      error: (err) => {
+        this.toastr.error(err.error.errorMessage);
+      },
+    });
+  }
 
   onAuthorSelect(data: any) {
     if (data.prevId) {
@@ -117,7 +146,6 @@ export class BookFormComponent implements OnInit {
       );
     }
     this.createBookModel.authorsId.push(data.id);
-    console.log(this.createBookModel.authorsId);
   }
 
   onCategorySelect(data: any) {
@@ -136,13 +164,10 @@ export class BookFormComponent implements OnInit {
         }
       },
     });
-
-    console.log(this.createBookModel.categoriesId);
   }
 
   onPublisherSelect(data: any) {
     this.createBookModel.publisherId = data.id;
-    console.log(this.createBookModel.publisherId);
   }
 
   onDateChange(ev: any) {
@@ -150,8 +175,6 @@ export class BookFormComponent implements OnInit {
       ...this.bookForm.value,
       publicationDate: new Date(ev.value),
     });
-    // console.log(new Date(ev.value));
-    console.log(this.bookForm.value);
   }
 
   addCoAuthor() {
@@ -164,7 +187,5 @@ export class BookFormComponent implements OnInit {
     this.createBookModel.authorsId = this.createBookModel.authorsId.filter(
       (id) => id != aid
     );
-
-    console.log(this.createBookModel.authorsId);
   }
 }

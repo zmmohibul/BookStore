@@ -57,7 +57,6 @@ export class CategoryListComponent implements OnInit {
 
     this.categoryService.getSubCategories(item.id).subscribe({
       next: (result) => {
-        console.log(result);
         this.subCategories = this.subCategories.map((item) => {
           if (item.heading === headingString) {
             item.subCategories = result?.subCategories;

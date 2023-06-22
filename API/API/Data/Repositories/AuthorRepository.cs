@@ -135,12 +135,7 @@ public class AuthorRepository : IAuthorRepository
 
         if (author == null)
         {
-            return new Result<PictureDto>()
-            {
-                IsSuccess = false,
-                StatusCode = 404,
-                ErrorMessage = $"No author found with id {authorId}"
-            };
+            return Result<PictureDto>.NotFoundResult($"No author found with id {authorId}");
         }
 
         if (author.AuthorPicture != null)
@@ -152,12 +147,7 @@ public class AuthorRepository : IAuthorRepository
 
         if (result.Error != null)
         {
-            return new Result<PictureDto>()
-            {
-                IsSuccess = false,
-                StatusCode = 400,
-                ErrorMessage = result.Error.Message
-            };
+            return Result<PictureDto>.BadRequestResult(result.Error.Message);
         }
 
         var authorPicture = new AuthorPicture()
@@ -169,22 +159,9 @@ public class AuthorRepository : IAuthorRepository
 
         author.AuthorPicture = authorPicture;
 
-        if (await _dataContext.SaveChangesAsync() > 0)
-        {
-            return new Result<PictureDto>()
-            {
-                Data = _mapper.Map<PictureDto>(authorPicture),
-                StatusCode = 200,
-                IsSuccess = true
-            };
-        }
-
-        return new Result<PictureDto>()
-        {
-            IsSuccess = false,
-            StatusCode = 400,
-            ErrorMessage = "Problem adding picture"
-        };
+        return await _dataContext.SaveChangesAsync() > 0 
+            ? Result<PictureDto>.OkResult(_mapper.Map<PictureDto>(authorPicture)) 
+            : Result<PictureDto>.BadRequestResult("Problem adding picture");
     }
 
     public async Task<bool> AuthorNameExist(string authorName)
