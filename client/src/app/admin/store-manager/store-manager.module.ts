@@ -9,6 +9,8 @@ import { AuthorFormComponent } from './author/author-form/author-form.component'
 import { CreateAuthorComponent } from './author/create-author/create-author.component';
 import { AuthorListComponent } from './author/author-list/author-list.component';
 import { AuthorEditComponent } from './author/author-edit/author-edit.component';
+import { BookFormComponent } from './book/book-form/book-form.component';
+import { BookCreateComponent } from './book/book-create/book-create.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { AuthorEditComponent } from './author/author-edit/author-edit.component'
     CreateAuthorComponent,
     AuthorListComponent,
     AuthorEditComponent,
+    BookFormComponent,
+    BookCreateComponent,
   ],
   imports: [CommonModule, StoreManagerRoutingModule, SharedModule],
 })
