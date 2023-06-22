@@ -14,6 +14,6 @@ public class DataContext : IdentityDbContext<User>
 
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
-    public DbSet<Author> Publishers { get; set; }
+    public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Category> Categories { get; set; }
 }

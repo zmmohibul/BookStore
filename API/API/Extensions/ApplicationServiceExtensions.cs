@@ -27,6 +27,7 @@ public static class ApplicationServiceExtensions
 
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
         
 
         return services;
