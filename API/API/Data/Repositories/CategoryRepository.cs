@@ -5,6 +5,7 @@ using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Data.Repositories;
 
@@ -19,16 +20,23 @@ public class CategoryRepository : ICategoryRepository
         _mapper = mapper;
     }
     
-    public async Task<Result<PaginatedList<CategoryDto>>> GetAllCategories(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<CategoryDto>>> GetAllCategories(PaginationParams paginationParams, QueryParameters queryParameters, int? parentId = null)
     {
         var query = _dataContext.Categories
-            .Where(category => category.ParentId == null)
-            .AsNoTracking()
-            .OrderBy(cat => cat.Name)
-            .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider);
+            .Where(category => category.ParentId == parentId)
+            .AsNoTracking();
+
+        if (!queryParameters.SearchTerm.IsNullOrEmpty())
+        {
+            query = query.Where(category => category.Name.Contains(queryParameters.SearchTerm));
+        }
         
+        query = query.OrderBy(cat => cat.Name);
+        
+        var projectedQuery = query.ProjectTo<CategoryDto>(_mapper.ConfigurationProvider);
+
         var data = await PaginatedList<CategoryDto>
-            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+            .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<CategoryDto>>.OkResult(data);
     }

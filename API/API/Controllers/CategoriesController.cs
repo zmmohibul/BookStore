@@ -15,15 +15,21 @@ public class CategoriesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAllCategories([FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
     {
-        return HandleResult(await _categoryRepository.GetAllCategories(paginationParams));
+        return HandleResult(await _categoryRepository.GetAllCategories(paginationParams, queryParameters));
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCategory(int id)
     {
         return HandleResult(await _categoryRepository.GetCategoryById(id));
+    }
+    
+    [HttpGet("{id}/sub-categories")]
+    public async Task<IActionResult> GetSubCategories(int id, [FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
+    {
+        return HandleResult(await _categoryRepository.GetAllCategories(paginationParams, queryParameters, id));
     }
 
     [HttpPost]

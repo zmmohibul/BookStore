@@ -5,7 +5,7 @@
 </h5>
 
 <mat-form-field style="width: 40rem;">
-  <mat-select #singleSelect (selectionChange)="onSelect()" [formControl]="control" placeholder="Item">
+  <mat-select #singleSelect (selectionChange)="onSelect()" [formControl]="control" placeholder={{label}}>
     <mat-option>
       <ngx-mat-select-search [formControl]="filterControl"></ngx-mat-select-search>
     </mat-option>

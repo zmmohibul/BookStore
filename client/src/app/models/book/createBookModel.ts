@@ -1,3 +1,4 @@
 export class CreateBookModel {
-  authors: number[] = [];
+  authorsId: number[] = [];
+  categoriesId: number[] = [];
 }

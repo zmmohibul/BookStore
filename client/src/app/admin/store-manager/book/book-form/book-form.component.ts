@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { CreateBookModel } from '../../../../models/book/createBookModel';
+import { CategoryService } from '../../../../services/category.service';
 
 @Component({
   selector: 'app-book-form',
@@ -21,20 +22,24 @@ import { CreateBookModel } from '../../../../models/book/createBookModel';
   styleUrls: ['./book-form.component.scss'],
 })
 export class BookFormComponent implements OnInit {
-  baseUrl = environment.apiUrl;
-  user: User | undefined;
   @Input() book: Book | undefined;
   bookForm: FormGroup = new FormGroup({});
 
+  baseUrl = environment.apiUrl;
+  user: User | undefined;
+
   createBookModel = new CreateBookModel();
   coAuthorCount = 0;
+  parentCategories: string[] = [];
+
   loading = false;
   uploader: FileUploader | undefined;
   hasBaseDropZoneOver = false;
 
   constructor(
     private authenticationService: AuthenticationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -91,12 +96,32 @@ export class BookFormComponent implements OnInit {
 
   onAuthorSelect(data: any) {
     if (data.prevId) {
-      this.createBookModel.authors = this.createBookModel.authors.filter(
+      this.createBookModel.authorsId = this.createBookModel.authorsId.filter(
         (id) => id != data.prevId
       );
     }
-    this.createBookModel.authors.push(data.id);
-    console.log(this.createBookModel.authors);
+    this.createBookModel.authorsId.push(data.id);
+    console.log(this.createBookModel.authorsId);
+  }
+
+  onCategorySelect(data: any) {
+    if (data.prevId) {
+      this.createBookModel.categoriesId =
+        this.createBookModel.categoriesId.filter((id) => id != data.prevId);
+    }
+
+    this.createBookModel.categoriesId.push(data.id);
+    this.categoryService.getSubCategories(data.id).subscribe({
+      next: (response) => {
+        if (response && response.subCategories.length) {
+          this.parentCategories.push(
+            `${this.baseUrl}/categories/${data.id}/sub-categories`
+          );
+        }
+      },
+    });
+
+    console.log(this.createBookModel.categoriesId);
   }
 
   addCoAuthor() {
@@ -106,10 +131,10 @@ export class BookFormComponent implements OnInit {
   closeCoAuthor(aid: number) {
     this.coAuthorCount--;
 
-    this.createBookModel.authors = this.createBookModel.authors.filter(
+    this.createBookModel.authorsId = this.createBookModel.authorsId.filter(
       (id) => id != aid
     );
 
-    console.log(this.createBookModel.authors);
+    console.log(this.createBookModel.authorsId);
   }
 }
