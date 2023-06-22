@@ -21,6 +21,10 @@
     {{label}} can be at most {{control.errors?.['maxlength'].requiredLength}} characters
   </mdb-error>
 
+  <mdb-error *ngIf="control.errors?.['min'] && (control?.dirty || control?.touched)">
+    {{label}} must be at least {{control.errors?.['min'].min}}
+  </mdb-error>
+
   <mdb-error *ngIf="control.errors?.['notMatching'] && (control?.dirty || control?.touched)">
     Passwords do not match
   </mdb-error>
@@ -47,4 +51,5 @@
     {{label}} can be at most {{control.errors?.['maxlength'].requiredLength}} characters
   </mdb-error>
 </mdb-form-control>
+
 

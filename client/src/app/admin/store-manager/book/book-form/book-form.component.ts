@@ -31,6 +31,7 @@ export class BookFormComponent implements OnInit {
   createBookModel = new CreateBookModel();
   coAuthorCount = 0;
   parentCategories: string[] = [];
+  date = '';
 
   loading = false;
   uploader: FileUploader | undefined;
@@ -57,11 +58,26 @@ export class BookFormComponent implements OnInit {
 
   initializeForm() {
     this.bookForm = this.formBuilder.group({
-      name: [this.book ? `${this.book.name}` : '', Validators.required],
+      name: [
+        this.book ? `${this.book.name}` : '',
+        [Validators.required, Validators.minLength(10)],
+      ],
       description: [
         this.book ? `${this.book.description}` : '',
-        Validators.required,
+        [Validators.required, Validators.minLength(20)],
       ],
+
+      paperbackPrice: ['', [Validators.required, Validators.min(10)]],
+      paperbackQuantity: ['', [Validators.required, Validators.min(1)]],
+
+      hardcoverPrice: ['', [Validators.required, Validators.min(10)]],
+      hardcoverQuantity: ['', [Validators.required, Validators.min(1)]],
+
+      printLength: ['', [Validators.required, Validators.min(1)]],
+      publicationDate: ['', [Validators.required]],
+
+      language: ['', [Validators.required, Validators.minLength(3)]],
+      isbn13: ['', [Validators.required, Validators.minLength(5)]],
     });
   }
 
@@ -122,6 +138,20 @@ export class BookFormComponent implements OnInit {
     });
 
     console.log(this.createBookModel.categoriesId);
+  }
+
+  onPublisherSelect(data: any) {
+    this.createBookModel.publisherId = data.id;
+    console.log(this.createBookModel.publisherId);
+  }
+
+  onDateChange(ev: any) {
+    this.bookForm.setValue({
+      ...this.bookForm.value,
+      publicationDate: new Date(ev.value),
+    });
+    // console.log(new Date(ev.value));
+    console.log(this.bookForm.value);
   }
 
   addCoAuthor() {

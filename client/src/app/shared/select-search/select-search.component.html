@@ -1,11 +1,12 @@
+<hr class="hr">
 <h5>
   Select {{label}}
   <i (click)="onClose()" *ngIf="label.includes('Co-') || label.includes('Sub-')"
      class="fas fa-window-close text-danger"></i>
 </h5>
 
-<mat-form-field style="width: 40rem;">
-  <mat-select #singleSelect (selectionChange)="onSelect()" [formControl]="control" placeholder={{label}}>
+<mat-form-field (click)="onSelectTouched()" style="width: 40rem;">
+  <mat-select #singleSelect (selectionChange)="onSelect()" [formControl]="control" [placeholder]="label">
     <mat-option>
       <ngx-mat-select-search [formControl]="filterControl"></ngx-mat-select-search>
     </mat-option>
@@ -16,6 +17,8 @@
   </mat-select>
 </mat-form-field>
 
-<p *ngIf="!control.value" class="text-danger">
+<p *ngIf="touched && !control.value" class="text-danger">
   Please Select {{label}}
 </p>
+<hr class="hr">
+

@@ -5,6 +5,7 @@ using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Data.Repositories;
 
@@ -19,14 +20,21 @@ public class PublisherRepository : IPublisherRepository
         _mapper = mapper;
     }
     
-    public async Task<Result<PaginatedList<PublisherDto>>> GetAllPublisher(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<PublisherDto>>> GetAllPublisher(PaginationParams paginationParams, QueryParameters queryParameters)
     {
-        var query = _dataContext.Publishers
-            .OrderBy(publisher => publisher.Name)
-            .ProjectTo<PublisherDto>(_mapper.ConfigurationProvider);
+        var query = _dataContext.Publishers.AsNoTracking();
+
+        if (!queryParameters.SearchTerm.IsNullOrEmpty())
+        {
+            query = query.Where(publisher => publisher.Name.Contains(queryParameters.SearchTerm));
+        }
+        
+        query = query.OrderBy(publisher => publisher.Name);
+
+        var projectedQuery = query.ProjectTo<PublisherDto>(_mapper.ConfigurationProvider);
 
         var data = await PaginatedList<PublisherDto>
-            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+            .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<PublisherDto>>.OkResult(data);
     }

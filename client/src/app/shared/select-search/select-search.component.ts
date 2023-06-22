@@ -14,13 +14,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import {ReplaySubject, Subject, take, takeUntil} from 'rxjs';
-import {MatSelect} from '@angular/material/select';
-import {environment} from '../../../environments/environment';
-import {User} from '../../models/user';
+import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
+import { environment } from '../../../environments/environment';
+import { User } from '../../models/user';
 
-import {AuthenticationService} from '../../services/authentication.service';
-import {HttpClient} from '@angular/common/http';
+import { AuthenticationService } from '../../services/authentication.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-select-search',
@@ -33,8 +33,9 @@ export class SelectSearchComponent implements OnInit, OnDestroy, AfterViewInit {
   public control: FormControl = new FormControl();
   public filterControl: FormControl = new FormControl();
   public filteredItems: ReplaySubject<any> = new ReplaySubject(1);
+  touched: boolean = false;
 
-  @ViewChild('singleSelect', {static: true}) singleSelect:
+  @ViewChild('singleSelect', { static: true }) singleSelect:
     | MatSelect
     | undefined;
   baseUrl = environment.apiUrl;
@@ -53,8 +54,7 @@ export class SelectSearchComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private http: HttpClient,
     private authenticationService: AuthenticationService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.control.setValue('');
@@ -95,15 +95,18 @@ export class SelectSearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this._onDestroy.complete();
   }
 
-  onSubmit() {
-  }
+  onSubmit() {}
 
   onSelect() {
-    const emitData = {prevId: this.selectedId, id: this.control.value.id};
+    const emitData = { prevId: this.selectedId, id: this.control.value.id };
     console.log(this.control.value);
     this.selectedId = this.control.value.id;
     this.selectedData = emitData;
     this.select.emit(emitData);
+  }
+
+  onSelectTouched() {
+    this.touched = true;
   }
 
   onClose() {

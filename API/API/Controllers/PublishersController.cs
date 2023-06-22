@@ -15,9 +15,9 @@ public class PublishersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPublishers([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAllPublishers([FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
     {
-        return HandleResult(await _publisherRepository.GetAllPublisher(paginationParams));
+        return HandleResult(await _publisherRepository.GetAllPublisher(paginationParams, queryParameters));
     }
 
     [HttpGet("{id}")]

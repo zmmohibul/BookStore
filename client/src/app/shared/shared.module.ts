@@ -26,6 +26,9 @@ import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { SelectSearchComponent } from './select-search/select-search.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [FooterComponent, InputComponent, SelectSearchComponent],
@@ -53,6 +56,9 @@ import { SelectSearchComponent } from './select-search/select-search.component';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
     NgxMatSelectSearchModule,
 
     FormsModule,
@@ -81,6 +87,9 @@ import { SelectSearchComponent } from './select-search/select-search.component';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
     NgxMatSelectSearchModule,
 
     FileUploadModule,

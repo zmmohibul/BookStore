@@ -10,6 +10,7 @@
                  label="Book Description"></app-input>
     </div>
 
+
     <div class="input">
       <app-select-search (select)="onAuthorSelect($event)" [searchUrl]="baseUrl + '/authors'"
                          label="Author"></app-select-search>
@@ -20,19 +21,80 @@
                          [searchUrl]="baseUrl + '/authors'"
                          label="Co-Author"></app-select-search>
     </div>
+
     <button (click)="addCoAuthor()" class="btn btn-dark btn-block mb-5" type="submit">
       Add More Author
     </button>
+
 
     <div class="input">
       <app-select-search (select)="onCategorySelect($event)" [searchUrl]="baseUrl + '/categories'"
                          label="Category"></app-select-search>
     </div>
 
+
     <div *ngFor="let url of parentCategories" class="input">
       <app-select-search (select)="onCategorySelect($event)" [searchUrl]="url"
                          label="Sub-Category"></app-select-search>
     </div>
+
+    <div class="input">
+      <app-select-search (select)="onPublisherSelect($event)" [searchUrl]="baseUrl + '/publishers'"
+                         label="Publisher"></app-select-search>
+    </div>
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['paperbackPrice'])" inputType="number"
+                 label="Paperback Price"></app-input>
+    </div>
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['paperbackQuantity'])" inputType="number"
+                 label="Paperback Quantity"></app-input>
+    </div>
+
+    <hr class="hr">
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['hardcoverPrice'])" inputType="number"
+                 label="Hardcover Price"></app-input>
+    </div>
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['hardcoverQuantity'])" inputType="number"
+                 label="Hardcover Quantity"></app-input>
+    </div>
+
+    <hr class="hr">
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['printLength'])" inputType="number"
+                 label="Print Length"></app-input>
+    </div>
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['language'])" inputType="text"
+                 label="Language"></app-input>
+    </div>
+
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['isbn13'])" inputType="text"
+                 label="ISBN-13"></app-input>
+    </div>
+
+    <hr class="hr">
+
+    <div class="input">
+      <h5>Select Publication Date</h5>
+      <mat-form-field style="min-width: 40rem;">
+        <mat-label>Choose a date</mat-label>
+        <input (dateChange)="onDateChange($event)" [matDatepicker]="picker" matInput>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <hr class="hr">
 
 
     <div class="mb-3">
