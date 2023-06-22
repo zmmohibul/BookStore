@@ -106,6 +106,7 @@ export class AuthorFormComponent implements OnInit {
             });
             this.uploader?.uploadAll();
             this.authorForm.setValue({ name: '', bio: '' });
+            this.authorForm.reset();
             this.toastr.success('Author Added');
             this.loading = false;
           },

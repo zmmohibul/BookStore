@@ -11,6 +11,9 @@ import { AuthorListComponent } from './author/author-list/author-list.component'
 import { AuthorEditComponent } from './author/author-edit/author-edit.component';
 import { BookFormComponent } from './book/book-form/book-form.component';
 import { BookCreateComponent } from './book/book-create/book-create.component';
+import { CreatePublisherComponent } from './publisher/create-publisher/create-publisher.component';
+import { PublisherListComponent } from './publisher/publisher-list/publisher-list.component';
+import { PublisherFormComponent } from './publisher/publisher-form/publisher-form.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,9 @@ import { BookCreateComponent } from './book/book-create/book-create.component';
     AuthorEditComponent,
     BookFormComponent,
     BookCreateComponent,
+    CreatePublisherComponent,
+    PublisherListComponent,
+    PublisherFormComponent,
   ],
   imports: [CommonModule, StoreManagerRoutingModule, SharedModule],
 })
