@@ -10,6 +10,7 @@ import { Author } from '../../../../models/author/author';
 })
 export class AuthorEditComponent implements OnInit {
   author: Author | undefined;
+  loading = false;
 
   constructor(
     private route: ActivatedRoute,

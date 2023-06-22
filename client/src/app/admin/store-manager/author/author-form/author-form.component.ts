@@ -25,6 +25,8 @@ export class AuthorFormComponent implements OnInit {
   baseUrl = environment.apiUrl;
   user: User | undefined;
 
+  loading = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private authorService: AuthorsService,
@@ -81,6 +83,7 @@ export class AuthorFormComponent implements OnInit {
 
   onSubmit() {
     if (this.authorForm.valid) {
+      this.loading = true;
       const authorModel: CreateAuthorModel = { ...this.authorForm.value };
       if (this.author) {
         this.authorService.updateAuthor(this.author.id, authorModel).subscribe({
@@ -91,6 +94,7 @@ export class AuthorFormComponent implements OnInit {
             });
             this.uploader?.uploadAll();
             this.toastr.success('Author Updated');
+            this.loading = false;
           },
         });
       } else {
@@ -103,6 +107,7 @@ export class AuthorFormComponent implements OnInit {
             this.uploader?.uploadAll();
             this.authorForm.setValue({ name: '', bio: '' });
             this.toastr.success('Author Added');
+            this.loading = false;
           },
         });
       }

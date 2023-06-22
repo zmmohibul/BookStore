@@ -1,5 +1,6 @@
 <div *ngIf="author">
   <h1 class="text-center mb-5">{{author.name}}</h1>
 
+  <div [ngClass]="{'loader': loading}"></div>
   <app-author-form [author]="author"></app-author-form>
 </div>

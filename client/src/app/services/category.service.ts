@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, delay, map, of } from 'rxjs';
+import { map, of } from 'rxjs';
 import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
@@ -31,7 +31,6 @@ export class CategoryService {
         params,
       })
       .pipe(
-        delay(1000),
         map((result) => {
           this.categoryCache.set(queryStr, result);
           return result;
