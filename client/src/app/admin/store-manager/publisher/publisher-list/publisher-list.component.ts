@@ -44,6 +44,7 @@ export class PublisherListComponent implements OnInit {
           this.publishersList.items = this.publishersList.items.filter(
             (item) => item.id != publisher.id
           );
+          this.publishersList.count = this.publishersList.items.length;
         }
         this.toastr.success(`Publisher ${publisher.name} deleted...`);
       },

@@ -1,34 +1,43 @@
 using API.Data;
+using API.DTOs.Book;
+using API.Helpers;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class BooksController : ControllerBase
+public class BooksController : BaseApiController
 {
-    private readonly DataContext _dataContext;
+    private readonly IBookRepository _bookRepository;
 
-    public BooksController(DataContext dataContext)
+    public BooksController(IBookRepository bookRepository)
     {
-        _dataContext = dataContext;
+        _bookRepository = bookRepository;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllBooks()
+    public async Task<IActionResult> GetAllBooks([FromQuery] PaginationParams paginationParams)
     {
-        var catId = 1;
-        var books = _dataContext.Books
-            .Include(book => book.Categories)
-            .Where(book => book.Categories.Any(cat => cat.Id == catId));
-        return Ok(await _dataContext.Books.ToListAsync());
+        return HandleResult(await _bookRepository.GetAllBooks(paginationParams));
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBook(int id)
     {
-        var book = await _dataContext.Books.FindAsync(id);
-        return Ok(book);
+        return HandleResult(await _bookRepository.GetBookById(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateBook(CreateBookDto createBookDto)
+    {
+        var result = await _bookRepository.CreateBook(createBookDto);
+
+        if (result.IsSuccess)
+        {
+            return CreatedAtAction(nameof(GetBook), new { id = result.Data.Id }, result.Data);
+        }
+
+        return HandleResult(result);
     }
 }
