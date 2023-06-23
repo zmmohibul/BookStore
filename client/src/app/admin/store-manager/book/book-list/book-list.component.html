@@ -1,0 +1,59 @@
+<p class="display-5 text-center">Authors</p>
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+  <tr>
+    <th class="text-center">Id</th>
+    <th class="px-5">Book Name</th>
+    <th class="">Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngIf="loading" class="text-center">
+    <td colspan="3">
+      <div [ngClass]="{'loader': loading}"></div>
+    </td>
+  </tr>
+  <tr *ngFor="let book of books?.items">
+    <td class="text-center">{{ book.id }}</td>
+    <td>
+      <div class="px-4 d-flex align-items-center">
+        <img
+          alt=""
+          class="rounded-circle"
+          src="{{ (book.pictures.length && book.pictures[0].url) || './assets/user.png' }}"
+          style="width: 65px; height: 65px"
+        />
+        <div class="ms-3">
+          <p class=" mb-1">{{ book.name }}</p>
+        </div>
+      </div>
+    </td>
+
+    <td class="">
+      <button class="btn btn-link btn-sm btn-rounded" routerLink="../author-edit/{{book.id}}" type="button">
+        Edit
+      </button>
+      <button (click)="deleteBook(book)" class="btn btn-link btn-sm btn-rounded text-danger" type="button">
+        Delete
+      </button>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="3">
+      <ng-container *ngIf="books">
+        <mat-paginator (page)="onPageChange($event)"
+                       [length]="books.count"
+                       [pageSizeOptions]="[books.pageSize, 5, 10, 25, 100]"
+                       [pageSize]="books.pageSize"
+                       aria-label="Select page"
+                       class="mat-paginator"
+                       showFirstLastButtons
+        >
+        </mat-paginator>
+      </ng-container>
+    </td>
+  </tr>
+  </tbody>
+</table>
+

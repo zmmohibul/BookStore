@@ -7,13 +7,14 @@ import { Category } from '../models/category';
 import { CategoryDetail } from '../models/categoryDetail';
 import { CreateCategory } from '../models/createCategory';
 import { PaginationParams } from '../models/paginationParams';
+import { Book } from '../models/book/book';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
   baseUrl = environment.apiUrl;
-  categoryCache = new Map();
+  categoryCache = new Map<string, PaginatedList<Category>>();
   subCategories = new Map();
 
   constructor(private http: HttpClient) {}
@@ -87,6 +88,12 @@ export class CategoryService {
   }
 
   deleteCategory(id: number) {
-    return this.http.delete(`${this.baseUrl}/categories/${id}`);
+    return this.http.delete(`${this.baseUrl}/categories/${id}`).pipe(
+      map(() => {
+        this.categoryCache.forEach((value, key) => {
+          value.items = value.items.filter((item) => item.id != id);
+        });
+      })
+    );
   }
 }

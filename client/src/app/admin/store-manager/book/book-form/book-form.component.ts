@@ -54,6 +54,9 @@ export class BookFormComponent implements OnInit {
           this.user = response;
         }
       },
+      error: (err) => {
+        this.toastr.error(err.error.errorMessage);
+      },
     });
 
     this.initializeUploader();
@@ -108,7 +111,7 @@ export class BookFormComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
-        this.toastr.success(`Item added.`);
+        this.toastr.success(`Picture added.`);
       }
     };
   }
@@ -130,6 +133,8 @@ export class BookFormComponent implements OnInit {
         this.uploader?.setOptions({
           url: `${this.baseUrl}/books/${response.id}/add-picture`,
         });
+        this.toastr.success(`${response.name} added.`);
+        this.bookForm.reset();
 
         this.uploader?.uploadAll();
       },
@@ -162,6 +167,9 @@ export class BookFormComponent implements OnInit {
             `${this.baseUrl}/categories/${data.id}/sub-categories`
           );
         }
+      },
+      error: (err) => {
+        this.toastr.error(err.error.errorMessage);
       },
     });
   }

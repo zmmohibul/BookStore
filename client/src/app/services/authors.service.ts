@@ -52,6 +52,12 @@ export class AuthorsService {
   }
 
   deleteAuthor(id: number) {
-    return this.http.delete(`${this.baseUrl}/authors/${id}`);
+    return this.http.delete(`${this.baseUrl}/authors/${id}`).pipe(
+      map(() => {
+        this.authors.forEach((value, key) => {
+          value.items = value.items.filter((item) => item.id != id);
+        });
+      })
+    );
   }
 }
