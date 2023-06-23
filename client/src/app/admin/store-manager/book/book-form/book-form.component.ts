@@ -2,21 +2,19 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '../../../../../environments/environment';
 import { User } from '../../../../models/user';
-import { Author } from '../../../../models/author/author';
 import { Book } from '../../../../models/book/book';
 import { AuthenticationService } from '../../../../services/authentication.service';
-import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { MatSelect } from '@angular/material/select';
+import { take } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreateBookModel } from '../../../../models/book/createBookModel';
 import { CategoryService } from '../../../../services/category.service';
 import { BooksService } from '../../../../services/books.service';
 import { ToastrService } from 'ngx-toastr';
+import {
+  NgxGalleryAnimation,
+  NgxGalleryImage,
+  NgxGalleryOptions,
+} from '@kolkov/ngx-gallery';
 
 @Component({
   selector: 'app-book-form',
@@ -38,6 +36,9 @@ export class BookFormComponent implements OnInit {
   loading = false;
   uploader: FileUploader | undefined;
   hasBaseDropZoneOver = false;
+
+  galleryOptions: NgxGalleryOptions[] = [];
+  galleryImages: NgxGalleryImage[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -61,6 +62,34 @@ export class BookFormComponent implements OnInit {
 
     this.initializeUploader();
     this.initializeForm();
+    console.log(this.book);
+
+    this.galleryOptions = [
+      {
+        width: '500px',
+        height: '800px',
+        imagePercent: 100,
+        thumbnailsColumns: 4,
+        imageAnimation: NgxGalleryAnimation.Slide,
+        preview: true,
+      },
+    ];
+
+    this.galleryImages = this.getGalleryImages();
+  }
+
+  getGalleryImages() {
+    if (!this.book) return [];
+    const imageUrls = [];
+    for (const picture of this.book.pictures) {
+      imageUrls.push({
+        small: picture.url,
+        medium: picture.url,
+        big: picture.url,
+      });
+    }
+    console.log(imageUrls);
+    return imageUrls;
   }
 
   initializeForm() {

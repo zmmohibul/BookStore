@@ -4,6 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthorsService } from '../../../../services/authors.service';
 import { Book } from '../../../../models/book/book';
 import { BooksService } from '../../../../services/books.service';
+import {
+  NgxGalleryAnimation,
+  NgxGalleryImage,
+  NgxGalleryOptions,
+} from '@kolkov/ngx-gallery';
 
 @Component({
   selector: 'app-book-edit',
