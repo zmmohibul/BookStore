@@ -15,7 +15,7 @@ public static class ApplicationServiceExtensions
     {
         services.AddDbContext<DataContext>(opt =>
         {
-            opt.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
         services.AddCors();
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));

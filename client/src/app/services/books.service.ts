@@ -56,14 +56,14 @@ export class BooksService {
 
   setMainPicture(bookId: number, pictureId: number) {
     return this.http.post(
-      `http://localhost:5285/api/books/${bookId}/set-main-picture/${pictureId}`,
+      `${this.baseUrl}/books/${bookId}/set-main-picture/${pictureId}`,
       {}
     );
   }
 
   deletePicture(bookId: number, pictureId: number) {
     return this.http.delete(
-      `http://localhost:5285/api/books/${bookId}/delete-picture/${pictureId}`
+      `${this.baseUrl}/books/${bookId}/delete-picture/${pictureId}`
     );
   }
 }
