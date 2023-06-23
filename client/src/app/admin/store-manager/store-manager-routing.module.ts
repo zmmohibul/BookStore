@@ -8,12 +8,14 @@ import { BookCreateComponent } from './book/book-create/book-create.component';
 import { CreatePublisherComponent } from './publisher/create-publisher/create-publisher.component';
 import { PublisherListComponent } from './publisher/publisher-list/publisher-list.component';
 import { BookListComponent } from './book/book-list/book-list.component';
+import { BookEditComponent } from './book/book-edit/book-edit.component';
 
 const routes: Routes = [
   { path: 'categories', component: CategoryListComponent },
 
   { path: 'create-book', component: BookCreateComponent },
   { path: 'book-list', component: BookListComponent },
+  { path: 'book-edit/:id', component: BookEditComponent },
 
   { path: 'create-publisher', component: CreatePublisherComponent },
   { path: 'publisher-list', component: PublisherListComponent },

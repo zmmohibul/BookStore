@@ -36,6 +36,10 @@ export class BooksService {
       );
   }
 
+  getBookById(id: number) {
+    return this.http.get<Book>(`${this.baseUrl}/books/${id}`);
+  }
+
   createBook(createBookModel: CreateBookModel) {
     return this.http.post<Book>(`${this.baseUrl}/books`, createBookModel);
   }

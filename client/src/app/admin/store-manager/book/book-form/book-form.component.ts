@@ -74,17 +74,41 @@ export class BookFormComponent implements OnInit {
         [Validators.required, Validators.minLength(20)],
       ],
 
-      paperbackPrice: ['', [Validators.required, Validators.min(10)]],
-      paperbackQuantity: ['', [Validators.required, Validators.min(1)]],
+      paperbackPrice: [
+        this.book ? `${this.book.paperbackPrice}` : '',
+        [Validators.required, Validators.min(10)],
+      ],
+      paperbackQuantity: [
+        this.book ? `${this.book.paperbackQuantity}` : '',
+        [Validators.required, Validators.min(1)],
+      ],
 
-      hardcoverPrice: ['', [Validators.required, Validators.min(10)]],
-      hardcoverQuantity: ['', [Validators.required, Validators.min(1)]],
+      hardcoverPrice: [
+        this.book ? `${this.book.hardcoverPrice}` : '',
+        [Validators.required, Validators.min(10)],
+      ],
+      hardcoverQuantity: [
+        this.book ? `${this.book.hardcoverQuantity}` : '',
+        [Validators.required, Validators.min(1)],
+      ],
 
-      printLength: ['', [Validators.required, Validators.min(1)]],
-      publicationDate: ['', [Validators.required]],
+      printLength: [
+        this.book ? `${this.book.printLength}` : '',
+        [Validators.required, Validators.min(1)],
+      ],
+      publicationDate: [
+        this.book ? `${this.book.publicationDate}` : '',
+        [Validators.required],
+      ],
 
-      language: ['', [Validators.required, Validators.minLength(3)]],
-      isbn13: ['', [Validators.required, Validators.minLength(5)]],
+      language: [
+        this.book ? `${this.book.language}` : '',
+        [Validators.required, Validators.minLength(3)],
+      ],
+      isbn13: [
+        this.book ? `${this.book.isbn13}` : '',
+        [Validators.required, Validators.minLength(5)],
+      ],
     });
   }
 
