@@ -106,9 +106,11 @@
             [disabled]="picture.isMain"
             [ngClass]="picture.isMain ? 'btn-success active' : 'btn-outline-success' "
             class="btn btn-sm"
-          >Main
+          >
+            Main
           </button>
           <button
+            (click)="deletePicture(book.id, picture.id)"
             [disabled]="picture.isMain"
             class="btn btn-sm btn-danger"
           ><i class="fa fa-trash"></i></button>

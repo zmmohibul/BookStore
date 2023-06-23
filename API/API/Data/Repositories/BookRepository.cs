@@ -192,4 +192,40 @@ public class BookRepository : IBookRepository
             ? Result<PictureDto>.OkResult(_mapper.Map<PictureDto>(picture))
             : Result<PictureDto>.BadRequestResult("Could not set main picture");
     }
+
+    public async Task<Result<PictureDto>> DeleteBookPicture(int bookId, int pictureId)
+    {
+        var book = await _dataContext.Books
+            .Include(book => book.Pictures)
+            .SingleOrDefaultAsync(b => b.Id == bookId);
+        
+        if (book == null)
+        {
+            return Result<PictureDto>.NotFoundResult($"No book found with given id {bookId}");
+        }
+
+        var picture = book.Pictures.FirstOrDefault(p => p.Id == pictureId);
+
+        if (picture == null)
+        {
+            return Result<PictureDto>.NotFoundResult($"No picture found with given id {pictureId}");
+        }
+
+        if (picture.IsMain)
+        {
+            return Result<PictureDto>.BadRequestResult("Cannot delete the main picture. Change main picture first.");
+        }
+
+        var result = await _pictureUploadService.DeletePhotoAsync(picture.PublicId);
+        if (result.Error != null)
+        {
+            return Result<PictureDto>.BadRequestResult(result.Error.Message);
+        }
+
+        _dataContext.Remove(picture);
+
+        return await _dataContext.SaveChangesAsync() > 0
+            ? Result<PictureDto>.NoContentResult()
+            : Result<PictureDto>.BadRequestResult("Could not delete picture");
+    }
 }

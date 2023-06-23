@@ -60,4 +60,10 @@ export class BooksService {
       {}
     );
   }
+
+  deletePicture(bookId: number, pictureId: number) {
+    return this.http.delete(
+      `http://localhost:5285/api/books/${bookId}/delete-picture/${pictureId}`
+    );
+  }
 }

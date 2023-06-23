@@ -1,15 +1,15 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {FileUploader} from 'ng2-file-upload';
-import {environment} from '../../../../../environments/environment';
-import {User} from '../../../../models/user';
-import {Book} from '../../../../models/book/book';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {take} from 'rxjs';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CreateBookModel} from '../../../../models/book/createBookModel';
-import {CategoryService} from '../../../../services/category.service';
-import {BooksService} from '../../../../services/books.service';
-import {ToastrService} from 'ngx-toastr';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FileUploader } from 'ng2-file-upload';
+import { environment } from '../../../../../environments/environment';
+import { User } from '../../../../models/user';
+import { Book } from '../../../../models/book/book';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { take } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CreateBookModel } from '../../../../models/book/createBookModel';
+import { CategoryService } from '../../../../services/category.service';
+import { BooksService } from '../../../../services/books.service';
+import { ToastrService } from 'ngx-toastr';
 import {
   NgxGalleryAnimation,
   NgxGalleryImage,
@@ -43,8 +43,7 @@ export class BookFormComponent implements OnInit {
     private categoryService: CategoryService,
     private bookService: BooksService,
     private toastr: ToastrService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.authenticationService.currentUser$.pipe(take(1)).subscribe({
@@ -149,7 +148,7 @@ export class BookFormComponent implements OnInit {
       return;
     }
 
-    this.createBookModel = {...this.createBookModel, ...this.bookForm.value};
+    this.createBookModel = { ...this.createBookModel, ...this.bookForm.value };
 
     this.bookService.createBook(this.createBookModel).subscribe({
       next: (response) => {
@@ -234,9 +233,25 @@ export class BookFormComponent implements OnInit {
             }
 
             return item;
-          })
+          });
         }
         this.toastr.success('Main Picture Updated');
+      },
+    });
+  }
+
+  deletePicture(bookId: number, pictureId: number) {
+    this.bookService.deletePicture(bookId, pictureId).subscribe({
+      next: () => {
+        if (this.book) {
+          this.book.pictures = this.book.pictures.filter(
+            (item) => item.id != pictureId
+          );
+        }
+        this.toastr.success('Picture deleted');
+      },
+      error: (err) => {
+        this.toastr.error(err.error.errorMessage);
       },
     });
   }

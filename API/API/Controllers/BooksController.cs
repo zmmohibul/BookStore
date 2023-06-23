@@ -58,4 +58,10 @@ public class BooksController : BaseApiController
     {
         return HandleResult(await _bookRepository.SetMainBookPicture(id, pictureId));
     }
+    
+    [HttpDelete("{id}/delete-picture/{pictureId}")]
+    public async Task<IActionResult> DeleteBookPicture(int id, int pictureId)
+    {
+        return HandleResult(await _bookRepository.DeleteBookPicture(id, pictureId));
+    }
 }

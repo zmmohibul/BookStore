@@ -13,4 +13,5 @@ public interface IBookRepository
     
     Task<Result<PictureDto>> AddBookPicture(int bookId, IFormFile file);
     Task<Result<PictureDto>> SetMainBookPicture(int bookId, int pictureId);
+    Task<Result<PictureDto>> DeleteBookPicture(int bookId, int pictureId);
 }
