@@ -1,6 +1,7 @@
 using API.DTOs.Author;
 using API.Helpers;
 using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -26,6 +27,7 @@ public class AuthorsController : BaseApiController
         return HandleResult(await _authorRepository.GetAuthorById(id));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost]
     public async Task<IActionResult> CreateAuthor(CreateAuthorDto createAuthorDto)
     {
@@ -39,18 +41,21 @@ public class AuthorsController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAuthor(int id, [FromBody] CreateAuthorDto createAuthorDto)
     {
         return HandleResult(await _authorRepository.UpdateAuthor(id, createAuthorDto));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAuthor(int id)
     {
         return HandleResult(await _authorRepository.DeleteAuthor(id));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("{id}/add-picture")]
     public async Task<IActionResult> AddAuthorPicture(int id, IFormFile file)
     {

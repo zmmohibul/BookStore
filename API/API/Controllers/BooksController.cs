@@ -2,6 +2,7 @@ using API.Data;
 using API.DTOs.Book;
 using API.Helpers;
 using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,7 @@ public class BooksController : BaseApiController
         return HandleResult(await _bookRepository.GetBookById(id));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost]
     public async Task<IActionResult> CreateBook(CreateBookDto createBookDto)
     {
@@ -41,24 +43,28 @@ public class BooksController : BaseApiController
         return HandleResult(result);
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         return HandleResult(await _bookRepository.DeleteBook(id));
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("{id}/add-picture")]
     public async Task<IActionResult> AddBookPicture(int id, IFormFile file)
     {
         return HandleResult(await _bookRepository.AddBookPicture(id, file));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("{id}/set-main-picture/{pictureId}")]
     public async Task<IActionResult> SetBookMainPicture(int id, int pictureId)
     {
         return HandleResult(await _bookRepository.SetMainBookPicture(id, pictureId));
     }
     
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}/delete-picture/{pictureId}")]
     public async Task<IActionResult> DeleteBookPicture(int id, int pictureId)
     {

@@ -1,6 +1,7 @@
 using API.DTOs.Publisher;
 using API.Helpers;
 using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -26,6 +27,7 @@ public class PublishersController : BaseApiController
         return HandleResult(await _publisherRepository.GetPublisherById(id));
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpPost]
     public async Task<IActionResult> CreatePublisher(CreatePublisherDto createPublisherDto)
     {
@@ -39,6 +41,7 @@ public class PublishersController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize(Policy = "RequireAdminRole")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePublisher(int id)
     {
