@@ -53,4 +53,11 @@ export class BooksService {
       })
     );
   }
+
+  setMainPicture(bookId: number, pictureId: number) {
+    return this.http.post(
+      `http://localhost:5285/api/books/${bookId}/set-main-picture/${pictureId}`,
+      {}
+    );
+  }
 }

@@ -52,4 +52,10 @@ public class BooksController : BaseApiController
     {
         return HandleResult(await _bookRepository.AddBookPicture(id, file));
     }
+
+    [HttpPost("{id}/set-main-picture/{pictureId}")]
+    public async Task<IActionResult> SetBookMainPicture(int id, int pictureId)
+    {
+        return HandleResult(await _bookRepository.SetMainBookPicture(id, pictureId));
+    }
 }

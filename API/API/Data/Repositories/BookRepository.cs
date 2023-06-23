@@ -156,4 +156,40 @@ public class BookRepository : IBookRepository
             ? Result<PictureDto>.OkResult(_mapper.Map<PictureDto>(bookPicture)) 
             : Result<PictureDto>.BadRequestResult("Problem adding picture");
     }
+
+    public async Task<Result<PictureDto>> SetMainBookPicture(int bookId, int pictureId)
+    {
+        var book = await _dataContext.Books
+            .Include(book => book.Pictures)
+            .SingleOrDefaultAsync(b => b.Id == bookId);
+        
+        if (book == null)
+        {
+            return Result<PictureDto>.NotFoundResult($"No book found with given id {bookId}");
+        }
+
+        var picture = book.Pictures.FirstOrDefault(p => p.Id == pictureId);
+
+        if (picture == null)
+        {
+            return Result<PictureDto>.NotFoundResult($"No picture found with given id {pictureId}");
+        }
+
+        if (picture.IsMain)
+        {
+            return Result<PictureDto>.BadRequestResult("This is already the main picture");
+        }
+
+        var currentMain = book.Pictures.FirstOrDefault(p => p.IsMain);
+        if (currentMain != null)
+        {
+            currentMain.IsMain = false;
+        }
+
+        picture.IsMain = true;
+        
+        return await _dataContext.SaveChangesAsync() > 0
+            ? Result<PictureDto>.OkResult(_mapper.Map<PictureDto>(picture))
+            : Result<PictureDto>.BadRequestResult("Could not set main picture");
+    }
 }

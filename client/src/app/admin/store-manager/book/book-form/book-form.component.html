@@ -97,8 +97,24 @@
     </div>
     <hr class="hr">
 
-    <div class="input">
-      <ngx-gallery [images]="galleryImages" [options]="galleryOptions" class="ngx-gallery"></ngx-gallery>
+    <div *ngIf="book" class="input row">
+      <div *ngFor="let picture of book.pictures" class="col-2 mb-1">
+        <img alt="photo of user" class="img-thumbnail mb-1" src="{{picture.url}}">
+        <div class="text-center">
+          <button
+            (click)="setMainPicture(book.id, picture.id)"
+            [disabled]="picture.isMain"
+            [ngClass]="picture.isMain ? 'btn-success active' : 'btn-outline-success' "
+            class="btn btn-sm"
+          >Main
+          </button>
+          <button
+            [disabled]="picture.isMain"
+            class="btn btn-sm btn-danger"
+          ><i class="fa fa-trash"></i></button>
+        </div>
+      </div>
+      <!--      <ngx-gallery [images]="galleryImages" [options]="galleryOptions" class="ngx-gallery"></ngx-gallery>-->
     </div>
 
 
