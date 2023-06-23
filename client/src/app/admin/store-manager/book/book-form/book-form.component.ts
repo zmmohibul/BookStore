@@ -10,11 +10,6 @@ import { CreateBookModel } from '../../../../models/book/createBookModel';
 import { CategoryService } from '../../../../services/category.service';
 import { BooksService } from '../../../../services/books.service';
 import { ToastrService } from 'ngx-toastr';
-import {
-  NgxGalleryAnimation,
-  NgxGalleryImage,
-  NgxGalleryOptions,
-} from '@kolkov/ngx-gallery';
 
 @Component({
   selector: 'app-book-form',

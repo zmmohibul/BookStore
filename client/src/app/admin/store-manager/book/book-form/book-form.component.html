@@ -163,14 +163,6 @@
               <div [ngStyle]="{ 'width': uploader?.progress + '%' }" class="progress-bar" role="progressbar"></div>
             </div>
           </div>
-          <!--          <button (click)="uploader?.uploadAll()" [disabled]="!uploader?.getNotUploadedItems()?.length"-->
-          <!--                  class="btn btn-success btn-s" type="button">-->
-          <!--            <span class="fa fa-upload"></span> Upload all-->
-          <!--          </button>-->
-          <!--          <button (click)="uploader?.cancelAll()" [disabled]="!uploader?.isUploading"-->
-          <!--                  class="btn btn-warning btn-s" type="button">-->
-          <!--            <span class="fa fa-ban"></span> Cancel all-->
-          <!--          </button>-->
           <button (click)="uploader?.clearQueue()" [disabled]="!uploader?.queue?.length"
                   class="btn btn-danger btn-s" type="button">
             <span class="fa fa-trash"></span> Remove all
