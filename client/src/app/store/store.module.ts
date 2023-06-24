@@ -6,9 +6,10 @@ import { HomeComponent } from './home/home.component';
 import { BookListComponent } from './book/book-list/book-list.component';
 import { BookCardComponent } from './book/book-card/book-card.component';
 import { SharedModule } from '../shared/shared.module';
+import { BookDetailsComponent } from './book/book-details/book-details.component';
 
 @NgModule({
-  declarations: [HomeComponent, BookListComponent, BookCardComponent],
+  declarations: [HomeComponent, BookListComponent, BookCardComponent, BookDetailsComponent],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
 })
 export class StoreModule {}
