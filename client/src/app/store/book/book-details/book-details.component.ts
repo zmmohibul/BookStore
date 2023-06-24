@@ -30,8 +30,8 @@ export class BookDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.galleryOptions = [
       {
-        width: '400px',
-        height: '600px',
+        width: '100%',
+        height: '650px',
         imagePercent: 100,
         thumbnailsColumns: 4,
         imageAnimation: NgxGalleryAnimation.Slide,
