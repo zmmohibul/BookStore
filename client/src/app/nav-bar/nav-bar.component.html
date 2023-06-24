@@ -37,6 +37,7 @@
 
 
     <ul class="navbar-nav flex-row">
+      
       <ng-container *ngIf="!user">
         <div class="dropdown me-3" mdbDropdown>
           <button
@@ -65,7 +66,7 @@
           <button
             aria-expanded="false"
             class="btn btn-outline-secondary text-white dropdown-toggle"
-            id="dropdownMenuButton2"
+            id="dropdownMenuButton3"
             mdbDropdownToggle
             type="button"
           >
@@ -73,7 +74,7 @@
           </button>
 
           <ul
-            aria-labelledby="dropdownMenuButton2"
+            aria-labelledby="dropdownMenuButton3"
             class="dropdown-menu dropdown-menu-light"
             mdbDropdownMenu
           >
@@ -91,7 +92,7 @@
             <li>
               <hr class="dropdown-divider"/>
             </li>
-            <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            <li><a (click)="logout()" class="dropdown-item">Logout</a></li>
           </ul>
         </div>
       </ng-container>

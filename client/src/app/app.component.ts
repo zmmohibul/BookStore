@@ -23,4 +23,8 @@ export class AppComponent implements OnInit {
     const user: User = JSON.parse(userString);
     this.authService.setCurrentUser(user);
   }
+
+  onEvent(event: any) {
+    event.stopPropagation();
+  }
 }
