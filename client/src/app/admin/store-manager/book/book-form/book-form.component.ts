@@ -66,6 +66,10 @@ export class BookFormComponent implements OnInit {
         this.book ? `${this.book.description}` : '',
         [Validators.required, Validators.minLength(20)],
       ],
+      highlight: [
+        this.book ? `${this.book.highlight}` : '',
+        [Validators.required, Validators.minLength(20)],
+      ],
 
       paperbackPrice: [
         this.book ? `${this.book.paperbackPrice}` : '',

@@ -1,6 +1,8 @@
 export class CreateBookModel {
   name: string = '';
   description: string = '';
+  highlight: string = '';
+
   authorsId: number[] = [];
   publisherId: number = 0;
   categoriesId: number[] = [];

@@ -11,6 +11,9 @@ public class CreateBookDto
     public string Description { get; set; }
     
     [Required]
+    public string Highlight { get; set; }
+    
+    [Required]
     public ICollection<int> AuthorsId { get; set; } = new List<int>();
     
     [Required]

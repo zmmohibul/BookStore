@@ -7,6 +7,7 @@ export interface Book {
   id: number;
   name: string;
   description: string;
+  highlight: string;
   pictures: Picture[];
   authors: Author[];
   publisher: Publisher;

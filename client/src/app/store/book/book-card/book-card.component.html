@@ -1,4 +1,4 @@
-<div class="card mb-4">
+<div *ngIf="book" class="card mb-4">
   <div class="row g-0">
     <div class="col-md-3" style="max-height: 400px">
       <img alt="..." class="card-img"
@@ -7,30 +7,40 @@
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h4 class="card-title m-0">The Alchemist, 25th Anniversary: A Fable About Following Your Dream</h4>
-        <p class=" mx-2 mb-2"><small class="text-muted">- by <span
-          class="text-decoration-underline me-1" style="color: #40516b; cursor: pointer">Paulo Coelho</span>
-          | <span class="mx-1">Apr 15, 2014</span></small></p>
+        <h4 class="card-title m-0">{{book.name}}</h4>
+        <p class=" mx-2 mb-2">
+          <small class="text-muted">- by
+            <span *ngFor="let author of book.authors" class="me-1">
+              <span class="link">{{author.name}}</span>
+              <span *ngIf="book.authors.length > 1" class="me-1">, </span>
+            </span>
+            <span> | </span>
+            <span class="mx-1">Apr 15, 2014</span>
+          </small>
+        </p>
+
         <div class="mb-3">
           <span class="me-2">3.67</span>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <i class="far fa-star"></i>
-
+          <span>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <i class="far fa-star"></i>
+          </span>
           <span class="mx-1 ms-2">-</span>
           <span class="mx-1">139,489 <span class="text-muted">(Ratings)</span></span>
         </div>
+
         <div class="row mb-2">
-          <div class="col-md-3">
+          <div class="col-xl-3  mr-3 mb-2">
             <h5 class="mr-4">Paperback</h5>
 
-            <h5 class="mr-4">BDT 1,080</h5>
+            <h5 class="mr-4">BDT {{book.paperbackPrice | number:'1.0':'en-US'}}</h5>
           </div>
-          <div class="col-md-3">
+          <div class="col-xl-3 ">
             <h5 class="mr-4">Hardcover</h5>
-            <h5 class="mr-4">BDT 1,530</h5>
+            <h5 class="mr-4">BDT {{book.hardcoverPrice | number:'1.0':'en-US'}}</h5>
           </div>
         </div>
 
@@ -41,7 +51,7 @@
 
 
         <div class="row mb-4">
-          <div class="col-md-3 mr-3">
+          <div class="col-xl-3 col-lg-12 col-md-12  mr-3 mb-2">
             <div class="dropdown" mdbDropdown>
               <button
                 aria-expanded="false"
@@ -50,7 +60,7 @@
                 mdbDropdownToggle
                 type="button"
               >
-                <i class="fas fa-book me-2"></i>
+                <i class="fas fa-shopping-cart me-2"></i>
                 Add to Cart
               </button>
               <ul aria-labelledby="dropdownMenuButton" class="dropdown-menu" mdbDropdownMenu>
@@ -63,8 +73,8 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="dropdown">
+          <div class="col-xl-4 col-lg-12 col-md-12">
+            <div>
               <button class="btn btn-outline-dark text-dark" routerLink="./{{0+1}}"><i
                 class="fas fa-book me-2"></i>View Book Details
               </button>
@@ -73,8 +83,7 @@
         </div>
 
         <h6 class="m-0">Highlight:</h6>
-        <p class="card-text">"Everyone seems to have a clear idea of how other people should lead their lives, but
-          none about his or her own."</p>
+        <p class="card-text">"{{book.highlight}}"</p>
 
         <p class="card-text"><small class="text-muted">Last Stock update: 3 months ago</small></p>
 

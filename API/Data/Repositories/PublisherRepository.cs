@@ -26,7 +26,7 @@ public class PublisherRepository : IPublisherRepository
 
         if (!queryParameters.SearchTerm.IsNullOrEmpty())
         {
-            query = query.Where(publisher => publisher.Name.Contains(queryParameters.SearchTerm));
+            query = query.Where(publisher => publisher.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
         }
         
         query = query.OrderBy(publisher => publisher.Name);

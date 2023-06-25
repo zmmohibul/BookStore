@@ -10,6 +10,7 @@ public class BookDto
     
     public string Name { get; set; }
     public string Description { get; set; }
+    public string Highlight { get; set; }
     public ICollection<PictureDto> Pictures { get; set; } = new List<PictureDto>();
 
     public ICollection<AuthorDto> Authors { get; set; } = new List<AuthorDto>();
@@ -21,6 +22,8 @@ public class BookDto
     
     public decimal HardcoverPrice { get; set; }
     public int HardcoverQuantity { get; set; }
+
+    public DateTime RestockDate { get; set; }
 
     public ICollection<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
     

@@ -67,6 +67,12 @@
     </div>
 
     <hr class="hr">
+    <div class="input">
+      <app-input [formControl]="$any(bookForm.controls['highlight'])" inputType="textarea"
+                 label="Book Highlight"></app-input>
+    </div>
+    <hr class="hr">
+    
 
     <div class="input">
       <app-input [formControl]="$any(bookForm.controls['printLength'])" inputType="number"
@@ -116,7 +122,6 @@
           ><i class="fa fa-trash"></i></button>
         </div>
       </div>
-      <!--      <ngx-gallery [images]="galleryImages" [options]="galleryOptions" class="ngx-gallery"></ngx-gallery>-->
     </div>
 
 

@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthorsService } from '../../../../services/authors.service';
-import { CreateAuthorModel } from '../../../../models/author/createAuthorModel';
-import { FileUploader } from 'ng2-file-upload';
-import { environment } from '../../../../../environments/environment';
-import { User } from '../../../../models/user';
-import { AuthenticationService } from '../../../../services/authentication.service';
-import { take } from 'rxjs';
-import { Author } from '../../../../models/author/author';
-import { ToastrService } from 'ngx-toastr';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthorsService} from '../../../../services/authors.service';
+import {CreateAuthorModel} from '../../../../models/author/createAuthorModel';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../../../environments/environment';
+import {User} from '../../../../models/user';
+import {AuthenticationService} from '../../../../services/authentication.service';
+import {take} from 'rxjs';
+import {Author} from '../../../../models/author/author';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-author-form',
@@ -77,6 +77,8 @@ export class AuthorFormComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
+        this.toastr.success('Author Updated');
+        this.authorForm.setValue({name: '', bio: ''});
       }
     };
   }
@@ -84,7 +86,7 @@ export class AuthorFormComponent implements OnInit {
   onSubmit() {
     if (this.authorForm.valid) {
       this.loading = true;
-      const authorModel: CreateAuthorModel = { ...this.authorForm.value };
+      const authorModel: CreateAuthorModel = {...this.authorForm.value};
       if (this.author) {
         this.authorService.updateAuthor(this.author.id, authorModel).subscribe({
           next: (res) => {
@@ -93,7 +95,6 @@ export class AuthorFormComponent implements OnInit {
               url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
             });
             this.uploader?.uploadAll();
-            this.toastr.success('Author Updated');
             this.loading = false;
           },
         });
@@ -105,7 +106,7 @@ export class AuthorFormComponent implements OnInit {
               url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
             });
             this.uploader?.uploadAll();
-            this.authorForm.setValue({ name: '', bio: '' });
+
             this.authorForm.reset();
             this.toastr.success('Author Added');
             this.loading = false;

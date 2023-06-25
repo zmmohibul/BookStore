@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Book } from '../../../models/book/book';
 
 @Component({
   selector: 'app-book-card',
@@ -6,9 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./book-card.component.scss'],
 })
 export class BookCardComponent {
-  showAddToCartOptions = false;
-
-  onAddToCartClick() {
-    this.showAddToCartOptions = !this.showAddToCartOptions;
-  }
+  @Input() book: Book | undefined;
 }

@@ -18,6 +18,7 @@ public class PublishersController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAllPublishers([FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
     {
+        Console.WriteLine(queryParameters.SearchTerm);
         return HandleResult(await _publisherRepository.GetAllPublisher(paginationParams, queryParameters));
     }
 

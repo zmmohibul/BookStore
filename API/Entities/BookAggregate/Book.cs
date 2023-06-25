@@ -10,6 +10,7 @@ public class Book
     [MaxLength(200)]
     public string Name { get; set; }
     public string Description { get; set; }
+    public string Highlight { get; set; }
     public ICollection<BookPicture> Pictures { get; set; } = new List<BookPicture>();
 
     public ICollection<Author> Authors { get; set; } = new List<Author>();
@@ -33,4 +34,6 @@ public class Book
     public DateTime PublicationDate { get; set; }
     [MaxLength(50)]
     public string Isbn13 { get; set; }
+
+    public DateTime RestockDate { get; set; } = DateTime.Now;
 }

@@ -28,7 +28,7 @@ public class CategoryRepository : ICategoryRepository
 
         if (!queryParameters.SearchTerm.IsNullOrEmpty())
         {
-            query = query.Where(category => category.Name.Contains(queryParameters.SearchTerm));
+            query = query.Where(category => category.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
         }
         
         query = query.OrderBy(cat => cat.Name);

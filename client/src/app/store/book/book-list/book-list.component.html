@@ -1,90 +1,36 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row mb-3">
     <div class="col-md-3">
       Sidebar
     </div>
     <div class="col-md-9">
 
+      <ng-container *ngIf="books">
+        <ng-container *ngFor="let book of books.items">
+          <app-book-card [book]="book"></app-book-card>
+        </ng-container>
+      </ng-container>
 
+
+      <app-book-card></app-book-card>
       <app-book-card></app-book-card>
 
 
-      <div class="card mb-4">
-        <div class="row g-0">
-          <div class="col-md-3" style="max-height: 400px">
-            <img alt="..." class="card-img"
-                 src="https://m.media-amazon.com/images/I/81+KUHpN2zL._AC_UY327_FMwebp_QL65_.jpg"
-                 style="width: 90%; height: 90%; margin: 2rem .7em; ">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h4 class="card-title m-0">Trust (Pulitzer Prize Winner) </h4>
-              <p class=" mx-3 mb-2"><small class="text-muted">- by <span
-                style="color: rgb(61, 71, 66)">Hernan Diaz (Author) </span>
-                | Oct 23, 2009</small></p>
-              <div class="mb-3">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="mx-1">4.53</span>
-                <span class="">-</span>
-                <span class="mx-1">9,489</span>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-3">
-                  <h5 class="mr-4">Paperback</h5>
-
-                  <h5 class="mr-4">BDT 1,080</h5>
-                </div>
-                <div class="col-md-3">
-                  <h5 class="mr-4">Hardcover</h5>
-                  <h5 class="mr-4">BDT 1,530</h5>
-                </div>
-              </div>
-
-              <p class=" mr-3 mb-0"><small class="text-muted">Shipping Fee:</small>
-              </p>
-              <p class=" mr-3 mb-4"><small class="text-muted">Inside Dhaka BDT 30 | Outside Dhaka BDT 100</small>
-              </p>
-
-
-              <div class="row mb-4">
-                <div class="col-md-3">
-                  <button (click)="onAddToCartClick()" class="btn btn-dark text-white">
-                    <i class="fas fa-shopping-cart me-2"></i> Add To Cart
-                  </button>
-                  <ul
-                    *ngIf="showAddToCartOptions"
-                    class="dropdown-menu dropdown-menu-light"
-                  >
-                    <li>
-                      <button class="dropdown-item" type="button">Paperback</button>
-                    </li>
-                    <li>
-                      <button class="dropdown-item" type="button">Hardcover</button>
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-outline-dark text-dark"><i class="fas fa-book me-2"></i>View Book Details
-                  </button>
-                </div>
-              </div>
-
-              <h6 class="m-0">Highlight:</h6>
-              <p class="card-text">"Everyone seems to have a clear idea of how other people should lead their lives, but
-                none about his or her own."</p>
-
-              <p class="card-text"><small class="text-muted">Last Stock update: 3 months ago</small></p>
-
-
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+
   </div>
+  <ng-container *ngIf="books">
+    <div>
+      <mat-paginator
+        [length]="books.count"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [pageSize]="books.pageSize"
+        aria-label="Select page"
+        class="mat-paginator"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </div>
+  </ng-container>
 </div>
