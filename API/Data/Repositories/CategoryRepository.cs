@@ -24,6 +24,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var query = _dataContext.Categories
             .Where(category => category.ParentId == parentId)
+            .Include(category => category.SubCategories)
             .AsNoTracking();
 
         if (!queryParameters.SearchTerm.IsNullOrEmpty())

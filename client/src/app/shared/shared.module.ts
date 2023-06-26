@@ -38,6 +38,7 @@ import {
 } from '@angular/material/tree';
 import { TreeComponent } from './tree/tree.component';
 import { MatIconModule } from '@angular/material/icon';
+import { TreeTwoComponent } from './tree-two/tree-two.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MatIconModule } from '@angular/material/icon';
     InputComponent,
     SelectSearchComponent,
     TreeComponent,
+    TreeTwoComponent,
   ],
   imports: [
     CommonModule,
@@ -124,6 +126,7 @@ import { MatIconModule } from '@angular/material/icon';
     InputComponent,
     SelectSearchComponent,
     TreeComponent,
+    TreeTwoComponent,
   ],
 })
 export class SharedModule {}

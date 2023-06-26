@@ -26,7 +26,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<Publisher, PublisherDto>();
         CreateMap<CreatePublisherDto, Publisher>();
         
-        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryDto>()
+            .ForMember(dest => dest.SubCategoryCount,
+                opt => opt.MapFrom(
+                    src => src.SubCategories.Count));
         CreateMap<Category, CategoryWithSubCategoriesDto>()
             .ForMember(dest => dest.SubCategories,
                 opt => opt.MapFrom(

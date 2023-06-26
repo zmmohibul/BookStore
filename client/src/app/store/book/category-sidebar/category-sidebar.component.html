@@ -1,1 +1,15 @@
-<app-tree (childClick)="onCategoryClick($event)" *ngIf="categoryNode" [data]="categoryNode"></app-tree>
+<div *ngIf="list">
+  <ul>
+
+    <li (click)="onListItemClick(item.id)" *ngFor="let item of list">{{item.name}}</li>
+    <div [ngClass]="{'loader-category': listLoading}"></div>
+
+    <ul *ngIf="children">
+      <li *ngFor="let child of children">
+        {{child.name}}
+      </li>
+      <div [ngClass]="{'loader-category': childLoading}"></div>
+
+    </ul>
+  </ul>
+</div>

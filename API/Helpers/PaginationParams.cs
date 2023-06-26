@@ -6,7 +6,7 @@ public class PaginationParams
 
     public int PageNumber { get; set; } = 1;
     
-    private int _pageSize = 5;
+    private int _pageSize = 48;
     public int PageSize
     {
         get => _pageSize;

@@ -40,6 +40,10 @@ export class BookListComponent implements OnInit {
     });
   }
 
+  onCategoryClick(id: number) {
+    console.log(id);
+  }
+
   loadCategories() {
     this.categoryService.getAllCategories(new PaginationParams()).subscribe({
       next: (response) => {

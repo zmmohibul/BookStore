@@ -1,8 +1,16 @@
-import {NestedTreeControl} from '@angular/cdk/tree';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatTreeNestedDataSource, MatTreeModule} from '@angular/material/tree';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { MatTreeNestedDataSource, MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 /**
  * Food data with nested structure.
@@ -19,9 +27,9 @@ const TREE_DATA: TreeNode[] = [
     id: 4,
     name: 'Fruit',
     children: [
-      {id: 1, name: 'Apple'},
-      {id: 2, name: 'Banana'},
-      {id: 3, name: 'Fruit loops'},
+      { id: 1, name: 'Apple' },
+      { id: 2, name: 'Banana' },
+      { id: 3, name: 'Fruit loops' },
     ],
   },
   {
@@ -40,23 +48,23 @@ const TREE_DATA: TreeNode[] = [
                 id: 8,
                 name: 'Apple',
                 children: [
-                  {id: 9, name: 'Apple'},
-                  {id: 10, name: 'Banana'},
-                  {id: 11, name: 'Fruit loops'},
+                  { id: 9, name: 'Apple' },
+                  { id: 10, name: 'Banana' },
+                  { id: 11, name: 'Fruit loops' },
                 ],
               },
-              {id: 12, name: 'Banana'},
+              { id: 12, name: 'Banana' },
             ],
           },
-          {id: 13, name: 'Brussels sprouts'},
+          { id: 13, name: 'Brussels sprouts' },
         ],
       },
       {
         id: 14,
         name: 'Orange',
         children: [
-          {id: 15, name: 'Pumpkins'},
-          {id: 16, name: 'Carrots'},
+          { id: 15, name: 'Pumpkins' },
+          { id: 16, name: 'Carrots' },
         ],
       },
     ],
@@ -68,15 +76,13 @@ const TREE_DATA: TreeNode[] = [
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.scss'],
 })
-export class TreeComponent implements OnInit {
+export class TreeComponent implements OnInit, OnChanges {
   @Input() data: TreeNode[] | undefined;
   @Output() childClick = new EventEmitter<number>();
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   dataSource = new MatTreeNestedDataSource<TreeNode>();
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {
     if (this.data) {
@@ -85,9 +91,19 @@ export class TreeComponent implements OnInit {
   }
 
   onChildClick(id: number) {
+    console.log(this.dataSource.data);
+
     this.childClick.emit(id);
   }
 
   hasChild = (_: number, node: TreeNode) =>
     !!node.children && node.children.length > 0;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.data) {
+      this.dataSource = new MatTreeNestedDataSource<TreeNode>();
+      this.dataSource.data = this.data;
+      console.log(this.dataSource.data);
+    }
+  }
 }
