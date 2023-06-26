@@ -49,7 +49,7 @@ export class CategoryService {
       .get<CategoryDetail>(`${this.baseUrl}/categories/${id}`)
       .pipe(
         map((result) => {
-          this.subCategories.set(result.parentId, result.subCategories);
+          this.subCategories.set(result.id, result.subCategories);
         })
       );
   }
@@ -64,7 +64,7 @@ export class CategoryService {
       .get<CategoryDetail>(`${this.baseUrl}/categories/${parentId}`)
       .pipe(
         map((result) => {
-          this.subCategories.set(result.parentId, result);
+          this.subCategories.set(result.id, result);
           return result;
         })
       );

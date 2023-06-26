@@ -5,7 +5,7 @@
     <div [ngClass]="{'loader-category': listLoading}"></div>
 
     <ul *ngIf="children">
-      <li *ngFor="let child of children">
+      <li *ngFor="let child of children" (click)="onChildItemClick(child.id)">
         {{child.name}}
       </li>
       <div [ngClass]="{'loader-category': childLoading}"></div>
