@@ -4,6 +4,7 @@
       Sidebar
     </div>
     <div class="col-md-9">
+      <div [ngClass]="{'loader': loading}"></div>
 
       <ng-container *ngIf="books">
         <ng-container *ngFor="let book of books.items">

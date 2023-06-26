@@ -37,10 +37,6 @@ export class BookListComponent {
         this.books = response;
         this.loading = false;
       },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
-        this.loading = false;
-      },
     });
   }
 
@@ -54,10 +50,6 @@ export class BookListComponent {
             (item) => item.id != book.id
           );
         }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
         this.loading = false;
       },
     });

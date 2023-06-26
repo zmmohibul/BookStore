@@ -47,9 +47,6 @@ export class BookFormComponent implements OnInit {
           this.user = response;
         }
       },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
-      },
     });
 
     this.initializeUploader();
@@ -159,9 +156,6 @@ export class BookFormComponent implements OnInit {
 
         this.uploader?.uploadAll();
       },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
-      },
     });
   }
 
@@ -188,9 +182,6 @@ export class BookFormComponent implements OnInit {
             `${this.baseUrl}/categories/${data.id}/sub-categories`
           );
         }
-      },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
       },
     });
   }
@@ -248,9 +239,6 @@ export class BookFormComponent implements OnInit {
           );
         }
         this.toastr.success('Picture deleted');
-      },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
       },
     });
   }

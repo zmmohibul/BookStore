@@ -33,10 +33,6 @@ export class BookEditComponent implements OnInit {
           this.book = response;
           this.loading = false;
         },
-        error: () => {
-          this.loading = false;
-          this.router.navigateByUrl('/admin');
-        },
       });
   }
 }

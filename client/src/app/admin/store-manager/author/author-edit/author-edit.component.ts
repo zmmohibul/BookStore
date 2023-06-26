@@ -25,9 +25,6 @@ export class AuthorEditComponent implements OnInit {
         next: (response) => {
           this.author = response;
         },
-        error: () => {
-          this.router.navigateByUrl('/admin');
-        },
       });
   }
 }

@@ -1,4 +1,5 @@
-<div class="container my-4 py-1">
+<div [ngClass]="{'loader': loading}"></div>
+<div *ngIf="book" class="container my-4 py-1">
   <div class="row">
     <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
       <div>
@@ -8,12 +9,15 @@
 
     <div class="ps-2 col-lg-8 col-md-12 col-sm-12">
       <section class="mb-3">
-        <h1 class="h2">The Alchemist, 25th Anniversary: A Fable About Following Your Dream</h1>
-        <p class=" mx-3 mb-2 text-muted"><span class="mx-1"> - by <span
-          class="link">Paulo Coelho</span> (Author)</span>
-          |
-          <span
-            class="mx-1">Published: Apr 15, 2014</span></p>
+        <h1 class="h2">{{book.name}}</h1>
+        <p class=" mx-3 mb-2 text-muted">
+          <span class="mx-1">
+            <span>- by </span>
+            <span *ngFor="let author of book.authors" class="link">{{author.name}}</span>
+            <span> (Author) |</span>
+            <span class="mx-1">Published: {{book.publicationDate | date: 'longDate'}}</span>
+          </span>
+        </p>
       </section>
 
       <section class="mb-5">
@@ -35,16 +39,16 @@
           <div class="col-md-4 me-3 card border border-dark mb-3" style="max-width: 15rem;">
             <div class="card-header"><h6 class="fw-normal">Paperback Price</h6></div>
             <div class="card-body text-dark">
-              <h5 class="card-title">BDT 1,080</h5>
-              <p class="card-text">Quantity in Stock: 29</p>
+              <h5 class="card-title">BDT {{book.paperbackPrice | number:'1.0':'en-US'}}</h5>
+              <p class="card-text">Quantity in Stock: {{book.paperbackQuantity}}</p>
             </div>
           </div>
 
           <div class="col-md-4 card border border-dark mb-3" style="max-width: 15rem;">
             <div class="card-header"><h6 class="fw-normal">Hardcover Price</h6></div>
             <div class="card-body text-dark">
-              <h5 class="card-title">BDT 1,530</h5>
-              <p class="card-text">Quantity in Stock: 3</p>
+              <h5 class="card-title">BDT {{book.hardcoverPrice | number:'1.0':'en-US'}}</h5>
+              <p class="card-text">Quantity in Stock: {{book.hardcoverQuantity}}</p>
             </div>
           </div>
 
@@ -77,19 +81,7 @@
 
       <section>
         <h6>Book Description:</h6>
-        <p class="">A special 25th anniversary edition of the extraordinary international bestseller, including a new
-          Foreword by
-          Paulo Coelho.
-        </p>
-
-        <p>Combining magic, mysticism, wisdom and wonder into an inspiring tale of self-discovery, The Alchemist has
-          become a modern classic, selling millions of copies around the world and transforming the lives of countless
-          readers across generations.</p>
-        <p>Paulo Coelho's masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to
-          travel in search of a worldly treasure. His quest will lead him to riches far different—and far more
-          satisfying—than he ever imagined. Santiago's journey teaches us about the essential wisdom of listening to our
-          hearts, of recognizing opportunity and learning to read the omens strewn along life's path, and, most
-          importantly, to follow our dreams.</p>
+        <p [innerText]="book.description"></p>
       </section>
 
       <section>
@@ -104,7 +96,7 @@
             <div class="text-center">
               <i class="far fa-file fa-2x"></i>
             </div>
-            <p class="fw-bold text-center">208 Pages</p>
+            <p class="fw-bold text-center">{{book.printLength}} Pages</p>
           </div>
 
           <div class="col" style="max-width: 10rem;">
@@ -114,7 +106,7 @@
             <div class="text-center">
               <i class="fas fa-globe fa-2x"></i>
             </div>
-            <p class="fw-bold text-center">English</p>
+            <p class="fw-bold text-center">{{book.language}}</p>
           </div>
 
           <div class="col" style="max-width: 10rem;">
@@ -124,7 +116,7 @@
             <div class="text-center">
               <i class="far fa-calendar-alt fa-2x"></i>
             </div>
-            <p class="fw-bold text-center">Apr 15, 2014</p>
+            <p class="fw-bold text-center">{{book.publicationDate | date: 'longDate'}}</p>
           </div>
 
           <div class="col" style="max-width: 10rem;">
@@ -134,7 +126,7 @@
             <div class="text-center">
               <i class="far fa-building fa-2x"></i>
             </div>
-            <p class="fw-bold text-center">HarperOne</p>
+            <p class="fw-bold text-center">{{book.publisher.name}}</p>
           </div>
 
 
@@ -145,7 +137,7 @@
             <div class="text-center">
               <i class="fas fa-barcode fa-2x"></i>
             </div>
-            <p class="fw-bold text-center">978-0062315007
+            <p class="fw-bold text-center">{{book.isbn13}}
             </p>
           </div>
         </div>

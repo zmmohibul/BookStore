@@ -57,9 +57,6 @@ export class CategoryTableComponent {
             });
           }
         },
-        error: (err) => {
-          this.toastr.error(err.error.errorMessage);
-        },
       });
       this.edit = { id, editMode: false };
     } else {
@@ -84,9 +81,6 @@ export class CategoryTableComponent {
             'Category Added'
           );
         },
-        error: (err) => {
-          this.newCategoryName.setErrors({ categoryNameTaken: true });
-        },
       });
     } else {
       return;
@@ -107,9 +101,6 @@ export class CategoryTableComponent {
             return null;
           }
         });
-      },
-      error: (err) => {
-        this.toastr.error(err.error.errorMessage);
       },
     });
   }
