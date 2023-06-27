@@ -8,11 +8,14 @@
       <hr class="hr ">
 
       <div class="my-5">
-        <app-author-sidebar></app-author-sidebar>
+        <h5 class="text-center">Authors</h5>
+        <div [ngClass]="{'loader-small': authorsLoading}"></div>
+        <app-sidebar (loadMore)="onLoadMoreAuthorsClick()" [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors"
+                     [items]="authors"></app-sidebar>
       </div>
     </div>
     <div class="col-md-9">
-      <div [ngClass]="{'loader': loading}"></div>
+      <div [ngClass]="{'loader': booksLoading}"></div>
 
       <ng-container *ngIf="books">
         <ng-container *ngFor="let book of books.items">

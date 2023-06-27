@@ -1,36 +1,14 @@
 <div class="sidebar border border-3">
   <ul class="mx-2 list-group list-group-light">
-    <li class="list-group-item">
+    <li *ngFor="let item of items" class="list-group-item">
       <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      First checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Second checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Third checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Fourth checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Fifth checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Fifth checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Fifth checkbox
-    </li>
-    <li class="list-group-item">
-      <input mdbCheckbox class="form-check-input me-1" type="checkbox" value="" aria-label="..."/>
-      Fifth checkbox
+      {{item.name}}
     </li>
   </ul>
+  <p *ngIf="items.length" class="text-center">
+    <button class="btn btn-link text-center" role="button" [disabled]="allItemsLoaded" (click)="onLoadMoreClicked()"
+            data-ripple-color="dark">Load
+      More
+    </button>
+  </p>
 </div>

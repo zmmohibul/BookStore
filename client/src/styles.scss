@@ -8,6 +8,17 @@
 
 //html, body { height: 100%; }
 //body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.loader-small {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #2e2725; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  animation: spin 2s linear infinite;
+}
+
 .loader {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #2e2725; /* Blue */

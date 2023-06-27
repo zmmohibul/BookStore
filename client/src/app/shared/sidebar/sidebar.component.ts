@@ -1,10 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+export interface SidebarItem {
+  name: string;
+}
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  @Output() loadMore = new EventEmitter<boolean>();
+  @Input() items: any = [];
+  @Input() allItemsLoaded = false;
 
+  ngOnInit(): void {}
+
+  onLoadMoreClicked() {
+    this.loadMore.emit(true);
+  }
 }
