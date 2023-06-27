@@ -1,9 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CategoryService } from '../../../services/category.service';
-import { TreeNode } from '../../../shared/tree/tree.component';
 import { PaginationParams } from '../../../models/paginationParams';
 import { Category } from '../../../models/category';
-import { delay } from 'rxjs';
 
 interface Node {
   id: number;

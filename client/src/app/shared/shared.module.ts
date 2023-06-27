@@ -36,18 +36,10 @@ import {
   MatTreeFlattener,
   MatTreeModule,
 } from '@angular/material/tree';
-import { TreeComponent } from './tree/tree.component';
 import { MatIconModule } from '@angular/material/icon';
-import { TreeTwoComponent } from './tree-two/tree-two.component';
 
 @NgModule({
-  declarations: [
-    FooterComponent,
-    InputComponent,
-    SelectSearchComponent,
-    TreeComponent,
-    TreeTwoComponent,
-  ],
+  declarations: [FooterComponent, InputComponent, SelectSearchComponent],
   imports: [
     CommonModule,
     MdbAccordionModule,
@@ -125,8 +117,6 @@ import { TreeTwoComponent } from './tree-two/tree-two.component';
     FooterComponent,
     InputComponent,
     SelectSearchComponent,
-    TreeComponent,
-    TreeTwoComponent,
   ],
 })
 export class SharedModule {}

@@ -61,7 +61,7 @@ export class BookDetailsComponent implements OnInit {
   getGalleryImages() {
     if (!this.book) return [];
     const imageUrls = [];
-    
+
     for (const picture of this.book.pictures) {
       if (picture.isMain) {
         imageUrls.push({
