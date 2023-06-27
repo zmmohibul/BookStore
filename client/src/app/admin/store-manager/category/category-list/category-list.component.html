@@ -1,11 +1,14 @@
-<div [ngClass]="{'loader': !categories}"></div>
-<app-category-table (viewSubCategory)="onViewSubCategoryClick($event)" *ngIf="categories"
-                    [categories]="categories.items"
-                    heading="Categories"></app-category-table>
+<div class="container">
+  <div [ngClass]="{'loader': !categories}"></div>
+  <app-category-table (viewSubCategory)="onViewSubCategoryClick($event)" *ngIf="categories"
+                      [categories]="categories.items"
+                      heading="Categories"></app-category-table>
 
-<ng-container *ngFor="let item of subCategories">
-  <app-category-table (close)="closeSubCategory($event)" (viewSubCategory)="onViewSubCategoryClick($event)"
-                      [categories]="item.subCategories"
-                      [loading]="item.loading" [parentId]="item.parentId"
-                      heading={{item.heading}}></app-category-table>
-</ng-container>
+  <ng-container *ngFor="let item of subCategories">
+    <app-category-table (close)="closeSubCategory($event)" (viewSubCategory)="onViewSubCategoryClick($event)"
+                        [categories]="item.subCategories"
+                        [loading]="item.loading" [parentId]="item.parentId"
+                        heading={{item.heading}}></app-category-table>
+  </ng-container>
+
+</div>
