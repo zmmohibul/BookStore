@@ -9,10 +9,18 @@
 
       <div class="my-5">
         <h5 class="text-center">Authors</h5>
-        <div [ngClass]="{'loader-small': authorsLoading}"></div>
         <app-sidebar (itemClick)="onAuthorItemClick($event)" (loadMore)="onLoadMoreAuthorsClick()"
-                     [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors"
+                     [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors" [loading]="authorsLoading"
                      [items]="authors"></app-sidebar>
+      </div>
+
+      <hr class="hr ">
+
+      <div class="my-5">
+        <h5 class="text-center">Publishers</h5>
+        <app-sidebar (itemClick)="onPublisherItemClick($event)" (loadMore)="onLoadMorePublishersClick()"
+                     [allItemsLoaded]="allPublishersLoaded" *ngIf="publishers" [loading]="publishersLoading"
+                     [items]="publishers"></app-sidebar>
       </div>
 
       <hr class="hr ">

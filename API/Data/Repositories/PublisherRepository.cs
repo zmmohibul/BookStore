@@ -28,7 +28,7 @@ public class PublisherRepository : IPublisherRepository
         {
             query = query.Where(publisher => publisher.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
         }
-        
+
         query = query.OrderBy(publisher => publisher.Name);
 
         var projectedQuery = query.ProjectTo<PublisherDto>(_mapper.ConfigurationProvider);

@@ -5,10 +5,11 @@ import { Book } from '../../../models/book/book';
 import { PaginationParams } from '../../../models/paginationParams';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../../services/category.service';
-import { Category } from '../../../models/category';
 import { QueryParams } from '../../../models/queryParams';
 import { AuthorsService } from '../../../services/authors.service';
 import { Author } from '../../../models/author/author';
+import { Publisher } from '../../../models/publisher/publisher';
+import { PublishersService } from '../../../services/publishers.service';
 
 @Component({
   selector: 'app-book-list',
@@ -21,8 +22,6 @@ export class BookListComponent implements OnInit {
   booksQueryParams = new QueryParams();
   booksLoading = false;
 
-  categories: PaginatedList<Category> | undefined;
-
   authors: Author[] = [];
   authorPaginationParams: PaginationParams = new PaginationParams();
   authorQueryParams = new QueryParams();
@@ -30,10 +29,18 @@ export class BookListComponent implements OnInit {
   allAuthorsLoaded = false;
   selectedAuthors: number[] = [];
 
+  publishers: Publisher[] = [];
+  publisherPaginationParams: PaginationParams = new PaginationParams();
+  publisherQueryParams = new QueryParams();
+  publishersLoading = false;
+  allPublishersLoaded = false;
+  selectedPublishers: number[] = [];
+
   constructor(
     private booksService: BooksService,
     private categoryService: CategoryService,
     private authorsService: AuthorsService,
+    private publishersService: PublishersService,
     private toastr: ToastrService
   ) {
     this.authorPaginationParams.pageSize = 1;
@@ -41,19 +48,19 @@ export class BookListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBooks();
-    this.loadCategories();
     this.loadAuthors();
+    this.loadPublishers();
   }
 
   loadBooks() {
-    console.log(this.booksQueryParams);
-    
     this.booksLoading = true;
     this.booksService
       .getAllBooks(this.booksPaginationParams, this.booksQueryParams)
       .subscribe({
         next: (response) => {
           this.books = response;
+        },
+        complete: () => {
           this.booksLoading = false;
         },
       });
@@ -65,13 +72,26 @@ export class BookListComponent implements OnInit {
       .getAllAuthors(this.authorPaginationParams, this.authorQueryParams)
       .subscribe({
         next: (response) => {
-          if (response.items.length == 0) {
-            this.allAuthorsLoaded = true;
-          } else {
-            this.allAuthorsLoaded = false;
-          }
+          this.allAuthorsLoaded = response.items.length == 0;
           this.authors = [...this.authors, ...response.items];
+        },
+        complete: () => {
           this.authorsLoading = false;
+        },
+      });
+  }
+
+  loadPublishers() {
+    this.publishersLoading = true;
+    this.publishersService
+      .getAllPublishers(this.publisherPaginationParams)
+      .subscribe({
+        next: (response) => {
+          this.allPublishersLoaded = response.items.length == 0;
+          this.publishers = [...this.publishers, ...response.items];
+        },
+        complete: () => {
+          this.publishersLoading = false;
         },
       });
   }
@@ -81,16 +101,37 @@ export class BookListComponent implements OnInit {
     this.loadAuthors();
   }
 
+  onLoadMorePublishersClick() {
+    this.publisherPaginationParams.pageNumber++;
+    this.loadPublishers();
+  }
+
   onAuthorItemClick(id: number) {
-    if (this.selectedAuthors.includes(id)) {
-      this.selectedAuthors.splice(this.selectedAuthors.indexOf(id), 1);
-    } else {
-      this.selectedAuthors.push(id);
-    }
+    this.updateSelectedFilter(this.selectedAuthors, id);
+
     this.booksQueryParams.authorsId = [...this.selectedAuthors];
-    console.log(this.booksQueryParams);
+    this.publisherQueryParams.authorsId = [...this.selectedAuthors];
+
     this.loadBooks();
-    console.log(this.selectedAuthors);
+    this.loadPublishers();
+  }
+
+  onPublisherItemClick(id: number) {
+    this.updateSelectedFilter(this.selectedPublishers, id);
+
+    this.booksQueryParams.publishersId = [...this.selectedPublishers];
+    this.authorQueryParams.publishersId = [...this.selectedPublishers];
+
+    this.loadBooks();
+    this.loadAuthors();
+  }
+
+  updateSelectedFilter(selectedFilter: number[], id: number) {
+    if (selectedFilter.includes(id)) {
+      selectedFilter.splice(selectedFilter.indexOf(id), 1);
+    } else {
+      selectedFilter.push(id);
+    }
   }
 
   onCategoryClick(id: number) {
@@ -101,16 +142,12 @@ export class BookListComponent implements OnInit {
     this.authorPaginationParams.pageNumber = 1;
     this.authors = [];
 
-    this.loadAuthors();
-    this.loadBooks();
-  }
+    this.publisherQueryParams.categoryId = id;
+    this.publisherPaginationParams.pageNumber = 1;
+    this.publishers = [];
 
-  loadCategories() {
-    this.categoryService.getAllCategories(new PaginationParams()).subscribe({
-      next: (response) => {
-        this.categories = response;
-        console.log(this.categories);
-      },
-    });
+    this.loadBooks();
+    this.loadAuthors();
+    this.loadPublishers();
   }
 }

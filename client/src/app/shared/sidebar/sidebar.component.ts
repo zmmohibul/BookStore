@@ -14,6 +14,7 @@ export class SidebarComponent implements OnInit {
   @Output() itemClick = new EventEmitter<number>();
   @Input() items: any = [];
   @Input() allItemsLoaded = false;
+  @Input() loading = false;
 
   ngOnInit(): void {}
 

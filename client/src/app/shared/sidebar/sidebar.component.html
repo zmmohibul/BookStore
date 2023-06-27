@@ -6,6 +6,8 @@
       {{item.name}}
     </li>
   </ul>
+  <div [ngClass]="{'loader-small': loading}"></div>
+
   <p *ngIf="items.length" class="text-center">
     <button class="btn btn-link text-center" role="button" [disabled]="allItemsLoaded" (click)="onLoadMoreClicked()"
             data-ripple-color="dark">Load

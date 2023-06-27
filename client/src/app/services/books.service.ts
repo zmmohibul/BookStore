@@ -6,8 +6,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Book } from '../models/book/book';
 import { CreateBookModel } from '../models/book/createBookModel';
 import { PaginationParams } from '../models/paginationParams';
-import { map, of } from 'rxjs';
+import { BehaviorSubject, map, of } from 'rxjs';
 import { QueryParams } from '../models/queryParams';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
