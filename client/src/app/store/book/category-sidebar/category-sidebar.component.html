@@ -1,15 +1,20 @@
 <div class="mt-5" *ngIf="list">
-  <ul>
+  <h5 class="text-center">Categories</h5>
+  <ul class="border border-3 list-group list-group-light">
 
-    <li (click)="onListItemClick(item.id)" *ngFor="let item of list">{{item.name}}</li>
+    <li type="button" class="list-group-item list-group-item-action  px-3 border-0" (click)="onListItemClick(item.id)"
+        *ngFor="let item of list">{{item.name}}</li>
     <div [ngClass]="{'loader-category': listLoading}"></div>
 
-    <ul *ngIf="children">
-      <li *ngFor="let child of children" (click)="onChildItemClick(child.id)">
+    <ul class="border border-3 list-group list-group-light" *ngIf="children">
+      <li type="button" class="list-group-item list-group-item-action mx-4  px-3 border-0"
+          *ngFor="let child of children"
+          (click)="onChildItemClick(child.id)">
         {{child.name}}
       </li>
       <div [ngClass]="{'loader-category': childLoading}"></div>
 
     </ul>
   </ul>
+  <hr class="hr">
 </div>
