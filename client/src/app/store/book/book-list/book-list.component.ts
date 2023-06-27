@@ -28,6 +28,7 @@ export class BookListComponent implements OnInit {
   authorQueryParams = new QueryParams();
   authorsLoading = false;
   allAuthorsLoaded = false;
+  selectedAuthors: number[] = [];
 
   constructor(
     private booksService: BooksService,
@@ -45,6 +46,8 @@ export class BookListComponent implements OnInit {
   }
 
   loadBooks() {
+    console.log(this.booksQueryParams);
+    
     this.booksLoading = true;
     this.booksService
       .getAllBooks(this.booksPaginationParams, this.booksQueryParams)
@@ -76,6 +79,18 @@ export class BookListComponent implements OnInit {
   onLoadMoreAuthorsClick() {
     this.authorPaginationParams.pageNumber++;
     this.loadAuthors();
+  }
+
+  onAuthorItemClick(id: number) {
+    if (this.selectedAuthors.includes(id)) {
+      this.selectedAuthors.splice(this.selectedAuthors.indexOf(id), 1);
+    } else {
+      this.selectedAuthors.push(id);
+    }
+    this.booksQueryParams.authorsId = [...this.selectedAuthors];
+    console.log(this.booksQueryParams);
+    this.loadBooks();
+    console.log(this.selectedAuthors);
   }
 
   onCategoryClick(id: number) {

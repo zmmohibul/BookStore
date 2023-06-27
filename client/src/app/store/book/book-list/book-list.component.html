@@ -10,9 +10,13 @@
       <div class="my-5">
         <h5 class="text-center">Authors</h5>
         <div [ngClass]="{'loader-small': authorsLoading}"></div>
-        <app-sidebar (loadMore)="onLoadMoreAuthorsClick()" [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors"
+        <app-sidebar (itemClick)="onAuthorItemClick($event)" (loadMore)="onLoadMoreAuthorsClick()"
+                     [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors"
                      [items]="authors"></app-sidebar>
       </div>
+
+      <hr class="hr ">
+
     </div>
     <div class="col-md-9">
       <div [ngClass]="{'loader': booksLoading}"></div>

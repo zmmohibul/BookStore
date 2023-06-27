@@ -11,6 +11,7 @@ export interface SidebarItem {
 })
 export class SidebarComponent implements OnInit {
   @Output() loadMore = new EventEmitter<boolean>();
+  @Output() itemClick = new EventEmitter<number>();
   @Input() items: any = [];
   @Input() allItemsLoaded = false;
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { PaginatedList } from '../models/paginatedList';
 import { Author } from '../models/author/author';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Book } from '../models/book/book';
 import { CreateBookModel } from '../models/book/createBookModel';
 import { PaginationParams } from '../models/paginationParams';
@@ -20,8 +20,22 @@ export class BooksService {
 
   getAllBooks(paginationParams: PaginationParams, queryParams?: QueryParams) {
     let queryString = Object.values(paginationParams).join('-');
-    if (queryParams && queryParams.categoryId) {
-      queryString += '-' + queryParams.categoryId;
+    let params = new HttpParams();
+    params = params.append('pageNumber', paginationParams.pageNumber);
+    params = params.append('pageSize', paginationParams.pageSize);
+    if (queryParams) {
+      if (queryParams.categoryId) {
+        queryString += '-' + queryParams.categoryId;
+        params = params.append('categoryId', queryParams.categoryId);
+        queryString += '-' + queryParams.categoryId;
+      }
+
+      if (queryParams.authorsId) {
+        for (let authorid of queryParams.authorsId) {
+          params = params.append('authorsId', authorid);
+        }
+        queryString += '-' + queryParams.authorsId.join(',') + ',';
+      }
     }
     console.log(queryString);
 
@@ -32,7 +46,7 @@ export class BooksService {
 
     return this.http
       .get<PaginatedList<Book>>(`${this.baseUrl}/books`, {
-        params: { ...paginationParams, ...queryParams },
+        params,
       })
       .pipe(
         map((response) => {

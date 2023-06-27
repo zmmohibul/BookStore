@@ -32,6 +32,11 @@ public class BookRepository : IBookRepository
             query = query.Where(book => book.Categories.Any(category => category.Id == queryParameters.CategoryId));
         }
 
+        if (queryParameters.AuthorsId.Count > 0)
+        {
+            query = query.Where(book => book.Authors.Any(author => queryParameters.AuthorsId.Any(id => id == author.Id)));
+        }
+
         query = query.OrderBy(book => book.Name);
         
         var projectedQuery = query.ProjectTo<BookDto>(_mapper.ConfigurationProvider);
