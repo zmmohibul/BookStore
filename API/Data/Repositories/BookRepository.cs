@@ -81,36 +81,17 @@ public class BookRepository : IBookRepository
         var categories = await _dataContext.Categories
             .Where(category => createBookDto.CategoriesId.Any(id => id == category.Id))
             .Include(category => category.AuthorsWhoWroteBooksOnThisCategory)
+            .Include(category => category.PublishersWhoPublishedBooksUnderThisCategory)
             .ToListAsync();
 
         if (categories.Count == 0)
         {
             return Result<BookDto>.BadRequestResult($"Invalid category id");
         }
-
-        foreach (var author in authors)
-        {
-            book.Authors.Add(author);
-            author.Books.Add(book);
-
-            foreach (var category in categories)
-            {
-                category.AuthorsWhoWroteBooksOnThisCategory.Add(author);
-            }
-        }
         
-        foreach (var category in categories)
-        {
-            book.Categories.Add(category);
-            category.Books.Add(book);
-
-            foreach (var author in authors)
-            {
-                author.WrittenBookCategories.Add(category);
-            }
-        }
-
         var publisher = await _dataContext.Publishers
+            .Include(publisher1 => publisher1.AuthorsWhoseBooksArePublishedByThisPublisher)
+            .Include(publisher1 => publisher1.BooksPublishedUnderCategories)
             .SingleOrDefaultAsync(pub => pub.Id == createBookDto.PublisherId);
 
         if (publisher == null)
@@ -118,8 +99,33 @@ public class BookRepository : IBookRepository
             return Result<BookDto>.BadRequestResult($"Invalid publisher id");
         }
 
+        foreach (var author in authors)
+        {
+            book.Authors.Add(author);
+            author.Books.Add(book);
+
+            publisher.AuthorsWhoseBooksArePublishedByThisPublisher.Add(author);
+            author.PublishersWithWhomBooksArePublished.Add(publisher);
+
+            foreach (var category in categories)
+            {
+                category.AuthorsWhoWroteBooksOnThisCategory.Add(author);
+                author.WrittenBookCategories.Add(category);
+            }
+        }
+        
+        foreach (var category in categories)
+        {
+            book.Categories.Add(category);
+            category.Books.Add(book);
+            
+            publisher.BooksPublishedUnderCategories.Add(category);
+            category.PublishersWhoPublishedBooksUnderThisCategory.Add(publisher);
+        }
+
         book.Publisher = publisher;
         publisher.Books.Add(book);
+        
 
         return await _dataContext.SaveChangesAsync() > 0 
             ? Result<BookDto>.OkResult(_mapper.Map<BookDto>(book)) 

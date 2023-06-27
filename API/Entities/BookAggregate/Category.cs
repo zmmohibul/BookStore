@@ -17,4 +17,6 @@ public class Category
     public ICollection<Book> Books { get; set; } = new List<Book>();
 
     public ICollection<Author> AuthorsWhoWroteBooksOnThisCategory { get; set; } = new List<Author>();
+
+    public ICollection<Publisher> PublishersWhoPublishedBooksUnderThisCategory { get; set; } = new List<Publisher>();
 }
