@@ -37,9 +37,15 @@ import {
   MatTreeModule,
 } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
-  declarations: [FooterComponent, InputComponent, SelectSearchComponent],
+  declarations: [
+    FooterComponent,
+    InputComponent,
+    SelectSearchComponent,
+    SidebarComponent,
+  ],
   imports: [
     CommonModule,
     MdbAccordionModule,
@@ -117,6 +123,7 @@ import { MatIconModule } from '@angular/material/icon';
     FooterComponent,
     InputComponent,
     SelectSearchComponent,
+    SidebarComponent,
   ],
 })
 export class SharedModule {}

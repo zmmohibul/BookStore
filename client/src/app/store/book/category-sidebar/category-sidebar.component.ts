@@ -41,23 +41,20 @@ export class CategorySidebarComponent implements OnInit {
   loadCategories() {
     this.listLoading = true;
     this.list = [this.allCategoryHeading];
-    this.categoryService
-      .getAllCategories(this.paginationParam)
-      .pipe(delay(1000))
-      .subscribe({
-        next: (response) => {
-          this.list = response.items.map((item) => {
-            return {
-              id: item.id,
-              name: item.name,
-              childrenCount: item.subCategoryCount,
-            };
-          });
-          this.list.unshift(this.allCategoryHeading);
-          this.listLoading = false;
-          this.childFetched = false;
-        },
-      });
+    this.categoryService.getAllCategories(this.paginationParam).subscribe({
+      next: (response) => {
+        this.list = response.items.map((item) => {
+          return {
+            id: item.id,
+            name: item.name,
+            childrenCount: item.subCategoryCount,
+          };
+        });
+        this.list.unshift(this.allCategoryHeading);
+        this.listLoading = false;
+        this.childFetched = false;
+      },
+    });
   }
 
   onListItemClick(id: number) {
@@ -98,23 +95,20 @@ export class CategorySidebarComponent implements OnInit {
   loadChildren(id: number) {
     this.childLoading = true;
     this.children = [];
-    this.categoryService
-      .getSubCategories(id)
-      .pipe(delay(1000))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            this.children = response.subCategories.map((subCat: Category) => {
-              return {
-                id: subCat.id,
-                name: subCat.name,
-                childrenCount: subCat.subCategoryCount,
-              };
-            });
-            this.childLoading = false;
-          }
-          this.childFetched = true;
-        },
-      });
+    this.categoryService.getSubCategories(id).subscribe({
+      next: (response) => {
+        if (response) {
+          this.children = response.subCategories.map((subCat: Category) => {
+            return {
+              id: subCat.id,
+              name: subCat.name,
+              childrenCount: subCat.subCategoryCount,
+            };
+          });
+          this.childLoading = false;
+        }
+        this.childFetched = true;
+      },
+    });
   }
 }

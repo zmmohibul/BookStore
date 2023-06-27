@@ -1,7 +1,15 @@
 <div class="container-fluid">
   <div class="row mb-3">
     <div class="col-md-3">
-      <app-category-sidebar (categoryClick)="onCategoryClick($event)"></app-category-sidebar>
+      <div class="my-5">
+        <app-category-sidebar (categoryClick)="onCategoryClick($event)"></app-category-sidebar>
+      </div>
+
+      <hr class="hr ">
+
+      <div class="my-5">
+        <app-author-sidebar></app-author-sidebar>
+      </div>
     </div>
     <div class="col-md-9">
       <div [ngClass]="{'loader': loading}"></div>

@@ -1,3 +1,3 @@
 export class QueryParams {
-  categoryId: number = 0;
+  categoryId?: number;
 }

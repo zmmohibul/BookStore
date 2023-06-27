@@ -25,15 +25,20 @@ public class AuthorRepository : IAuthorRepository
     
     public async Task<Result<PaginatedList<AuthorDto>>> GetAllAuthors(PaginationParams paginationParams, QueryParameters queryParameters)
     {
-        var query = _dataContext.Authors
-            .AsNoTracking();
+        var query = _dataContext.Authors.AsNoTracking();
 
         if (!queryParameters.SearchTerm.IsNullOrEmpty())
         {
-            Console.WriteLine(queryParameters.SearchTerm);
             query = query.Where(author => author.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
         }
-        
+
+        if (queryParameters.CategoryId != null)
+        {
+            query = query.Include(author => author.WrittenBookCategories);
+            query = query.Where(author =>
+                author.WrittenBookCategories.Any(category => category.Id == queryParameters.CategoryId));
+        }
+
         query = query.OrderBy(author => author.Name);
 
         var projectedQuery = query.ProjectTo<AuthorDto>(_mapper.ConfigurationProvider);

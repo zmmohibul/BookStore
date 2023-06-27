@@ -1,4 +1,5 @@
 using API.DTOs;
+using API.DTOs.Author;
 using API.DTOs.Book;
 using API.Entities.BookAggregate;
 using API.Helpers;
@@ -26,7 +27,7 @@ public class BookRepository : IBookRepository
     {
         var query = _dataContext.Books.AsNoTracking();
 
-        if (queryParameters.CategoryId > 0)
+        if (queryParameters.CategoryId != null)
         {
             query = query.Where(book => book.Categories.Any(category => category.Id == queryParameters.CategoryId));
         }
@@ -37,7 +38,7 @@ public class BookRepository : IBookRepository
 
         var data = await PaginatedList<BookDto>
             .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
-        
+
         return Result<PaginatedList<BookDto>>.OkResult(data);
     }
 
@@ -64,6 +65,7 @@ public class BookRepository : IBookRepository
         var authors = await _dataContext.Authors
             .Where(auth => createBookDto.AuthorsId.Any(id => id == auth.Id))
             .Include(auth => auth.AuthorPicture)
+            .Include(author => author.WrittenBookCategories)
             .ToListAsync();
 
         if (authors.Count == 0)
@@ -71,14 +73,9 @@ public class BookRepository : IBookRepository
             return Result<BookDto>.BadRequestResult($"Invalid author id");
         }
 
-        foreach (var author in authors)
-        {
-            book.Authors.Add(author);
-            author.Books.Add(book);
-        }
-
         var categories = await _dataContext.Categories
             .Where(category => createBookDto.CategoriesId.Any(id => id == category.Id))
+            .Include(category => category.AuthorsWhoWroteBooksOnThisCategory)
             .ToListAsync();
 
         if (categories.Count == 0)
@@ -86,10 +83,26 @@ public class BookRepository : IBookRepository
             return Result<BookDto>.BadRequestResult($"Invalid category id");
         }
 
+        foreach (var author in authors)
+        {
+            book.Authors.Add(author);
+            author.Books.Add(book);
+
+            foreach (var category in categories)
+            {
+                category.AuthorsWhoWroteBooksOnThisCategory.Add(author);
+            }
+        }
+        
         foreach (var category in categories)
         {
             book.Categories.Add(category);
             category.Books.Add(book);
+
+            foreach (var author in authors)
+            {
+                author.WrittenBookCategories.Add(category);
+            }
         }
 
         var publisher = await _dataContext.Publishers

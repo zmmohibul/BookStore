@@ -20,8 +20,8 @@ export class BooksService {
 
   getAllBooks(paginationParams: PaginationParams, queryParams?: QueryParams) {
     let queryString = Object.values(paginationParams).join('-');
-    if (queryParams) {
-      queryString += '-' + Object.values(queryParams).join('-');
+    if (queryParams && queryParams.categoryId) {
+      queryString += '-' + queryParams.categoryId;
     }
     console.log(queryString);
 
