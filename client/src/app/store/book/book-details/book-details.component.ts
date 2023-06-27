@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   NgxGalleryAnimation,
   NgxGalleryImage,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
-import { ActivatedRoute } from '@angular/router';
-import { BooksService } from '../../../services/books.service';
-import { Book } from '../../../models/book/book';
-import { ToastrService } from 'ngx-toastr';
-import { delay } from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {BooksService} from '../../../services/books.service';
+import {Book} from '../../../models/book/book';
+import {ToastrService} from 'ngx-toastr';
+import {delay} from 'rxjs';
 
 @Component({
   selector: 'app-book-details',
@@ -26,7 +26,8 @@ export class BookDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private booksService: BooksService,
     private toastr: ToastrService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadBook();
@@ -60,11 +61,34 @@ export class BookDetailsComponent implements OnInit {
   getGalleryImages() {
     if (!this.book) return [];
     const imageUrls = [];
+    
     for (const picture of this.book.pictures) {
+      if (picture.isMain) {
+        imageUrls.push({
+          small: picture.url,
+          medium: picture.url,
+          big: picture.url,
+        });
+      }
+    }
+
+    for (const picture of this.book.pictures) {
+      if (!picture.isMain) {
+        imageUrls.push({
+          small: picture.url,
+          medium: picture.url,
+          big: picture.url,
+        });
+      }
+    }
+
+    if (!this.book.pictures.length) {
       imageUrls.push({
-        small: picture.url,
-        medium: picture.url,
-        big: picture.url,
+        small:
+          'https://images.unsplash.com/photo-1623697899811-f2403f50685e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fGJvb2slMjBwbGFjZWhvbGRlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
+        medium:
+          'https://images.unsplash.com/photo-1623697899811-f2403f50685e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fGJvb2slMjBwbGFjZWhvbGRlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
+        big: 'https://images.unsplash.com/photo-1623697899811-f2403f50685e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fGJvb2slMjBwbGFjZWhvbGRlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
       });
     }
     console.log(imageUrls);

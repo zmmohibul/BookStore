@@ -18,9 +18,9 @@ public class BooksController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllBooks([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAllBooks([FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
     {
-        return HandleResult(await _bookRepository.GetAllBooks(paginationParams));
+        return HandleResult(await _bookRepository.GetAllBooks(paginationParams, queryParameters));
     }
     
     [HttpGet("{id}")]

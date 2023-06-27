@@ -7,6 +7,7 @@ import { Book } from '../models/book/book';
 import { CreateBookModel } from '../models/book/createBookModel';
 import { PaginationParams } from '../models/paginationParams';
 import { map, of } from 'rxjs';
+import { QueryParams } from '../models/queryParams';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,13 @@ export class BooksService {
 
   constructor(private http: HttpClient) {}
 
-  getAllBooks(paginationParams: PaginationParams) {
+  getAllBooks(paginationParams: PaginationParams, queryParams?: QueryParams) {
     let queryString = Object.values(paginationParams).join('-');
+    if (queryParams) {
+      queryString += '-' + Object.values(queryParams).join('-');
+    }
+    console.log(queryString);
+
     const data = this.books.get(queryString);
     if (data) {
       return of(data);
@@ -26,7 +32,7 @@ export class BooksService {
 
     return this.http
       .get<PaginatedList<Book>>(`${this.baseUrl}/books`, {
-        params: { ...paginationParams },
+        params: { ...paginationParams, ...queryParams },
       })
       .pipe(
         map((response) => {

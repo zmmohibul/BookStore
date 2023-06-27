@@ -22,15 +22,21 @@ public class BookRepository : IBookRepository
         _mapper = mapper;
     }
     
-    public async Task<Result<PaginatedList<BookDto>>> GetAllBooks(PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<BookDto>>> GetAllBooks(PaginationParams paginationParams, QueryParameters queryParameters)
     {
-        var query = _dataContext.Books
-            .AsNoTracking()
-            .OrderBy(book => book.Name)
-            .ProjectTo<BookDto>(_mapper.ConfigurationProvider);
+        var query = _dataContext.Books.AsNoTracking();
+
+        if (queryParameters.CategoryId > 0)
+        {
+            query = query.Where(book => book.Categories.Any(category => category.Id == queryParameters.CategoryId));
+        }
+
+        query = query.OrderBy(book => book.Name);
+        
+        var projectedQuery = query.ProjectTo<BookDto>(_mapper.ConfigurationProvider);
 
         var data = await PaginatedList<BookDto>
-            .CreatePaginatedListAsync(query, paginationParams.PageNumber, paginationParams.PageSize);
+            .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<BookDto>>.OkResult(data);
     }

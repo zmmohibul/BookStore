@@ -35,5 +35,5 @@ public class Book
     [MaxLength(50)]
     public string Isbn13 { get; set; }
 
-    public DateTime RestockDate { get; set; } = DateTime.Now;
+    public DateTime RestockDate { get; set; } = DateTime.UtcNow;
 }

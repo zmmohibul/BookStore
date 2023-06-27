@@ -17,6 +17,7 @@ export interface Book {
   hardcoverPrice: number;
   hardcoverQuantity: number;
   printLength: number;
+  restockDate: Date;
   language: string;
   publicationDate: Date;
   isbn13: string;
