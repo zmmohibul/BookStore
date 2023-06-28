@@ -28,6 +28,13 @@ public class PublisherRepository : IPublisherRepository
         {
             query = query.Where(publisher => publisher.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
         }
+        
+        if (queryParameters.CategoryId != null)
+        {
+            query = query.Include(publisher => publisher.BooksPublishedUnderCategories);
+            query = query.Where(publisher =>
+                publisher.BooksPublishedUnderCategories.Any(category => category.Id == queryParameters.CategoryId));
+        }
 
         query = query.OrderBy(publisher => publisher.Name);
 

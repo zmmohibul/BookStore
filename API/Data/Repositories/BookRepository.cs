@@ -36,6 +36,11 @@ public class BookRepository : IBookRepository
         {
             query = query.Where(book => book.Authors.Any(author => queryParameters.AuthorsId.Any(id => id == author.Id)));
         }
+        
+        if (queryParameters.PublishersId.Count > 0)
+        {
+            query = query.Where(book => queryParameters.PublishersId.Any(id => id == book.Publisher.Id));
+        }
 
         query = query.OrderBy(book => book.Name);
         

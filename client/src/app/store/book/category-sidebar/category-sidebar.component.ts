@@ -18,7 +18,7 @@ interface Node {
   styleUrls: ['./category-sidebar.component.scss'],
 })
 export class CategorySidebarComponent implements OnInit {
-  @Output() categoryClick = new EventEmitter<number>();
+  @Output() categoryClick = new EventEmitter();
 
   allCategoryHeading: Node = { id: 0, name: 'All Categories' };
   list: Node[] = [this.allCategoryHeading];
@@ -57,8 +57,8 @@ export class CategorySidebarComponent implements OnInit {
     });
   }
 
-  onListItemClick(id: number) {
-    this.categoryClick.emit(id);
+  onListItemClick(id: number, item: any) {
+    this.categoryClick.emit(item);
 
     if (id == 0) {
       this.children = [];
@@ -80,8 +80,8 @@ export class CategorySidebarComponent implements OnInit {
     }
   }
 
-  onChildItemClick(id: number) {
-    this.categoryClick.emit(id);
+  onChildItemClick(id: number, item: any) {
+    this.categoryClick.emit(item);
 
     for (let child of this.children) {
       if (child.id == id) {

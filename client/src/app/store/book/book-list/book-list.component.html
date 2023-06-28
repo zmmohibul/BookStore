@@ -8,7 +8,7 @@
       <hr class="hr ">
 
       <div class="my-5">
-        <h5 class="text-center">Authors</h5>
+        <h5 class="text-center">Authors in {{currentCategory}}</h5>
         <app-sidebar (itemClick)="onAuthorItemClick($event)" (loadMore)="onLoadMoreAuthorsClick()"
                      [allItemsLoaded]="allAuthorsLoaded" *ngIf="authors" [loading]="authorsLoading"
                      [items]="authors"></app-sidebar>
@@ -17,7 +17,7 @@
       <hr class="hr ">
 
       <div class="my-5">
-        <h5 class="text-center">Publishers</h5>
+        <h5 class="text-center">Publishers in {{currentCategory}}</h5>
         <app-sidebar (itemClick)="onPublisherItemClick($event)" (loadMore)="onLoadMorePublishersClick()"
                      [allItemsLoaded]="allPublishersLoaded" *ngIf="publishers" [loading]="publishersLoading"
                      [items]="publishers"></app-sidebar>
@@ -27,12 +27,16 @@
 
     </div>
     <div class="col-md-9">
+      <p class="display-6">Books in {{currentCategory}}</p>
       <div [ngClass]="{'loader': booksLoading}"></div>
 
       <ng-container *ngIf="books">
+        <p *ngIf="!books.items.length" class="h3 fw-light">No Books Found...</p>
+
         <ng-container *ngFor="let book of books.items">
           <app-book-card [book]="book"></app-book-card>
         </ng-container>
+
       </ng-container>
 
 
