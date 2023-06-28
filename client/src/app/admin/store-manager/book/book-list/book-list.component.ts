@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 import { BooksService } from '../../../../services/books.service';
 import { Book } from '../../../../models/book/book';
+import { QueryParams } from '../../../../models/queryParams';
 
 @Component({
   selector: 'app-book-list',
@@ -16,7 +17,7 @@ import { Book } from '../../../../models/book/book';
 export class BookListComponent {
   authors: PaginatedList<Author> | undefined;
   books: PaginatedList<Book> | undefined;
-  paginationParams = new PaginationParams();
+  queryParams = new QueryParams();
   loading = false;
 
   constructor(
@@ -26,15 +27,15 @@ export class BookListComponent {
   ) {}
 
   ngOnInit(): void {
-    this.paginationParams.pageSize = 5;
-    this.loadAuthors();
+    this.queryParams.pageSize = 5;
+    this.loadBooks();
   }
 
-  loadAuthors() {
+  loadBooks() {
     this.loading = true;
-    this.booksService.getAllBooks(this.paginationParams).subscribe({
+    this.booksService.getAllBooks(this.queryParams).subscribe({
       next: (response) => {
-        this.books = response;
+        this.books = { ...response };
         this.loading = false;
       },
     });
@@ -56,8 +57,8 @@ export class BookListComponent {
   }
 
   onPageChange(event: PageEvent) {
-    this.paginationParams.pageNumber = event.pageIndex + 1;
-    this.paginationParams.pageSize = event.pageSize;
-    this.loadAuthors();
+    this.queryParams.pageNumber = event.pageIndex + 1;
+    this.queryParams.pageSize = event.pageSize;
+    this.loadBooks();
   }
 }

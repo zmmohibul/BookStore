@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { PaginatedList } from '../models/paginatedList';
 import { Category } from '../models/category';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { CreateAuthorModel } from '../models/author/createAuthorModel';
 import { Author } from '../models/author/author';
 import { PaginationParams } from '../models/paginationParams';
@@ -18,20 +18,14 @@ export class AuthorsService {
 
   constructor(private http: HttpClient) {}
 
-  getAllAuthors(paginationParams: PaginationParams, queryParams?: QueryParams) {
-    let queryString = Object.values(paginationParams).join('-');
-    if (queryParams && queryParams.categoryId) {
-      queryString += '-' + queryParams.categoryId;
-    }
+  getAllAuthors(queryParams: QueryParams) {
+    let queryString = queryParams.getQueryString();
+    let params = queryParams.getHttpParamsObject();
+
     console.log(queryString);
     const data = this.authors.get(queryString);
     if (data) {
       return of(data);
-    }
-
-    let params: any = { ...paginationParams };
-    if (queryParams && queryParams?.categoryId) {
-      params = { ...params, categoryId: queryParams.categoryId };
     }
 
     return this.http

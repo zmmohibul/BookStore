@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Query } from '@angular/core';
 import { PublishersService } from '../../../../services/publishers.service';
 import { ToastrService } from 'ngx-toastr';
 import { PaginatedList } from '../../../../models/paginatedList';
 import { Publisher } from '../../../../models/publisher/publisher';
 import { PaginationParams } from '../../../../models/paginationParams';
 import { PageEvent } from '@angular/material/paginator';
+import { QueryParams } from '../../../../models/queryParams';
 
 @Component({
   selector: 'app-publisher-list',
@@ -13,7 +14,7 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class PublisherListComponent implements OnInit {
   publishersList: PaginatedList<Publisher> | undefined;
-  paginationParams = new PaginationParams();
+  queryParams = new QueryParams();
   loading = false;
 
   constructor(
@@ -23,15 +24,15 @@ export class PublisherListComponent implements OnInit {
 
   ngOnInit(): void {
     this.publishersList = new PaginatedList<Publisher>();
-    this.paginationParams.pageSize = 5;
+    this.queryParams.pageSize = 5;
     this.loadPublishers();
   }
 
   loadPublishers() {
     this.loading = true;
-    this.publisherService.getAllPublishers(this.paginationParams).subscribe({
+    this.publisherService.getAllPublishers(this.queryParams).subscribe({
       next: (response) => {
-        this.publishersList = response;
+        this.publishersList = { ...response };
         this.loading = false;
       },
     });
@@ -52,8 +53,8 @@ export class PublisherListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    this.paginationParams.pageNumber = event.pageIndex + 1;
-    this.paginationParams.pageSize = event.pageSize;
+    this.queryParams.pageNumber = event.pageIndex + 1;
+    this.queryParams.pageSize = event.pageSize;
     this.loadPublishers();
   }
 }

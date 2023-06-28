@@ -5,6 +5,7 @@ import { PaginatedList } from '../../../../models/paginatedList';
 import { PageEvent } from '@angular/material/paginator';
 import { PaginationParams } from '../../../../models/paginationParams';
 import { ToastrService } from 'ngx-toastr';
+import { QueryParams } from '../../../../models/queryParams';
 
 @Component({
   selector: 'app-author-list',
@@ -13,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AuthorListComponent implements OnInit {
   authors: PaginatedList<Author> | undefined;
-  paginationParams = new PaginationParams();
+  queryParams = new QueryParams();
   loading = false;
 
   constructor(
@@ -22,15 +23,15 @@ export class AuthorListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.paginationParams.pageSize = 5;
+    this.queryParams.pageSize = 5;
     this.loadAuthors();
   }
 
   loadAuthors() {
     this.loading = true;
-    this.authorService.getAllAuthors(this.paginationParams).subscribe({
+    this.authorService.getAllAuthors(this.queryParams).subscribe({
       next: (response) => {
-        this.authors = response;
+        this.authors = { ...response };
         this.loading = false;
       },
     });
@@ -55,8 +56,8 @@ export class AuthorListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    this.paginationParams.pageNumber = event.pageIndex + 1;
-    this.paginationParams.pageSize = event.pageSize;
+    this.queryParams.pageNumber = event.pageIndex + 1;
+    this.queryParams.pageSize = event.pageSize;
     this.loadAuthors();
   }
 }

@@ -35,10 +35,7 @@ export class CategoryListComponent implements OnInit {
     this.paginationParams.pageSize = 48;
     this.categoryService.getAllCategories(this.paginationParams).subscribe({
       next: (result) => {
-        this.categories = result;
-        if (this.categories) {
-          this.categories.pageSize = result.items.length;
-        }
+        this.categories = { ...result };
       },
     });
   }

@@ -47,9 +47,11 @@
   <ng-container *ngIf="books">
     <div>
       <mat-paginator
+        (page)="onBookPageChange($event)"
         [length]="books.count"
         [pageSizeOptions]="[5, 10, 25, 100]"
         [pageSize]="books.pageSize"
+        [pageIndex]="books.currentPage - 1"
         aria-label="Select page"
         class="mat-paginator"
         showFirstLastButtons

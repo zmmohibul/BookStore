@@ -10,6 +10,7 @@ import { CreateBookModel } from '../../../../models/book/createBookModel';
 import { CategoryService } from '../../../../services/category.service';
 import { BooksService } from '../../../../services/books.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-book-form',
@@ -37,7 +38,8 @@ export class BookFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
     private bookService: BooksService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -130,6 +132,7 @@ export class BookFormComponent implements OnInit {
       if (response) {
         const photo = JSON.parse(response);
         this.toastr.success(`Picture added.`);
+        this.router.navigateByUrl('admin/store-manager/book-list');
       }
     };
   }
@@ -153,8 +156,11 @@ export class BookFormComponent implements OnInit {
         });
         this.toastr.success(`${response.name} added.`);
         this.bookForm.reset();
-
-        this.uploader?.uploadAll();
+        if (this.uploader?.queue.length) {
+          this.uploader?.uploadAll();
+        } else {
+          this.router.navigateByUrl('admin/store-manager/book-list');
+        }
       },
     });
   }

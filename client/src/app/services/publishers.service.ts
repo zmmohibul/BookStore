@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { CreatePublisherModel } from '../models/publisher/createPublisherModel';
 import { environment } from '../../environments/environment';
 import { Publisher } from '../models/publisher/publisher';
@@ -7,6 +7,7 @@ import { PaginationParams } from '../models/paginationParams';
 import { map, of } from 'rxjs';
 import { PaginatedList } from '../models/paginatedList';
 import { Author } from '../models/author/author';
+import { QueryParams } from '../models/queryParams';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,10 @@ export class PublishersService {
 
   constructor(private http: HttpClient) {}
 
-  getAllPublishers(paginationParams: PaginationParams) {
-    let queryString = Object.values(paginationParams).join('-');
+  getAllPublishers(queryParams: QueryParams) {
+    let queryString = queryParams.getQueryString();
+    let params = queryParams.getHttpParamsObject();
+
     const data = this.publishers.get(queryString);
     if (data) {
       return of(data);
@@ -26,7 +29,7 @@ export class PublishersService {
 
     return this.http
       .get<PaginatedList<Publisher>>(`${this.baseUrl}/publishers`, {
-        params: { ...paginationParams },
+        params,
       })
       .pipe(
         map((response) => {

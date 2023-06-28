@@ -19,26 +19,9 @@ export class BooksService {
 
   constructor(private http: HttpClient) {}
 
-  getAllBooks(paginationParams: PaginationParams, queryParams?: QueryParams) {
-    let queryString = Object.values(paginationParams).join('-');
-    let params = new HttpParams();
-    params = params.append('pageNumber', paginationParams.pageNumber);
-    params = params.append('pageSize', paginationParams.pageSize);
-    if (queryParams) {
-      if (queryParams.categoryId) {
-        queryString += '-' + queryParams.categoryId;
-        params = params.append('categoryId', queryParams.categoryId);
-        queryString += '-' + queryParams.categoryId;
-      }
-
-      if (queryParams.authorsId) {
-        for (let authorid of queryParams.authorsId) {
-          params = params.append('authorsId', authorid);
-        }
-        queryString += '-' + queryParams.authorsId.join(',') + ',';
-      }
-    }
-    console.log(queryString);
+  getAllBooks(queryParams: QueryParams) {
+    let queryString = queryParams.getQueryString();
+    let params = queryParams.getHttpParamsObject();
 
     const data = this.books.get(queryString);
     if (data) {
