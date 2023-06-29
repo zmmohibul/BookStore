@@ -48,84 +48,126 @@ export class CartService {
           : book.hardcoverPrice,
     };
 
-    this.cartItems$.pipe(take(1)).subscribe({
-      next: (cartItems) => {
-        for (let item of cartItems) {
-          if (item.id === cartItem.id && item.type === cartItem.type) {
-            this.toastr.success('Book is already in cart');
-            return;
-          }
-        }
-        cartItems = [...cartItems, cartItem];
+    let cartItems: CartItem[] = this.getCartFromLocalStorage();
 
-        this.cartSource.next(cartItems);
-        localStorage.setItem('cart', JSON.stringify(cartItems));
+    for (let item of cartItems) {
+      if (item.id === cartItem.id && item.type === cartItem.type) {
+        this.toastr.success('Book is already in cart');
+        return;
+      }
+    }
 
-        this.toastr.success('Book added to cart.');
-      },
+    cartItems = [...cartItems, cartItem];
+    this.cartSource.next(cartItems);
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    this.toastr.success('Book added to cart.');
+  }
+
+  removeItemFromCart(cartItem: CartItem) {
+    let itemToDelete = this.getItemFromCartInLocalStorage(cartItem);
+    if (!itemToDelete) {
+      this.toastr.error(
+        'The cart was updated on some other page. Please reload the page for the updated cart',
+        'Error!!!'
+      );
+      return;
+    }
+
+    let cartItems: CartItem[] = this.getCartFromLocalStorage();
+    cartItems = cartItems.filter((item) => {
+      if (item.id !== cartItem.id) {
+        return item;
+      }
+
+      if (item.id === cartItem.id && item.type !== cartItem.type) {
+        return item;
+      }
+
+      return;
     });
+
+    this.cartSource.next(cartItems);
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+
+    this.toastr.error(`Item Removed from Cart.`);
+  }
+
+  getCartFromLocalStorage(): CartItem[] {
+    const cartString = localStorage.getItem('cart');
+    if (cartString) {
+      return JSON.parse(cartString);
+    }
+
+    return [];
+  }
+
+  getItemFromCartInLocalStorage(cartItem: CartItem): CartItem | null {
+    let cart = this.getCartFromLocalStorage();
+
+    for (let item of cart) {
+      if (item.id === cartItem.id && item.type === cartItem.type) {
+        return item;
+      }
+    }
+
+    return null;
   }
 
   incrementCartItemQuantity(cartItem: CartItem) {
-    if (cartItem.quantity === cartItem.quantityInStock) {
+    let itemToUpdate = this.getItemFromCartInLocalStorage(cartItem);
+    if (!itemToUpdate) {
+      this.toastr.error(
+        'The cart was updated on some other page. Please reload the page for the updated cart',
+        'Error!!!'
+      );
+      return;
+    }
+
+    if (itemToUpdate.quantity === itemToUpdate.quantityInStock) {
       this.toastr.error('Desired quantity is not available in stock.');
       return;
     }
 
-    this.updateCartItem(cartItem, CartOperation.Increment);
+    this.updateCartItem(itemToUpdate, CartOperation.Increment);
   }
 
   decrementCartItemQuantity(cartItem: CartItem) {
-    if (cartItem.quantity === 1) {
+    let itemToUpdate = this.getItemFromCartInLocalStorage(cartItem);
+    if (!itemToUpdate) {
+      this.toastr.error(
+        'The cart was updated on some other page. Please reload the page for the updated cart',
+        'Error!!!'
+      );
       return;
     }
 
-    this.updateCartItem(cartItem, CartOperation.Decrement);
+    if (itemToUpdate.quantity === 1) {
+      return;
+    }
+
+    this.updateCartItem(itemToUpdate, CartOperation.Decrement);
   }
 
   updateCartItem(cartItem: CartItem, operation: CartOperation) {
-    this.cartItems$.pipe(take(1)).subscribe({
-      next: (cartItems) => {
-        for (let item of cartItems) {
-          if (item.id === cartItem.id && item.type === cartItem.type) {
-            if (operation === CartOperation.Increment) {
-              item.quantity++;
-            }
-
-            if (operation === CartOperation.Decrement) {
-              item.quantity--;
-            }
-
-            this.cartSource.next(cartItems);
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-
-            return;
-          }
+    let cartItems: CartItem[] = this.getCartFromLocalStorage();
+    for (let item of cartItems) {
+      if (item.id === cartItem.id && item.type === cartItem.type) {
+        if (operation === CartOperation.Increment) {
+          item.quantity++;
         }
-      },
-    });
-  }
 
-  removeItemFromCart(cartItem: CartItem) {
-    this.cartItems$.pipe(take(1)).subscribe({
-      next: (itemList) => {
-        itemList = itemList.filter((item) => {
-          if (item.id !== cartItem.id) {
-            return item;
-          }
+        if (operation === CartOperation.Decrement) {
+          item.quantity--;
+        }
 
-          if (item.id === cartItem.id && item.type !== cartItem.type) {
-            return item;
-          }
+        this.cartSource.next(cartItems);
+        localStorage.setItem('cart', JSON.stringify(cartItems));
 
-          return;
-        });
-
-        this.cartSource.next(itemList);
-        localStorage.setItem('cart', JSON.stringify(itemList));
-
-        this.toastr.error(`Item Removed from Cart.`);
-      },
-    });
+        return;
+      }
+    }
   }
 }
