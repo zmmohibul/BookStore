@@ -16,13 +16,23 @@ enum CartOperation {
   providedIn: 'root',
 })
 export class CartService {
-  cartSource = new BehaviorSubject<CartItem[]>([]);
+  private cartSource = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartSource.asObservable();
 
   constructor(
     private booksService: BooksService,
     private toastr: ToastrService
   ) {}
+
+  loadCart() {
+    const cartString = localStorage.getItem('cart');
+    if (!cartString) {
+      return;
+    }
+
+    const cartItems: CartItem[] = JSON.parse(cartString);
+    this.cartSource.next(cartItems);
+  }
 
   addToCart(book: Book, bookType: BookType) {
     let quantityInStock =
@@ -95,7 +105,17 @@ export class CartService {
     this.toastr.error(`Item Removed from Cart.`);
   }
 
-  getCartFromLocalStorage(): CartItem[] {
+  getCartTotal() {
+    const cart = this.getCartFromLocalStorage();
+    let total = 0;
+    for (let item of cart) {
+      total += item.quantity * item.unitPrice;
+    }
+
+    return total;
+  }
+
+  private getCartFromLocalStorage(): CartItem[] {
     const cartString = localStorage.getItem('cart');
     if (cartString) {
       return JSON.parse(cartString);
@@ -104,7 +124,7 @@ export class CartService {
     return [];
   }
 
-  getItemFromCartInLocalStorage(cartItem: CartItem): CartItem | null {
+  private getItemFromCartInLocalStorage(cartItem: CartItem): CartItem | null {
     let cart = this.getCartFromLocalStorage();
 
     for (let item of cart) {
@@ -151,7 +171,7 @@ export class CartService {
     this.updateCartItem(itemToUpdate, CartOperation.Decrement);
   }
 
-  updateCartItem(cartItem: CartItem, operation: CartOperation) {
+  private updateCartItem(cartItem: CartItem, operation: CartOperation) {
     let cartItems: CartItem[] = this.getCartFromLocalStorage();
     for (let item of cartItems) {
       if (item.id === cartItem.id && item.type === cartItem.type) {

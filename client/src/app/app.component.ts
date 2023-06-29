@@ -31,13 +31,7 @@ export class AppComponent implements OnInit {
   }
 
   loadCart() {
-    const cartString = localStorage.getItem('cart');
-    if (!cartString) {
-      return;
-    }
-
-    const cartItems: CartItem[] = JSON.parse(cartString);
-    this.cartService.cartSource.next(cartItems);
+    this.cartService.loadCart();
   }
 
   onEvent(event: any) {

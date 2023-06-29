@@ -30,11 +30,13 @@ export class CartComponent implements OnInit {
 
   onIncrementItemQuantity(cartItem: CartItem) {
     this.cartService.incrementCartItemQuantity(cartItem);
-    // this.cartService.addItemToCart(newItem);
   }
 
   onDecrementItemQuantity(cartItem: CartItem) {
     this.cartService.decrementCartItemQuantity(cartItem);
-    // this.cartService.addItemToCart(cartItem);
+  }
+
+  getCartTotal() {
+    return this.cartService.getCartTotal();
   }
 }
