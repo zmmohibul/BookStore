@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from './models/user';
 import { AuthenticationService } from './services/authentication.service';
+import { CartItem } from './models/cartItem';
+import { CartService } from './services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -8,13 +10,17 @@ import { AuthenticationService } from './services/authentication.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthenticationService) {}
+  constructor(
+    private authService: AuthenticationService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
-    this.setUser();
+    this.loadUser();
+    this.loadCart();
   }
 
-  setUser() {
+  loadUser() {
     const userString = localStorage.getItem('user');
     if (!userString) {
       return;
@@ -22,6 +28,16 @@ export class AppComponent implements OnInit {
 
     const user: User = JSON.parse(userString);
     this.authService.setCurrentUser(user);
+  }
+
+  loadCart() {
+    const cartString = localStorage.getItem('cart');
+    if (!cartString) {
+      return;
+    }
+
+    const cartItems: CartItem[] = JSON.parse(cartString);
+    this.cartService.cartSource.next(cartItems);
   }
 
   onEvent(event: any) {

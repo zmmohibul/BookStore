@@ -37,7 +37,7 @@
 
 
     <ul class="navbar-nav flex-row">
-      
+
       <ng-container *ngIf="!user">
         <div class="dropdown me-3" mdbDropdown>
           <button
@@ -99,10 +99,11 @@
 
       <ng-container *ngIf="!user || (user && user.role != 'Admin')">
         <li class="nav-item me-5 me-lg-0">
-          <a class="nav-link" href="#">
+          <a class="nav-link" routerLink="cart">
             <!-- <span class="badge badge-pill bg-danger">1</span> -->
             <span><i class="fas fa-shopping-cart fa-lg"></i></span>
-            <span class="badge rounded-pill badge-notification bg-danger">1</span>
+            <span *ngIf="(cartService.cartItems$ | async)?.length"
+                  class="badge rounded-pill badge-notification bg-danger">{{ (cartService.cartItems$ | async)?.length }}</span>
           </a>
         </li>
       </ng-container>

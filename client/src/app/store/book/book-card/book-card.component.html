@@ -67,10 +67,14 @@
               </button>
               <ul aria-labelledby="dropdownMenuButton" class="dropdown-menu" mdbDropdownMenu>
                 <li>
-                  <button class="dropdown-item" type="button">Paperback</button>
+                  <button (click)="onAddToCartClick(book, typePaperback)" class="dropdown-item" type="button">
+                    Paperback
+                  </button>
                 </li>
                 <li>
-                  <button class="dropdown-item" type="button">Hardcover</button>
+                  <button (click)="onAddToCartClick(book, typeHardcover)" class="dropdown-item" type="button">
+                    Hardcover
+                  </button>
                 </li>
               </ul>
             </div>

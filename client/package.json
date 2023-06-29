@@ -22,6 +22,7 @@
     "@angular/router": "^15.1.0",
     "@fortawesome/fontawesome-free": "^6.0.0",
     "@kolkov/ngx-gallery": "^2.0.1",
+    "@nghacks/quantity-input": "^1.0.1",
     "chart.js": "^3.1.1",
     "mdb-angular-ui-kit": "^4.1.0",
     "ng2-file-upload": "^4.0.0",

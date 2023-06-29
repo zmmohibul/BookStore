@@ -8,6 +8,7 @@ import { BookCardComponent } from './book/book-card/book-card.component';
 import { SharedModule } from '../shared/shared.module';
 import { BookDetailsComponent } from './book/book-details/book-details.component';
 import { CategorySidebarComponent } from './book/category-sidebar/category-sidebar.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CategorySidebarComponent } from './book/category-sidebar/category-sideb
     BookCardComponent,
     BookDetailsComponent,
     CategorySidebarComponent,
+    CartComponent,
   ],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
 })
