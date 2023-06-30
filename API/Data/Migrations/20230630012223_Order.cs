@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class PostgresInit : Migration
+    public partial class Order : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,6 +230,28 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderedByUserId = table.Column<string>(type: "text", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "numeric(8,2)", nullable: false),
+                    OrderStatus = table.Column<string>(type: "varchar(50)", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_OrderedByUserId",
+                        column: x => x.OrderedByUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
                 {
@@ -257,6 +279,7 @@ namespace API.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    Highlight = table.Column<string>(type: "text", nullable: false),
                     PublisherId = table.Column<int>(type: "integer", nullable: false),
                     PaperbackPrice = table.Column<decimal>(type: "numeric(8,2)", nullable: false),
                     PaperbackQuantity = table.Column<int>(type: "integer", nullable: false),
@@ -265,7 +288,8 @@ namespace API.Data.Migrations
                     PrintLength = table.Column<int>(type: "integer", nullable: false),
                     Language = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     PublicationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Isbn13 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    Isbn13 = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RestockDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,6 +297,103 @@ namespace API.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Books_Publishers_PublisherId",
                         column: x => x.PublisherId,
+                        principalTable: "Publishers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryPublisher",
+                columns: table => new
+                {
+                    BooksPublishedUnderCategoriesId = table.Column<int>(type: "integer", nullable: false),
+                    PublishersWhoPublishedBooksUnderThisCategoryId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryPublisher", x => new { x.BooksPublishedUnderCategoriesId, x.PublishersWhoPublishedBooksUnderThisCategoryId });
+                    table.ForeignKey(
+                        name: "FK_CategoryPublisher_Categories_BooksPublishedUnderCategoriesId",
+                        column: x => x.BooksPublishedUnderCategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryPublisher_Publishers_PublishersWhoPublishedBooksUnd~",
+                        column: x => x.PublishersWhoPublishedBooksUnderThisCategoryId,
+                        principalTable: "Publishers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BookDetails_BookId = table.Column<int>(type: "integer", nullable: false),
+                    BookDetails_BookName = table.Column<string>(type: "text", nullable: false),
+                    BookDetails_BookType = table.Column<string>(type: "varchar(50)", nullable: false),
+                    BookDetails_PictureUrl = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(8,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuthorCategory",
+                columns: table => new
+                {
+                    AuthorsWhoWroteBooksOnThisCategoryId = table.Column<int>(type: "integer", nullable: false),
+                    WrittenBookCategoriesId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthorCategory", x => new { x.AuthorsWhoWroteBooksOnThisCategoryId, x.WrittenBookCategoriesId });
+                    table.ForeignKey(
+                        name: "FK_AuthorCategory_Authors_AuthorsWhoWroteBooksOnThisCategoryId",
+                        column: x => x.AuthorsWhoWroteBooksOnThisCategoryId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AuthorCategory_Categories_WrittenBookCategoriesId",
+                        column: x => x.WrittenBookCategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AuthorPublisher",
+                columns: table => new
+                {
+                    AuthorsWhoseBooksArePublishedByThisPublisherId = table.Column<int>(type: "integer", nullable: false),
+                    PublishersWithWhomBooksArePublishedId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthorPublisher", x => new { x.AuthorsWhoseBooksArePublishedByThisPublisherId, x.PublishersWithWhomBooksArePublishedId });
+                    table.ForeignKey(
+                        name: "FK_AuthorPublisher_Authors_AuthorsWhoseBooksArePublishedByThis~",
+                        column: x => x.AuthorsWhoseBooksArePublishedByThisPublisherId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AuthorPublisher_Publishers_PublishersWithWhomBooksArePublis~",
+                        column: x => x.PublishersWithWhomBooksArePublishedId,
                         principalTable: "Publishers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -396,6 +517,16 @@ namespace API.Data.Migrations
                 column: "BooksId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuthorCategory_WrittenBookCategoriesId",
+                table: "AuthorCategory",
+                column: "WrittenBookCategoriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuthorPublisher_PublishersWithWhomBooksArePublishedId",
+                table: "AuthorPublisher",
+                column: "PublishersWithWhomBooksArePublishedId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Authors_AuthorPictureId",
                 table: "Authors",
                 column: "AuthorPictureId");
@@ -419,6 +550,21 @@ namespace API.Data.Migrations
                 name: "IX_Categories_ParentId",
                 table: "Categories",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryPublisher_PublishersWhoPublishedBooksUnderThisCateg~",
+                table: "CategoryPublisher",
+                column: "PublishersWhoPublishedBooksUnderThisCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_OrderId",
+                table: "OrderItem",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_OrderedByUserId",
+                table: "Orders",
+                column: "OrderedByUserId");
         }
 
         /// <inheritdoc />
@@ -446,31 +592,46 @@ namespace API.Data.Migrations
                 name: "AuthorBook");
 
             migrationBuilder.DropTable(
+                name: "AuthorCategory");
+
+            migrationBuilder.DropTable(
+                name: "AuthorPublisher");
+
+            migrationBuilder.DropTable(
                 name: "BookCategory");
 
             migrationBuilder.DropTable(
                 name: "BookPicture");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "CategoryPublisher");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "OrderItem");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
+                name: "Books");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "AuthorPicture");
 
             migrationBuilder.DropTable(
                 name: "Publishers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

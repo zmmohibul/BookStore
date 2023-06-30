@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230627044129_AuthorCategoryUpdate")]
-    partial class AuthorCategoryUpdate
+    [Migration("20230630012223_Order")]
+    partial class Order
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -313,6 +313,59 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("API.Entities.OrderAggregate.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("OrderedByUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(8, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderedByUserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("API.Entities.OrderAggregate.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(8, 2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItem");
+                });
+
             modelBuilder.Entity("AuthorBook", b =>
                 {
                     b.Property<int>("AuthorsId")
@@ -343,6 +396,21 @@ namespace API.Data.Migrations
                     b.ToTable("AuthorCategory");
                 });
 
+            modelBuilder.Entity("AuthorPublisher", b =>
+                {
+                    b.Property<int>("AuthorsWhoseBooksArePublishedByThisPublisherId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PublishersWithWhomBooksArePublishedId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AuthorsWhoseBooksArePublishedByThisPublisherId", "PublishersWithWhomBooksArePublishedId");
+
+                    b.HasIndex("PublishersWithWhomBooksArePublishedId");
+
+                    b.ToTable("AuthorPublisher");
+                });
+
             modelBuilder.Entity("BookCategory", b =>
                 {
                     b.Property<int>("BooksId")
@@ -356,6 +424,21 @@ namespace API.Data.Migrations
                     b.HasIndex("CategoriesId");
 
                     b.ToTable("BookCategory");
+                });
+
+            modelBuilder.Entity("CategoryPublisher", b =>
+                {
+                    b.Property<int>("BooksPublishedUnderCategoriesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PublishersWhoPublishedBooksUnderThisCategoryId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BooksPublishedUnderCategoriesId", "PublishersWhoPublishedBooksUnderThisCategoryId");
+
+                    b.HasIndex("PublishersWhoPublishedBooksUnderThisCategoryId");
+
+                    b.ToTable("CategoryPublisher");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -541,6 +624,56 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.OrderAggregate.Order", b =>
+                {
+                    b.HasOne("API.Entities.Identity.User", "OrderedByUser")
+                        .WithMany()
+                        .HasForeignKey("OrderedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrderedByUser");
+                });
+
+            modelBuilder.Entity("API.Entities.OrderAggregate.OrderItem", b =>
+                {
+                    b.HasOne("API.Entities.OrderAggregate.Order", null)
+                        .WithMany("OrderedBooks")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("API.Entities.OrderAggregate.OrderedBook", "BookDetails", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("BookId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("BookName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("BookType")
+                                .IsRequired()
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<string>("PictureUrl")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("OrderItem");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
+
+                    b.Navigation("BookDetails")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AuthorBook", b =>
                 {
                     b.HasOne("API.Entities.BookAggregate.Author", null)
@@ -571,6 +704,21 @@ namespace API.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AuthorPublisher", b =>
+                {
+                    b.HasOne("API.Entities.BookAggregate.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsWhoseBooksArePublishedByThisPublisherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.BookAggregate.Publisher", null)
+                        .WithMany()
+                        .HasForeignKey("PublishersWithWhomBooksArePublishedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BookCategory", b =>
                 {
                     b.HasOne("API.Entities.BookAggregate.Book", null)
@@ -582,6 +730,21 @@ namespace API.Data.Migrations
                     b.HasOne("API.Entities.BookAggregate.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CategoryPublisher", b =>
+                {
+                    b.HasOne("API.Entities.BookAggregate.Category", null)
+                        .WithMany()
+                        .HasForeignKey("BooksPublishedUnderCategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.BookAggregate.Publisher", null)
+                        .WithMany()
+                        .HasForeignKey("PublishersWhoPublishedBooksUnderThisCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -655,6 +818,11 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Identity.User", b =>
                 {
                     b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("API.Entities.OrderAggregate.Order", b =>
+                {
+                    b.Navigation("OrderedBooks");
                 });
 #pragma warning restore 612, 618
         }
