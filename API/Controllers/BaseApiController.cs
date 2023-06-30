@@ -19,6 +19,15 @@ public class BaseApiController : ControllerBase
         {
             return NoContent();
         }
+        
+        if (result.StatusCode == 401)
+        {
+            return Unauthorized(new Error()
+            {
+                StatusCode = result.StatusCode,
+                ErrorMessage = result.ErrorMessage
+            });
+        }
 
         if (result.StatusCode == 404)
         {

@@ -2,8 +2,10 @@ using API.DTOs;
 using API.DTOs.Author;
 using API.DTOs.Book;
 using API.DTOs.Category;
+using API.DTOs.Order;
 using API.DTOs.Publisher;
 using API.Entities.BookAggregate;
+using API.Entities.OrderAggregate;
 using AutoMapper;
 
 namespace API.Helpers;
@@ -15,6 +17,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreateBookDto, Book>();
         CreateMap<Book, BookDto>();
         CreateMap<BookPicture, PictureDto>();
+
+        CreateMap<OrderBookDetail, OrderBookDetailDto>();
+        CreateMap<OrderItem, OrderItemDto>();
+        CreateMap<Order, OrderDto>();
         
         CreateMap<CreateAuthorDto, Author>();
         CreateMap<Author, AuthorDto>()

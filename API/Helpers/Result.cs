@@ -27,6 +27,16 @@ public class Result<T>
         };
     }
     
+    public static Result<T> UnauthorizedResult(string message)
+    {
+        return new Result<T>()
+        {
+            ErrorMessage = message,
+            StatusCode = 401,
+            IsSuccess = false
+        };
+    }
+    
     public static Result<T> NotFoundResult(string message)
     {
         return new Result<T>()

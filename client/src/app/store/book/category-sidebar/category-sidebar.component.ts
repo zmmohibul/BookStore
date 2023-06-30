@@ -54,6 +54,9 @@ export class CategorySidebarComponent implements OnInit {
         this.listLoading = false;
         this.childFetched = false;
       },
+      error: () => {
+        this.listLoading = false;
+      },
     });
   }
 
@@ -108,6 +111,9 @@ export class CategorySidebarComponent implements OnInit {
           this.childLoading = false;
         }
         this.childFetched = true;
+      },
+      error: () => {
+        this.childLoading = false;
       },
     });
   }

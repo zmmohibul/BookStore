@@ -2,14 +2,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities.OrderAggregate;
 
-public class OrderedBook
+public class OrderBookDetail
 {
-    public OrderedBook()
+    public OrderBookDetail()
     {
         
     }
 
-    public OrderedBook(int bookId, string bookName, OrderedBookType bookType, string pictureUrl)
+    public OrderBookDetail(int bookId, string bookName, OrderedBookType bookType, string pictureUrl)
     {
         BookId = bookId;
         BookName = bookName;

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230630012223_Order")]
+    [Migration("20230630051020_Order")]
     partial class Order
     {
         /// <inheritdoc />
@@ -627,7 +627,7 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.OrderAggregate.Order", b =>
                 {
                     b.HasOne("API.Entities.Identity.User", "OrderedByUser")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("OrderedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -642,7 +642,7 @@ namespace API.Data.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.OwnsOne("API.Entities.OrderAggregate.OrderedBook", "BookDetails", b1 =>
+                    b.OwnsOne("API.Entities.OrderAggregate.OrderBookDetail", "BookDetails", b1 =>
                         {
                             b1.Property<int>("OrderItemId")
                                 .HasColumnType("integer");
@@ -818,6 +818,8 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Identity.User", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("API.Entities.OrderAggregate.Order", b =>
