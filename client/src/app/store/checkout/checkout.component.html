@@ -1,0 +1,72 @@
+<div class="container my-5 px-5">
+  <div *ngIf="!cartItems.length" class="row d-flex justify-content-center">
+    <p class="text-center display-4">Add item to cart to checkout</p>
+  </div>
+  <div *ngIf="cartItems.length" class="row d-flex justify-content-center">
+    <div class="col-lg-6 col-md-12">
+      <div *ngIf="currentUserDetail" class="card border border-success shadow-3 mb-3" style="max-width: 18rem;">
+        <div class="card-header bg-transparent border-success">Address <i class="fas fa-check fa-lg mx-2"></i></div>
+        <div class="card-body ">
+          <h5 class="card-title">{{currentUserDetail.firstName}} {{currentUserDetail.lastName}}</h5>
+          <p class="card-text mb-0">{{currentUserDetail.addresses[0].street}}</p>
+          <p class="card-text">{{currentUserDetail.addresses[0].province}}, {{currentUserDetail.addresses[0].city}}
+            - {{currentUserDetail.addresses[0].zipCode}}</p>
+        </div>
+      </div>
+      <button class="ms-1  my-2 btn btn-dark btn-lg">Add New Address</button>
+
+    </div>
+    <div class="col-lg-6 col-md-12">
+      <div class="card text-center shadow-3">
+        <!--        <h5 class="card-header ">Order Summary</h5>-->
+        <div class="card-body">
+
+          <div class="card-header row justify-content-around card-text">
+            <div class="col-6 h5">
+              Book
+            </div>
+            <div class="col-3 h5 text-center">
+              Unit Price
+            </div>
+            <div class="col-3 h5 text-center">
+              Total
+            </div>
+          </div>
+
+        </div>
+        <div class="row justify-content-end mb-4 card-text">
+
+          <div *ngFor="let item of cartItems" class="row justify-content-end mb-4 card-text">
+            <div class="col-6">
+              {{item.name}} - ({{item.type}}) <span class="fw-bold">x {{item.quantity}}</span>
+            </div>
+            <div class="col-3">
+              BDT {{ item.unitPrice }} <span class="fw-bold">x {{item.quantity}}</span>
+            </div>
+            <div class="col-3">
+              BDT {{ item.unitPrice * item.quantity }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="row justify-content-end card-text card-footer">
+          <div class="col-6 h5">
+            Total
+          </div>
+          <div class="col-6 h5">
+            BDT {{ cartService.getCartTotal() }}
+          </div>
+
+        </div>
+
+
+      </div>
+
+      <div class="d-flex flex-row-reverse">
+        <button class="me-2  my-5 btn btn-dark btn-lg">Place Order</button>
+      </div>
+
+
+    </div>
+  </div>
+</div>

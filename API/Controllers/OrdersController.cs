@@ -16,11 +16,22 @@ public class OrdersController : BaseApiController
         _orderRepository = orderRepository;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllOrders()
+    {
+        var result = await _orderRepository.GetAllOrders(User.FindFirst(ClaimTypes.Name)?.Value);
+        return HandleResult(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateOrder(CreateOrderDto createOrderDto)
     {
-        var username = User.FindFirst(ClaimTypes.Name)?.Value;
-        var result = await _orderRepository.CreateOrder(username, createOrderDto);
+        var result = await _orderRepository.CreateOrder(User.FindFirst(ClaimTypes.Name)?.Value, createOrderDto);
+
+        if (result.StatusCode != 201)
+        {
+            return HandleResult(result);
+        }
 
         return Ok(result.Data);
     }

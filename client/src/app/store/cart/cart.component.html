@@ -58,5 +58,14 @@
     </tr>
     </tbody>
   </table>
+  <div class="d-flex flex-row-reverse">
+    <button (click)="onCheckOut()" class="mx-2 me-5 my-5 btn btn-dark btn-lg">Proceed to Checkout</button>
+    <button *ngIf="!(authenticationService.currentUser$ | async)" class="mx-2 my-5 btn btn-dark btn-lg">Login /
+      Register
+    </button>
 
+  </div>
+  <!--  <div class="text-center">-->
+  <!--    <button class="my-5 btn btn-dark btn-lg">Proceed to Checkout</button>-->
+  <!--  </div>-->
 </div>

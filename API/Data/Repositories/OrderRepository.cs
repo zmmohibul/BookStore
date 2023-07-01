@@ -4,6 +4,7 @@ using API.Entities.OrderAggregate;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,8 +26,25 @@ public class OrderRepository : IOrderRepository
     }
 
 
-    public async Task<Result<ICollection<OrderDto>>> GetAllOrders(string username)
+    public async Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username)
     {
+        var user = await _userManager.Users
+            .SingleOrDefaultAsync(user => user.UserName.Equals(username));
+        
+        if (user == null)
+        {
+            return Result<PaginatedList<OrderDto>>.UnauthorizedResult("Please login to continue");
+        }
+
+        var projectedQuery = _dataContext.Orders
+            .Where(order => order.OrderedByUserId.Equals(user.Id))
+            .ProjectTo<OrderDto>(_mapper.ConfigurationProvider);
+        
+        var data = await PaginatedList<OrderDto>
+            .CreatePaginatedListAsync(projectedQuery, 1, 50);
+        
+        return Result<PaginatedList<OrderDto>>.OkResult(data);
+
         throw new NotImplementedException();
     }
 
@@ -43,6 +61,12 @@ public class OrderRepository : IOrderRepository
         if (user == null)
         {
             return Result<OrderDto>.UnauthorizedResult("Please login to continue");
+        }
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles[0].Equals(UserRoles.Admin))
+        {
+            return Result<OrderDto>.UnauthorizedResult("Admin cannot place order.");
         }
 
         if (createOrderDto.OrderBookItems.Count == 0)

@@ -12,4 +12,4 @@ public class OrderItem
     [Column(TypeName = "decimal(8, 2)")]
     public decimal Price { get; set; }
     public int Quantity { get; set; }
-}
+} 

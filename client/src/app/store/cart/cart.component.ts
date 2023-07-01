@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../models/cartItem';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-cart',
@@ -13,13 +15,22 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private toastr: ToastrService
+    public authenticationService: AuthenticationService,
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.cartService.cartItems$.subscribe({
       next: (items) => {
         this.cartItems = [...items];
+      },
+    });
+    console.log(this.route);
+    this.route.url.subscribe({
+      next: (url) => {
+        console.log(url);
       },
     });
   }
@@ -38,5 +49,23 @@ export class CartComponent implements OnInit {
 
   getCartTotal() {
     return this.cartService.getCartTotal();
+  }
+
+  onCheckOut() {
+    this.authenticationService.currentUser$.subscribe({
+      next: (user) => {
+        if (!user) {
+          this.route.url.subscribe({
+            next: (url) => {
+              let path = 'checkout';
+              this.authenticationService.previousPath = path;
+            },
+          });
+          this.router.navigateByUrl('auth');
+        } else {
+          this.router.navigateByUrl('checkout');
+        }
+      },
+    });
   }
 }

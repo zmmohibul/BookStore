@@ -1,6 +1,10 @@
+using System.Security.Claims;
 using API.DTOs;
+using API.DTOs.Account;
 using API.Entities.Identity;
 using API.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +18,13 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
-    public AccountController(UserManager<User> userManager, ITokenService tokenService)
+    public AccountController(UserManager<User> userManager, ITokenService tokenService, IMapper mapper)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
     [Authorize(Policy = "RequireAdminRole")]
@@ -60,5 +66,19 @@ public class AccountController : ControllerBase
             Role = roles[0],
             Token = await _tokenService.CreateToken(user)
         });
+    }
+    
+    [Authorize]
+    [HttpGet("current-user-detail")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var username = User.FindFirst(ClaimTypes.Name)?.Value;
+        
+        var user = await _userManager.Users
+            .Include(u => u.Addresses)
+            .ProjectTo<UserDetailDto>(_mapper.ConfigurationProvider)
+            .SingleOrDefaultAsync(user => user.UserName.Equals(username));
+
+        return Ok(user);
     }
 }
