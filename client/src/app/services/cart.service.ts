@@ -33,10 +33,12 @@ export class CartService {
 
     const cartItems: CartItem[] = JSON.parse(cartString);
     this.cartSource.next(cartItems);
+
   }
 
   emptyCart() {
     this.cartSource.next([]);
+    localStorage.setItem('cart', JSON.stringify([]));
   }
 
   addToCart(book: Book, bookType: BookType) {

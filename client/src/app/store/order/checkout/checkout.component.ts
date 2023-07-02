@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {UserDetail} from '../../../models/userDetail';
-import {CartItem} from '../../../models/cartItem';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {CartService} from '../../../services/cart.service';
-import {CreateOrderModel} from '../../../models/order/createOrderModel';
-import {OrderService} from '../../../services/order.service';
-import {ToastrService} from 'ngx-toastr';
+import { Component, OnInit } from '@angular/core';
+import { UserDetail } from '../../../models/userDetail';
+import { CartItem } from '../../../models/cartItem';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { CartService } from '../../../services/cart.service';
+import { CreateOrderModel } from '../../../models/order/createOrderModel';
+import { OrderService } from '../../../services/order.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -21,9 +22,9 @@ export class CheckoutComponent implements OnInit {
     private authenticationService: AuthenticationService,
     public cartService: CartService,
     private orderService: OrderService,
-    private toastr: ToastrService
-  ) {
-  }
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cartService.cartItems$.subscribe({
@@ -54,7 +55,14 @@ export class CheckoutComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.loading = false;
-      }
-    })
+        this.cartService.emptyCart();
+        this.toastr.success(`Order #${response.id} placed successfully`);
+        this.router.navigateByUrl('');
+      },
+      error: (err) => {
+        this.toastr.error(err.error.errorMessage);
+        console.log(err);
+      },
+    });
   }
 }

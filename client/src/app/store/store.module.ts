@@ -10,6 +10,7 @@ import { BookDetailsComponent } from './book/book-details/book-details.component
 import { CategorySidebarComponent } from './book/category-sidebar/category-sidebar.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './order/checkout/checkout.component';
+import { OrderSummaryComponent } from './order/order-summary/order-summary.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { CheckoutComponent } from './order/checkout/checkout.component';
     CategorySidebarComponent,
     CartComponent,
     CheckoutComponent,
+    OrderSummaryComponent,
   ],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
 })
