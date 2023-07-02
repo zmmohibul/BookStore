@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, take } from 'rxjs';
-import { User } from '../models/user';
-import { CartItem } from '../models/cartItem';
-import { ToastrService } from 'ngx-toastr';
-import { BooksService } from './books.service';
-import { Book } from '../models/book/book';
-import { BookType } from '../models/bookType';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, take} from 'rxjs';
+import {User} from '../models/user';
+import {CartItem} from '../models/cartItem';
+import {ToastrService} from 'ngx-toastr';
+import {BooksService} from './books.service';
+import {Book} from '../models/book/book';
+import {BookType} from '../models/bookType';
 
 enum CartOperation {
   Increment = 'Increment',
@@ -22,7 +22,8 @@ export class CartService {
   constructor(
     private booksService: BooksService,
     private toastr: ToastrService
-  ) {}
+  ) {
+  }
 
   loadCart() {
     const cartString = localStorage.getItem('cart');
@@ -32,6 +33,10 @@ export class CartService {
 
     const cartItems: CartItem[] = JSON.parse(cartString);
     this.cartSource.next(cartItems);
+  }
+
+  emptyCart() {
+    this.cartSource.next([]);
   }
 
   addToCart(book: Book, bookType: BookType) {

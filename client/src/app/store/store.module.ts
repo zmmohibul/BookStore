@@ -9,7 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { BookDetailsComponent } from './book/book-details/book-details.component';
 import { CategorySidebarComponent } from './book/category-sidebar/category-sidebar.component';
 import { CartComponent } from './cart/cart.component';
-import { CheckoutComponent } from './checkout/checkout.component';
+import { CheckoutComponent } from './order/checkout/checkout.component';
 
 @NgModule({
   declarations: [
