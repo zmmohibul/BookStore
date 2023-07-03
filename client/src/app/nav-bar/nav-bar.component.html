@@ -80,8 +80,8 @@
           >
 
             <ng-container *ngIf="user && user.role == 'User'">
-              <li><a class="dropdown-item" href="#">Your Profile</a></li>
-              <li><a class="dropdown-item" href="#">Your Orders</a></li>
+              <li><a class="dropdown-item">Your Profile</a></li>
+              <li><a class="dropdown-item" routerLink="order-list">Your Orders</a></li>
             </ng-container>
 
 

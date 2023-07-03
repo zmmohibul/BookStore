@@ -26,5 +26,6 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
+  exports: [],
 })
 export class AppModule {}

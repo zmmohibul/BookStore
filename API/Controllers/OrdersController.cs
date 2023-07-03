@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using API.DTOs.Order;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,9 @@ public class OrdersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllOrders()
+    public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams paginationParams)
     {
-        var result = await _orderRepository.GetAllOrders(User.FindFirst(ClaimTypes.Name)?.Value);
+        var result = await _orderRepository.GetAllOrders(User.FindFirst(ClaimTypes.Name)?.Value, paginationParams);
         return HandleResult(result);
     }
 

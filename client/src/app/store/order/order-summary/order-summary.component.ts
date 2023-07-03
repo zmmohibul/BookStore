@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserDetail } from '../../../models/userDetail';
 import { CartItem } from '../../../models/cartItem';
 import { AuthenticationService } from '../../../services/authentication.service';
@@ -6,6 +6,7 @@ import { CartService } from '../../../services/cart.service';
 import { OrderService } from '../../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { OrderSummaryItem } from '../../../models/order/orderSummaryItem';
 
 @Component({
   selector: 'app-order-summary',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class OrderSummaryComponent implements OnInit {
   cartItems: CartItem[] = [];
+  @Input() orderSummaryItems: OrderSummaryItem[] = [];
   loading = false;
 
   constructor(public cartService: CartService) {}
@@ -24,5 +26,14 @@ export class OrderSummaryComponent implements OnInit {
         this.cartItems = cartItems;
       },
     });
+  }
+
+  getOrderTotal() {
+    let total = 0;
+    for (let item of this.orderSummaryItems) {
+      total += item.unitPrice * item.quantity;
+    }
+
+    return total;
   }
 }

@@ -15,9 +15,20 @@
 </div>
 <div class="row justify-content-end mb-4 card-text">
 
-  <div *ngFor="let item of cartItems" class="row justify-content-end mb-4 card-text">
+  <div *ngFor="let item of orderSummaryItems" class="row justify-content-end mb-4 card-text">
     <div class="col-6">
-      {{item.name}} - ({{item.type}}) <span class="fw-bold">x {{item.quantity}}</span>
+      <div class="d-flex align-items-center">
+        <img
+          src="{{item.pictureUrl || 'https://plus.unsplash.com/premium_photo-1677151193419-9be7a26c02cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Ym9va3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60'}}"
+          alt=""
+          style="width: 45px; height: 45px"
+          class="rounded-circle"
+        />
+        <div class="ms-3">
+          <p class="mb-1">{{item.name}}</p>
+          <p class="text-muted mb-0">- ({{item.type}}) <span class="fw-bold">x {{item.quantity}}</span></p>
+        </div>
+      </div>
     </div>
     <div class="col-3">
       BDT {{ item.unitPrice }} <span class="fw-bold">x {{item.quantity}}</span>
@@ -33,6 +44,6 @@
     Total
   </div>
   <div class="col-6 h5">
-    BDT {{ cartService.getCartTotal() }}
+    BDT {{ getOrderTotal() }}
   </div>
 </div>

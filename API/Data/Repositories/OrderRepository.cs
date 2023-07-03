@@ -26,7 +26,7 @@ public class OrderRepository : IOrderRepository
     }
 
 
-    public async Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username)
+    public async Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username, PaginationParams paginationParams)
     {
         var user = await _userManager.Users
             .SingleOrDefaultAsync(user => user.UserName.Equals(username));
@@ -41,7 +41,7 @@ public class OrderRepository : IOrderRepository
             .ProjectTo<OrderDto>(_mapper.ConfigurationProvider);
         
         var data = await PaginatedList<OrderDto>
-            .CreatePaginatedListAsync(projectedQuery, 1, 50);
+            .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<OrderDto>>.OkResult(data);
 

@@ -1,6 +1,8 @@
+import { BookType } from '../bookType';
+
 export interface OrderBookDetails {
   bookId: number;
   bookName: string;
-  bookType: string;
+  bookType: BookType;
   pictureUrl: string;
 }

@@ -7,6 +7,7 @@ import { CartComponent } from './cart/cart.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { UserGuard } from '../guards/user.guard';
 import { CheckoutComponent } from './order/checkout/checkout.component';
+import { OrderListComponent } from './order/order-list/order-list.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,11 @@ const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent,
+    canActivate: [AuthGuard, UserGuard],
+  },
+  {
+    path: 'order-list',
+    component: OrderListComponent,
     canActivate: [AuthGuard, UserGuard],
   },
 ];

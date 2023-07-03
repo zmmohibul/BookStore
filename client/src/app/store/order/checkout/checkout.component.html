@@ -20,7 +20,7 @@
       <div [ngClass]="{'loader': loading}"></div>
       <div class="card text-center shadow-3">
         <!--        <h5 class="card-header ">Order Summary</h5>-->
-        <app-order-summary></app-order-summary>
+        <app-order-summary [orderSummaryItems]="getOrderSummaryItems()"></app-order-summary>
 
 
       </div>

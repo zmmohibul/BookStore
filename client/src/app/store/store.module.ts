@@ -11,6 +11,8 @@ import { CategorySidebarComponent } from './book/category-sidebar/category-sideb
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './order/checkout/checkout.component';
 import { OrderSummaryComponent } from './order/order-summary/order-summary.component';
+import { OrderSuccessComponent } from './order/order-success/order-success.component';
+import { OrderListComponent } from './order/order-list/order-list.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { OrderSummaryComponent } from './order/order-summary/order-summary.compo
     CartComponent,
     CheckoutComponent,
     OrderSummaryComponent,
+    OrderSuccessComponent,
+    OrderListComponent,
   ],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
 })

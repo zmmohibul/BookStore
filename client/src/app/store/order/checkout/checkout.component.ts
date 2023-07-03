@@ -7,6 +7,7 @@ import { CreateOrderModel } from '../../../models/order/createOrderModel';
 import { OrderService } from '../../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { OrderSummaryItem } from '../../../models/order/orderSummaryItem';
 
 @Component({
   selector: 'app-checkout',
@@ -64,5 +65,14 @@ export class CheckoutComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  getOrderSummaryItems() {
+    const orderSummaryItems: OrderSummaryItem[] = [];
+    for (let cartItem of this.cartItems) {
+      orderSummaryItems.push({ ...cartItem });
+    }
+
+    return orderSummaryItems;
   }
 }

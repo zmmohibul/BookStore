@@ -6,7 +6,7 @@ namespace API.Interfaces;
 
 public interface IOrderRepository
 {
-    Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username);
+    Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username, PaginationParams paginationParams);
     Task<Result<OrderDto>> GetAllOrderById(string username, int orderId);
     Task<Result<OrderDto>> CreateOrder(string username, CreateOrderDto createOrderDto);
     Task<Result<OrderDto>> UpdateOrder(string username, int orderId, UpdateOrderDto updateOrderDto);
