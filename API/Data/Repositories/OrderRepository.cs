@@ -26,7 +26,7 @@ public class OrderRepository : IOrderRepository
     }
 
 
-    public async Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username, PaginationParams paginationParams)
+    public async Task<Result<PaginatedList<OrderDto>>> GetAllOrders(string username, PaginationParams paginationParams, QueryParameters queryParameters)
     {
         var user = await _userManager.Users
             .SingleOrDefaultAsync(user => user.UserName.Equals(username));
@@ -36,16 +36,28 @@ public class OrderRepository : IOrderRepository
             return Result<PaginatedList<OrderDto>>.UnauthorizedResult("Please login to continue");
         }
 
-        var projectedQuery = _dataContext.Orders
-            .Where(order => order.OrderedByUserId.Equals(user.Id))
+        var query = _dataContext.Orders.AsNoTracking();
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles[0] != UserRoles.Admin.ToString())
+        {
+            query = query.Where(order => order.OrderedByUserId.Equals(user.Id));
+        }
+
+        if (queryParameters.OrderStatus != null)
+        {
+            query = query.Where(order => order.OrderStatus == queryParameters.OrderStatus);
+        }
+
+        query = query.OrderByDescending(order => order.OrderDate);
+
+        var projectedQuery = query
             .ProjectTo<OrderDto>(_mapper.ConfigurationProvider);
         
         var data = await PaginatedList<OrderDto>
             .CreatePaginatedListAsync(projectedQuery, paginationParams.PageNumber, paginationParams.PageSize);
         
         return Result<PaginatedList<OrderDto>>.OkResult(data);
-
-        throw new NotImplementedException();
     }
 
     public async Task<Result<OrderDto>> GetAllOrderById(string username, int orderId)
@@ -64,7 +76,7 @@ public class OrderRepository : IOrderRepository
         }
         
         var roles = await _userManager.GetRolesAsync(user);
-        if (roles[0].Equals(UserRoles.Admin))
+        if (roles[0] == UserRoles.Admin.ToString())
         {
             return Result<OrderDto>.UnauthorizedResult("Admin cannot place order.");
         }
@@ -74,20 +86,20 @@ public class OrderRepository : IOrderRepository
             return Result<OrderDto>.BadRequestResult("There are no items to be ordered");
         }
 
-        var order = new Order();
-        order.OrderedByUser = user;
-        
+        var order = new Order
+        {
+            OrderedByUser = user
+        };
+
         decimal subtotal = 0;
-        
         foreach (var orderBookItemDto in createOrderDto.OrderBookItems)
         {
-            var result = await _bookRepository.GetBookById(orderBookItemDto.BookId);
-            if (!result.IsSuccess)
+            var book = await _dataContext.Books.SingleOrDefaultAsync(b => b.Id == orderBookItemDto.BookId);
+            if (book == null)
             {
                 return Result<OrderDto>.BadRequestResult($"Invalid book id: {orderBookItemDto.BookId}");
             }
-
-            var book = result.Data;
+            
             var orderItem = new OrderItem()
             {
                 Price = orderBookItemDto.BookType == OrderedBookType.Paperback ? book.PaperbackPrice : book.HardcoverPrice,
@@ -104,6 +116,11 @@ public class OrderRepository : IOrderRepository
 
             if (orderBookItemDto.BookType == OrderedBookType.Paperback)
             {
+                if (book.PaperbackQuantity == 0)
+                {
+                    continue;
+                }
+                
                 if (book.PaperbackQuantity >= orderBookItemDto.Quantity)
                 {
                     orderItem.Quantity = orderBookItemDto.Quantity;
@@ -117,6 +134,11 @@ public class OrderRepository : IOrderRepository
             }
             else
             {
+                if (book.HardcoverQuantity == 0)
+                {
+                    continue;
+                } 
+                
                 if (book.HardcoverQuantity >= orderBookItemDto.Quantity)
                 {
                     orderItem.Quantity = orderBookItemDto.Quantity;

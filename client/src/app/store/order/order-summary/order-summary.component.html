@@ -25,7 +25,7 @@
           class="rounded-circle"
         />
         <div class="ms-3">
-          <p class="mb-1">{{item.name}}</p>
+          <a class="mb-1" routerLink="/books/{{item.id}}" class="link">{{item.name}}</a>
           <p class="text-muted mb-0">- ({{item.type}}) <span class="fw-bold">x {{item.quantity}}</span></p>
         </div>
       </div>

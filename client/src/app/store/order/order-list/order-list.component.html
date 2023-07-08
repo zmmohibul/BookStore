@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="orderSummary.length" class="col-md-6 scroll">
-      <h4 class="text-center display-6">Order Summary</h4>
+      <h4 class="text-center display-6">Order #{{orderSummaryInViewId}} Summary</h4>
       <hr class="hr hr-blurry">
       <app-order-summary [orderSummaryItems]="orderSummary"></app-order-summary>
     </div>

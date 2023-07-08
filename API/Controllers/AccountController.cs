@@ -2,6 +2,7 @@ using System.Security.Claims;
 using API.DTOs;
 using API.DTOs.Account;
 using API.Entities.Identity;
+using API.Errors;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -48,14 +49,14 @@ public class AccountController : ControllerBase
 
         if (user == null)
         {
-            return Unauthorized("Invalid UserName");
+            return Unauthorized(new Error(){ StatusCode = 401, ErrorMessage = "Invalid Username" });
         }
 
         var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
         if (!result)
         {
-            return Unauthorized("Invalid Password");
+            return Unauthorized(new Error(){ StatusCode = 401, ErrorMessage = "Invalid Password" });
         }
         
         var roles = await _userManager.GetRolesAsync(user);

@@ -14,7 +14,7 @@ public class Order
     public decimal Subtotal { get; set; }
     
     [Column(TypeName = "varchar(50)")]
-    public OrderStatus OrderStatus { get; set; } = OrderStatus.OrderReceived;
+    public OrderStatus OrderStatus { get; set; } = OrderStatus.OrderPlaced;
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
     public ICollection<OrderItem> OrderedBooks { get; set; } = new List<OrderItem>();

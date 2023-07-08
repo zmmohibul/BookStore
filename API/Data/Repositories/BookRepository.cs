@@ -55,7 +55,7 @@ public class BookRepository : IBookRepository
     public async Task<Result<BookDto>> GetBookById(int id)
     {
         var book = await _dataContext.Books
-            .AsNoTracking()
+            // .AsNoTracking()
             .OrderBy(book => book.Name)
             .ProjectTo<BookDto>(_mapper.ConfigurationProvider)
             .SingleOrDefaultAsync(book => book.Id == id);
@@ -158,6 +158,11 @@ public class BookRepository : IBookRepository
         return await _dataContext.SaveChangesAsync() > 0
             ? Result<bool>.NoContentResult()
             : Result<bool>.BadRequestResult("Could not delete book");
+    }
+
+    public async Task<bool> SaveChanges()
+    {
+        return await _dataContext.SaveChangesAsync() > 0;
     }
 
     public async Task<Result<PictureDto>> AddBookPicture(int bookId, IFormFile file)

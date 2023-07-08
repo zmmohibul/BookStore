@@ -18,9 +18,9 @@ public class OrdersController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams paginationParams)
+    public async Task<IActionResult> GetAllOrders([FromQuery] PaginationParams paginationParams, [FromQuery] QueryParameters queryParameters)
     {
-        var result = await _orderRepository.GetAllOrders(User.FindFirst(ClaimTypes.Name)?.Value, paginationParams);
+        var result = await _orderRepository.GetAllOrders(User.FindFirst(ClaimTypes.Name)?.Value, paginationParams, queryParameters);
         return HandleResult(result);
     }
 

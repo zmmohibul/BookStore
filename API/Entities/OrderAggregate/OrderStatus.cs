@@ -4,6 +4,9 @@ namespace API.Entities.OrderAggregate;
 
 public enum OrderStatus
 {
+    [EnumMember(Value = "OrderPlaced")]
+    OrderPlaced,
+    
     [EnumMember(Value = "OrderReceived")]
     OrderReceived,
     

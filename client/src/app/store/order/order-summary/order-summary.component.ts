@@ -14,19 +14,12 @@ import { OrderSummaryItem } from '../../../models/order/orderSummaryItem';
   styleUrls: ['./order-summary.component.scss'],
 })
 export class OrderSummaryComponent implements OnInit {
-  cartItems: CartItem[] = [];
   @Input() orderSummaryItems: OrderSummaryItem[] = [];
   loading = false;
 
-  constructor(public cartService: CartService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.cartService.cartItems$.subscribe({
-      next: (cartItems) => {
-        this.cartItems = cartItems;
-      },
-    });
-  }
+  ngOnInit(): void {}
 
   getOrderTotal() {
     let total = 0;

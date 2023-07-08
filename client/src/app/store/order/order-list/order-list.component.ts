@@ -15,6 +15,7 @@ export class OrderListComponent implements OnInit {
   orders: PaginatedList<Order> = new PaginatedList<Order>();
   orderQueryParams = new QueryParams();
   orderSummary: OrderSummaryItem[] = [];
+  orderSummaryInViewId = 0;
   loading = false;
 
   constructor(private orderService: OrderService) {}
@@ -45,6 +46,9 @@ export class OrderListComponent implements OnInit {
   viewOrderDetails(id: number) {
     const order = this.orders.items.find((item) => item.id == id);
     if (order) {
+      this.orderSummary = [];
+      this.orderSummaryInViewId = order.id;
+
       for (let item of order.orderedBooks) {
         this.orderSummary.push({
           id: item.bookDetails.bookId,
@@ -58,30 +62,10 @@ export class OrderListComponent implements OnInit {
     }
   }
 
-  loadMore() {
-    if (this.allOrdersLoaded()) {
-      return;
-    }
-
-    this.orderQueryParams.pageNumber++;
-    this.loadOrders();
-  }
-
   loadNextOrderPage(event: PageEvent) {
     this.orderQueryParams.pageNumber = event.pageIndex + 1;
     this.orderQueryParams.pageSize = event.pageSize;
 
     this.loadOrders();
-  }
-
-  splitString(str: string) {
-    return str.split(/(?=[A-Z])/).join(' ');
-  }
-
-  allOrdersLoaded() {
-    return (
-      this.orderQueryParams.pageSize * this.orderQueryParams.pageNumber >=
-      this.orders.count
-    );
   }
 }
