@@ -7,7 +7,7 @@ import { CartComponent } from './cart/cart.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { UserGuard } from '../guards/user.guard';
 import { CheckoutComponent } from './order/checkout/checkout.component';
-import { OrderListComponent } from './order/order-list/order-list.component';
+import { OrdersHomeComponent } from './order/orders-home/orders-home.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,8 +20,8 @@ const routes: Routes = [
     canActivate: [AuthGuard, UserGuard],
   },
   {
-    path: 'order-list',
-    component: OrderListComponent,
+    path: 'orders-home',
+    component: OrdersHomeComponent,
     canActivate: [AuthGuard, UserGuard],
   },
 ];

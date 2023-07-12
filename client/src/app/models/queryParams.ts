@@ -1,4 +1,5 @@
 import { HttpParams } from '@angular/common/http';
+import { OrderStatus } from './order/orderStatus';
 
 export class QueryParams {
   pageNumber: number = 1;
@@ -6,6 +7,7 @@ export class QueryParams {
   categoryId: number | null = null;
   authorsId: number[] | null = null;
   publishersId: number[] | null = null;
+  orderStatus: OrderStatus | null = null;
 
   getQueryString() {
     let queryString = '';
@@ -25,6 +27,10 @@ export class QueryParams {
       queryString += '-' + this.publishersId.join(',') + ',';
     }
 
+    if (this.orderStatus) {
+      queryString += '-' + this.orderStatus;
+    }
+
     return queryString;
   }
 
@@ -36,6 +42,10 @@ export class QueryParams {
 
     if (this.categoryId) {
       params = params.append('categoryId', this.categoryId);
+    }
+
+    if (this.orderStatus) {
+      params = params.append('orderStatus', this.orderStatus);
     }
 
     if (this.authorsId) {

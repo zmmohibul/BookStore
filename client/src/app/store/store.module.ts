@@ -10,9 +10,7 @@ import { BookDetailsComponent } from './book/book-details/book-details.component
 import { CategorySidebarComponent } from './book/category-sidebar/category-sidebar.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './order/checkout/checkout.component';
-import { OrderSummaryComponent } from './order/order-summary/order-summary.component';
-import { OrderSuccessComponent } from './order/order-success/order-success.component';
-import { OrderListComponent } from './order/order-list/order-list.component';
+import { OrdersHomeComponent } from './order/orders-home/orders-home.component';
 
 @NgModule({
   declarations: [
@@ -23,10 +21,9 @@ import { OrderListComponent } from './order/order-list/order-list.component';
     CategorySidebarComponent,
     CartComponent,
     CheckoutComponent,
-    OrderSummaryComponent,
-    OrderSuccessComponent,
-    OrderListComponent,
+    OrdersHomeComponent,
   ],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
+  exports: [],
 })
 export class StoreModule {}

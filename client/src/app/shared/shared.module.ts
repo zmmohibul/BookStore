@@ -40,6 +40,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { QuantityInputModule } from '@nghacks/quantity-input';
 import { SplitCamelCasePipe } from '../pipes/split-camel-case.pipe';
+import { OrderListComponent } from './order-list/order-list.component';
+import { OrderSummaryComponent } from './order-summary/order-summary.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { SplitCamelCasePipe } from '../pipes/split-camel-case.pipe';
     SelectSearchComponent,
     SidebarComponent,
     SplitCamelCasePipe,
+    OrderListComponent,
+    OrderSummaryComponent,
   ],
   imports: [
     CommonModule,
@@ -133,6 +137,8 @@ import { SplitCamelCasePipe } from '../pipes/split-camel-case.pipe';
     InputComponent,
     SelectSearchComponent,
     SidebarComponent,
+    OrderListComponent,
+    OrderSummaryComponent,
   ],
 })
 export class SharedModule {}

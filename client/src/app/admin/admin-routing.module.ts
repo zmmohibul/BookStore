@@ -11,6 +11,13 @@ const routes: Routes = [
         (module) => module.StoreManagerModule
       ),
   },
+  {
+    path: 'order-manager',
+    loadChildren: () =>
+      import('./order-manager/order-manager.module').then(
+        (module) => module.OrderManagerModule
+      ),
+  },
 ];
 
 @NgModule({

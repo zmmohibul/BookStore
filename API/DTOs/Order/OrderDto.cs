@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using API.DTOs.Account;
 using API.Entities.OrderAggregate;
 
 namespace API.DTOs.Order;
@@ -12,4 +13,6 @@ public class OrderDto
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus OrderStatus { get; set; }
+
+    public UserDetailDto OrderedByUser { get; set; }
 }

@@ -1,0 +1,16 @@
+<div class="container">
+  <mdb-tabs [justified]="true">
+    <mdb-tab title="New Orders">
+      <app-orders [orderStatus]="OrderStatus.OrderPlaced"></app-orders>
+    </mdb-tab>
+    <mdb-tab title="Accepted Orders">
+      <app-orders [orderStatus]="OrderStatus.OrderReceived"></app-orders>
+    </mdb-tab>
+    <mdb-tab title="Shipped Orders">Tab content 3</mdb-tab>
+    <mdb-tab title="Delivered Orders">Tab content 3</mdb-tab>
+  </mdb-tabs>
+
+</div>
+
+
+

@@ -43,6 +43,11 @@ public class OrderRepository : IOrderRepository
         {
             query = query.Where(order => order.OrderedByUserId.Equals(user.Id));
         }
+        else
+        {
+            query = query.Include(order => order.OrderedByUser)
+                .ThenInclude(orderUser => orderUser.Addresses);
+        }
 
         if (queryParameters.OrderStatus != null)
         {

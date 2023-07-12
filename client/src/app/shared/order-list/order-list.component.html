@@ -1,0 +1,37 @@
+<div [ngClass]="{'loader': loading}"></div>
+
+<div *ngFor="let order of orders.items" class="card mb-4">
+  <h5 class="card-header text-center">Order #{{order.id}}</h5>
+  <div class="card-body">
+    <div class="d-flex">
+      <div class="h6 m-0 p-1">Order Date:</div>
+      <div class="ms-auto p-q">{{order.orderDate | date: 'longDate'}}</div>
+    </div>
+    <hr class="hr">
+    <div class="d-flex">
+      <div class="h6 m-0 p-1">Order Status:</div>
+      <div class="ms-auto p-q">{{order.orderStatus.toString() | splitCamelCase }}</div>
+    </div>
+    <hr class="hr">
+    <div class="d-flex mb-3">
+      <div class="h6 m-0 p-1">Subtotal:</div>
+      <div class="ms-auto p-1">BDT {{order.subtotal}}</div>
+    </div>
+    <a class="btn btn-dark" (click)="viewOrderDetails(order.id)">View Details</a>
+  </div>
+</div>
+
+<ng-container *ngIf="orders">
+  <div class="my-3">
+    <mat-paginator
+      (page)="loadNextOrderPage($event)"
+      [length]="orders.count"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSize]="orders.pageSize"
+      [pageIndex]="orders.currentPage - 1"
+      aria-label="Select page"
+      class="mat-paginator"
+    >
+    </mat-paginator>
+  </div>
+</ng-container>

@@ -10,15 +10,15 @@ public enum OrderStatus
     [EnumMember(Value = "OrderReceived")]
     OrderReceived,
     
-    [EnumMember(Value = "Processing")]
-    Processing,
+    [EnumMember(Value = "OrderProcessing")]
+    OrderProcessing,
     
-    [EnumMember(Value = "Shipped")]
-    Shipped,
+    [EnumMember(Value = "OrderShipped")]
+    OrderShipped,
     
-    [EnumMember(Value = "Delivered")]
-    Delivered,
+    [EnumMember(Value = "OrderDelivered")]
+    OrderDelivered,
     
-    [EnumMember(Value = "Cancelled")]
-    Cancelled,
+    [EnumMember(Value = "OrderCancelled")]
+    OrderCancelled,
 }
