@@ -24,6 +24,7 @@ public class DataContext : IdentityDbContext<User>
         builder.Entity<OrderItem>()
             .OwnsOne(o => o.BookDetails);
         
+        
         builder.Entity<Order>()
             .HasMany(o => o.OrderedBooks).WithOne().OnDelete(DeleteBehavior.Cascade);
         

@@ -19,6 +19,7 @@ public class OrderBookDetail
     
     public int BookId { get; set; }
     public string BookName { get; set; }
+    public string Author { get; set; }
     
     [Column(TypeName = "varchar(50)")]
     public OrderedBookType BookType { get; set; }

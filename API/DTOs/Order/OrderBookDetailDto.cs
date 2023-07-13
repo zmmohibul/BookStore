@@ -7,6 +7,7 @@ public class OrderBookDetailDto
 {
     public int BookId { get; set; }
     public string BookName { get; set; }
+    public string Author { get; set; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderedBookType BookType { get; set; }

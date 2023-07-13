@@ -1,5 +1,6 @@
 import { OrderedBook } from './orderedBook';
 import { OrderStatus } from './orderStatus';
+import { Address, UserDetail } from '../userDetail';
 
 export interface Order {
   id: number;
@@ -7,4 +8,6 @@ export interface Order {
   subtotal: number;
   orderDate: string;
   orderStatus: OrderStatus;
+  orderedByUser: UserDetail;
+  userAddress: Address;
 }

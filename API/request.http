@@ -1,0 +1,13 @@
+POST http://localhost:5285/api/account/login
+content-type: application/json
+
+{
+    "userName": "hamid",
+    "password": "Pa$$w0rd"
+}
+
+###
+
+GET http://localhost:5285/api/orders/
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlMzljZDRiOC0yYTk5LTQ2YTItODZiNy1lZTAyM2IwYjA4OWMiLCJ1bmlxdWVfbmFtZSI6ImhhbWlkIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNjg5MTM2NDA2LCJleHAiOjE2ODk3NDEyMDYsImlhdCI6MTY4OTEzNjQwNn0.hs7DHCBBp69LaEjXt6b57eKOjH4obGrXx8ug50vTg1lLYqyE7zf0womNpeIUhHCoJnJKxAGlAj6rfFgMYL73HA

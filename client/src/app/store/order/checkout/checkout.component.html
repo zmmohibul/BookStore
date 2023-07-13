@@ -7,7 +7,10 @@
       <div *ngIf="currentUserDetail" class="card border border-success shadow-3 mb-2" style="max-width: 18rem;">
         <div class="card-header bg-transparent border-success">Address <i class="fas fa-check fa-lg mx-2"></i></div>
         <div class="card-body ">
-          <h5 class="card-title">{{currentUserDetail.firstName}} {{currentUserDetail.lastName}}</h5>
+          <h5 class="card-title mb-0">{{currentUserDetail.firstName}} {{currentUserDetail.lastName}}</h5>
+          <p class="card-title">
+            <strong>Phone:</strong>
+            {{currentUserDetail.phoneNumber}}</p>
           <p class="card-text mb-0">{{currentUserDetail.addresses[0].street}}</p>
           <p class="card-text">{{currentUserDetail.addresses[0].province}}, {{currentUserDetail.addresses[0].city}}
             - {{currentUserDetail.addresses[0].zipCode}}</p>

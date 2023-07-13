@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230712115110_OrderUpdate")]
+    partial class OrderUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,14 +338,9 @@ namespace API.Data.Migrations
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(8, 2)");
 
-                    b.Property<int>("UserAddressId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OrderedByUserId");
-
-                    b.HasIndex("UserAddressId");
 
                     b.ToTable("Orders");
                 });
@@ -637,15 +635,39 @@ namespace API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Identity.Address", "UserAddress")
-                        .WithMany()
-                        .HasForeignKey("UserAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsOne("API.Entities.OrderAggregate.OrderAddress", "UserAddress", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Province")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
 
                     b.Navigation("OrderedByUser");
 
-                    b.Navigation("UserAddress");
+                    b.Navigation("UserAddress")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("API.Entities.OrderAggregate.OrderItem", b =>
@@ -659,10 +681,6 @@ namespace API.Data.Migrations
                         {
                             b1.Property<int>("OrderItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Author")
-                                .IsRequired()
-                                .HasColumnType("text");
 
                             b1.Property<int>("BookId")
                                 .HasColumnType("integer");

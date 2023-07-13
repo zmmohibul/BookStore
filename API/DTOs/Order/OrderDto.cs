@@ -15,4 +15,5 @@ public class OrderDto
     public OrderStatus OrderStatus { get; set; }
 
     public UserDetailDto OrderedByUser { get; set; }
+    public AddressDto UserAddress { get; set; }
 }

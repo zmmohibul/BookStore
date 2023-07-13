@@ -1,14 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthorsService} from '../../../../services/authors.service';
-import {CreateAuthorModel} from '../../../../models/author/createAuthorModel';
-import {FileUploader} from 'ng2-file-upload';
-import {environment} from '../../../../../environments/environment';
-import {User} from '../../../../models/user';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {take} from 'rxjs';
-import {Author} from '../../../../models/author/author';
-import {ToastrService} from 'ngx-toastr';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthorsService } from '../../../../services/authors.service';
+import { CreateAuthorModel } from '../../../../models/author/createAuthorModel';
+import { FileUploader } from 'ng2-file-upload';
+import { environment } from '../../../../../environments/environment';
+import { User } from '../../../../models/user';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { take } from 'rxjs';
+import { Author } from '../../../../models/author/author';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-author-form',
@@ -78,7 +78,8 @@ export class AuthorFormComponent implements OnInit {
       if (response) {
         const photo = JSON.parse(response);
         this.toastr.success('Author Updated');
-        this.authorForm.setValue({name: '', bio: ''});
+        this.authorForm.setValue({ name: '', bio: '' });
+        this.loading = false;
       }
     };
   }
@@ -86,26 +87,36 @@ export class AuthorFormComponent implements OnInit {
   onSubmit() {
     if (this.authorForm.valid) {
       this.loading = true;
-      const authorModel: CreateAuthorModel = {...this.authorForm.value};
+      const authorModel: CreateAuthorModel = { ...this.authorForm.value };
       if (this.author) {
         this.authorService.updateAuthor(this.author.id, authorModel).subscribe({
           next: (res) => {
             this.author = res;
-            this.uploader?.setOptions({
-              url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
-            });
-            this.uploader?.uploadAll();
-            this.loading = false;
+
+            if (this.uploader?.queue.length) {
+              this.uploader?.setOptions({
+                url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
+              });
+              this.uploader?.uploadAll();
+            } else {
+              this.loading = false;
+            }
           },
         });
       } else {
         this.authorService.createAuthor(authorModel).subscribe({
           next: (res) => {
-            this.author = res;
             this.uploader?.setOptions({
               url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
             });
-            this.uploader?.uploadAll();
+            if (this.uploader?.queue.length) {
+              this.uploader?.setOptions({
+                url: `${this.baseUrl}/authors/${this.author?.id}/add-picture`,
+              });
+              this.uploader?.uploadAll();
+            } else {
+              this.loading = false;
+            }
 
             this.authorForm.reset();
             this.toastr.success('Author Added');

@@ -33,6 +33,7 @@ public class Seed
                 UserName = "mohib",
                 FirstName = "Mohibul",
                 LastName = "Islam",
+                PhoneNumber = "01711223344",
                 Addresses = new List<Address>
                 {
                     new Address
@@ -41,6 +42,7 @@ public class Seed
                         Province = "Kafrul",
                         City = "Dhaka",
                         ZipCode = "1216",
+                        IsMain = true
                     }
                 }
             },
@@ -50,6 +52,7 @@ public class Seed
                 UserName = "hamid",
                 FirstName = "Hamidul",
                 LastName = "Islam",
+                PhoneNumber = "01711223344",
                 Addresses = new List<Address>
                 {
                     new Address
@@ -58,6 +61,7 @@ public class Seed
                         Province = "Kafrul",
                         City = "Dhaka",
                         ZipCode = "1216",
+                        IsMain = true
                     }
                 }
             }

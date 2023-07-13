@@ -1,5 +1,5 @@
 <div [ngClass]="{'loader': loading}"></div>
-<div class="d-flex justify-content-center align-items-center">
+<div *ngIf="!loading" class="d-flex justify-content-center align-items-center">
   <div class="text-center">
     <div class="inp">
       <app-input [formControl]="$any(authorForm.controls['name'])" inputType="text"

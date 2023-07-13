@@ -54,6 +54,18 @@ export class OrderService {
     return this.http.get<Order>(`${this.baseUrl}/orders/${id}`);
   }
 
+  getOrderSummary(id: number) {
+    let order: Order | undefined = undefined;
+    for (let [key, ords] of this.orders) {
+      for (let ord of ords.items) {
+        if (ord.id == id) {
+          order = ord;
+          break;
+        }
+      }
+    }
+  }
+
   createOrder(createOrderModel: CreateOrderModel) {
     return this.http.post<Order>(`${this.baseUrl}/orders`, createOrderModel);
   }

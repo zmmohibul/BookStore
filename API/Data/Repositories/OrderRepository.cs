@@ -45,14 +45,15 @@ public class OrderRepository : IOrderRepository
         }
         else
         {
-            query = query.Include(order => order.OrderedByUser)
-                .ThenInclude(orderUser => orderUser.Addresses);
+            query = query.Include(order => order.OrderedByUser);
         }
 
         if (queryParameters.OrderStatus != null)
         {
             query = query.Where(order => order.OrderStatus == queryParameters.OrderStatus);
         }
+
+        query = query.Include(order => order.UserAddress);
 
         query = query.OrderByDescending(order => order.OrderDate);
 
@@ -73,6 +74,7 @@ public class OrderRepository : IOrderRepository
     public async Task<Result<OrderDto>> CreateOrder(string username, CreateOrderDto createOrderDto)
     {
         var user = await _userManager.Users
+            .Include(usr => usr.Addresses)
             .SingleOrDefaultAsync(user => user.UserName.Equals(username));
 
         if (user == null)
@@ -83,7 +85,7 @@ public class OrderRepository : IOrderRepository
         var roles = await _userManager.GetRolesAsync(user);
         if (roles[0] == UserRoles.Admin.ToString())
         {
-            return Result<OrderDto>.UnauthorizedResult("Admin cannot place order.");
+            return Result<OrderDto>.BadRequestResult("Admin cannot place order.");
         }
 
         if (createOrderDto.OrderBookItems.Count == 0)
@@ -93,17 +95,29 @@ public class OrderRepository : IOrderRepository
 
         var order = new Order
         {
-            OrderedByUser = user
+            OrderedByUser = user,
         };
+
+        foreach (var address in user.Addresses)
+        {
+            if (address.IsMain)
+            {
+                order.UserAddress = address;
+                break;
+            }
+        }
 
         decimal subtotal = 0;
         foreach (var orderBookItemDto in createOrderDto.OrderBookItems)
         {
-            var book = await _dataContext.Books.SingleOrDefaultAsync(b => b.Id == orderBookItemDto.BookId);
+            var book = await _dataContext.Books.Include(b => b.Authors).SingleOrDefaultAsync(b => b.Id == orderBookItemDto.BookId);
             if (book == null)
             {
                 return Result<OrderDto>.BadRequestResult($"Invalid book id: {orderBookItemDto.BookId}");
             }
+
+            var authors = book.Authors.Select(author => author.Name);
+            var authorString = string.Join(" & ", authors);
             
             var orderItem = new OrderItem()
             {
@@ -113,7 +127,8 @@ public class OrderRepository : IOrderRepository
                     BookId = book.Id,
                     BookName = book.Name,
                     BookType = orderBookItemDto.BookType,
-                    PictureUrl = book.Pictures.Count == 0 ? "" : book.Pictures.First().Url
+                    PictureUrl = book.Pictures.Count == 0 ? "" : book.Pictures.First().Url,
+                    Author = authorString
                 }
 
             };

@@ -6,4 +6,5 @@ public class AddressDto
     public string City { get; set; }
     public string Province { get; set; }
     public string ZipCode { get; set; }
+    public bool IsMain { get; set; }
 }

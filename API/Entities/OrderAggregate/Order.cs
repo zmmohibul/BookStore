@@ -9,7 +9,10 @@ public class Order
 
     public User OrderedByUser { get; set; }
     public string OrderedByUserId { get; set; }
-    
+
+    public int UserAddressId { get; set; }
+    public Address UserAddress { get; set; }
+
     [Column(TypeName = "decimal(8, 2)")]
     public decimal Subtotal { get; set; }
     
