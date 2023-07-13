@@ -41,7 +41,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { QuantityInputModule } from '@nghacks/quantity-input';
 import { SplitCamelCasePipe } from '../pipes/split-camel-case.pipe';
 import { OrderListComponent } from './order-list/order-list.component';
-import { OrderSummaryComponent } from './order-summary/order-summary.component';
+import { RouterModule } from '@angular/router';
+import { OrderInvoiceComponent } from './order-invoice/order-invoice.component';
 
 @NgModule({
   declarations: [
@@ -51,10 +52,11 @@ import { OrderSummaryComponent } from './order-summary/order-summary.component';
     SidebarComponent,
     SplitCamelCasePipe,
     OrderListComponent,
-    OrderSummaryComponent,
+    OrderInvoiceComponent,
   ],
   imports: [
     CommonModule,
+    RouterModule,
     MdbAccordionModule,
     MdbCarouselModule,
     MdbCheckboxModule,
@@ -138,7 +140,7 @@ import { OrderSummaryComponent } from './order-summary/order-summary.component';
     SelectSearchComponent,
     SidebarComponent,
     OrderListComponent,
-    OrderSummaryComponent,
+    OrderInvoiceComponent,
   ],
 })
 export class SharedModule {}

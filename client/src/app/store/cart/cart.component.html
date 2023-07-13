@@ -43,10 +43,10 @@
         </button>
       </td>
       <td>
-        <p class="fw-normal mb-1 fs-6">{{item.unitPrice}}</p>
+        <p class="fw-normal mb-1 fs-6">{{item.unitPrice | number:'1.0':'en-US'}}</p>
       </td>
       <td>
-        <p class="fw-normal mb-1 fs-6">{{item.unitPrice * item.quantity}}</p>
+        <p class="fw-normal mb-1 fs-6">{{(item.unitPrice * item.quantity) | number:'1.0':'en-US'}}</p>
       </td>
       <td>
         <p (click)="removeCartItem(item)" class="fw-normal mb-1 btn-close"></p>
@@ -54,13 +54,14 @@
     </tr>
     <tr>
       <td colspan="4"><p class="fw-normal mb-1 fs-6">Total Amount:</p></td>
-      <td colspan="2"><p class="fw-normal mb-1 fs-6">{{getCartTotal()}}</p></td>
+      <td colspan="2"><p class="fw-normal mb-1 fs-6">{{getCartTotal() | number:'1.0':'en-US'}}</p></td>
     </tr>
     </tbody>
   </table>
   <div class="d-flex flex-row-reverse">
     <button (click)="onCheckOut()" class="mx-2 me-5 my-5 btn btn-dark btn-lg">Proceed to Checkout</button>
-    <button *ngIf="!(authenticationService.currentUser$ | async)" class="mx-2 my-5 btn btn-dark btn-lg">Login /
+    <button [routerLink]="'/auth'" *ngIf="!(authenticationService.currentUser$ | async)"
+            class="mx-2 my-5 btn btn-dark btn-lg">Login /
       Register
     </button>
 

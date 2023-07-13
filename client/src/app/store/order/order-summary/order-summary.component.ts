@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { OrderSummaryItem } from '../../models/order/orderSummaryItem';
-import { Order } from '../../models/order/order';
+import { OrderSummaryItem } from '../../../models/order/orderSummaryItem';
 
 @Component({
   selector: 'app-order-summary',
@@ -10,7 +9,6 @@ import { Order } from '../../models/order/order';
 export class OrderSummaryComponent implements OnInit {
   @Input() orderId: number = 0;
   @Input() orderSummaryItems: OrderSummaryItem[] = [];
-  @Input() order: Order | undefined = undefined;
   loading = false;
 
   constructor() {}

@@ -11,6 +11,7 @@ import { CategorySidebarComponent } from './book/category-sidebar/category-sideb
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './order/checkout/checkout.component';
 import { OrdersHomeComponent } from './order/orders-home/orders-home.component';
+import { OrderSummaryComponent } from './order/order-summary/order-summary.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { OrdersHomeComponent } from './order/orders-home/orders-home.component';
     CartComponent,
     CheckoutComponent,
     OrdersHomeComponent,
+    OrderSummaryComponent,
   ],
   imports: [CommonModule, StoreRoutingModule, SharedModule],
   exports: [],

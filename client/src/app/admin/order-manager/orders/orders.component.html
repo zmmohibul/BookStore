@@ -5,9 +5,8 @@
                       [orderQueryParams]="orderQueryParams"></app-order-list>
     </div>
 
-    <div class="col-md-8 scroll" *ngIf="orderSummary.length">
-      <app-order-summary [order]="orderInView" [orderId]="orderSummaryInViewId"
-                         [orderSummaryItems]="orderSummary"></app-order-summary>
+    <div class="col-md-8 scroll" *ngIf="orderInView">
+      <app-order-invoice [order]="orderInView"></app-order-invoice>
     </div>
   </div>
 </div>

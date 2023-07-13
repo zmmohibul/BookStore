@@ -12,11 +12,8 @@ import { OrderService } from '../../../services/order.service';
   styleUrls: ['./orders-home.component.scss'],
 })
 export class OrdersHomeComponent {
-  @Input() orderStatus: OrderStatus = OrderStatus.OrderPlaced;
   orders: PaginatedList<Order> = new PaginatedList<Order>();
-  orderSummary: OrderSummaryItem[] = [];
-  orderSummaryInViewId = 0;
-
+  orderInView: Order | undefined = undefined;
   orderQueryParams = new QueryParams();
   loading = false;
 
@@ -30,19 +27,7 @@ export class OrdersHomeComponent {
   viewOrderDetail(id: number) {
     this.orderService.getOrderById(id).subscribe({
       next: (order) => {
-        this.orderSummary = [];
-        this.orderSummaryInViewId = order.id;
-
-        for (let item of order.orderedBooks) {
-          this.orderSummary.push({
-            id: item.bookDetails.bookId,
-            type: item.bookDetails.bookType,
-            unitPrice: item.price,
-            quantity: item.quantity,
-            name: item.bookDetails.bookName,
-            pictureUrl: item.bookDetails.pictureUrl,
-          });
-        }
+        this.orderInView = order;
       },
     });
   }
